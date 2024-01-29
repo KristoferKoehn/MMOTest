@@ -1,0 +1,59 @@
+[gd_scene load_steps=2 format=3 uid="uid://caijgqq1st4lf"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_jxigk"]
+font_size = 32
+
+[node name="MainMenu" type="Node3D"]
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+
+[node name="Control" type="Control" parent="CanvasLayer"]
+layout_mode = 3
+anchors_preset = 0
+offset_left = 6.0
+offset_top = -1.0
+offset_right = 1151.0
+offset_bottom = 652.0
+
+[node name="Label" type="Label" parent="CanvasLayer/Control"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -38.5
+offset_top = -182.5
+offset_right = 39.5
+offset_bottom = -152.5
+grow_horizontal = 2
+grow_vertical = 2
+text = "MMOTEST"
+label_settings = SubResource("LabelSettings_jxigk")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/Control"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -122.0
+offset_top = -50.5
+offset_right = 122.0
+offset_bottom = 50.5
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Host" type="Button" parent="CanvasLayer/Control/VBoxContainer"]
+layout_mode = 2
+text = "Host"
+
+[node name="Join" type="Button" parent="CanvasLayer/Control/VBoxContainer"]
+layout_mode = 2
+text = "Join"
+
+[node name="Solo" type="Button" parent="CanvasLayer/Control/VBoxContainer"]
+layout_mode = 2
+text = "Solo
+"
