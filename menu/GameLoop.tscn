@@ -1,6 +1,0 @@
-[gd_scene load_steps=2 format=3 uid="uid://b424pnp684xjx"]
-
-[ext_resource type="Script" path="res://menu/GameLoop.cs" id="1_0m0vb"]
-
-[node name="GameLoop" type="Node3D"]
-script = ExtResource("1_0m0vb")
