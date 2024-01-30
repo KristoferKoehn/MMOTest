@@ -11,7 +11,7 @@ public partial class MainMenu : Node3D
 
     public void _on_connect_pressed()
     {
-        this.GetParent<GameLoop>().PushScene(ResourceLoader.Load<PackedScene>("res://scenes/menu/networkMenu/Main.tscn").Instantiate());
+        this.GetParent<GameLoop>().PushScene(ResourceLoader.Load<PackedScene>("res://scenes/menu/networkMenu/ServerMenu.tscn").Instantiate());
     }
 
     public void _on_quit_pressed()

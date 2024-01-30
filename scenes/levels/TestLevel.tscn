@@ -1,23 +1,48 @@
-[gd_scene load_steps=5 format=3 uid="uid://cj5kbymecdp11"]
+[gd_scene load_steps=7 format=3 uid="uid://cj5kbymecdp11"]
 
-[ext_resource type="Texture2D" uid="uid://dc2g6fo721vwq" path="res://assets/texture_04.png" id="1_r3kwa"]
+[ext_resource type="Script" path="res://scenes/levels/TestLevel.cs" id="1_s7cfu"]
+[ext_resource type="Texture2D" uid="uid://c8arnlq67qi7" path="res://assets/textures&grids/grids/Dark/texture_05.png" id="2_vyinc"]
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_2kqbi"]
-albedo_texture = ExtResource("1_r3kwa")
-uv1_scale = Vector3(4, 4, 4)
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_7bhck"]
+sky_horizon_color = Color(0.64625, 0.65575, 0.67075, 1)
+ground_horizon_color = Color(0.64625, 0.65575, 0.67075, 1)
 
-[sub_resource type="QuadMesh" id="QuadMesh_lxmc0"]
-size = Vector2(32, 32)
-orientation = 1
+[sub_resource type="Sky" id="Sky_o1qb7"]
+sky_material = SubResource("ProceduralSkyMaterial_7bhck")
 
-[sub_resource type="ConvexPolygonShape3D" id="ConvexPolygonShape3D_ybo2w"]
-points = PackedVector3Array(-16, 0, -16, -16, 0, 16, 16, 0, -16, 16, 0, 16)
+[sub_resource type="Environment" id="Environment_6ty48"]
+background_mode = 2
+sky = SubResource("Sky_o1qb7")
+tonemap_mode = 2
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_dvsge"]
+albedo_texture = ExtResource("2_vyinc")
+uv1_triplanar = true
 
 [node name="Node3D" type="Node3D"]
+script = ExtResource("1_s7cfu")
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
-material_override = SubResource("StandardMaterial3D_2kqbi")
-mesh = SubResource("QuadMesh_lxmc0")
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(-0.866023, -0.433016, 0.250001, 0, 0.499998, 0.866027, -0.500003, 0.749999, -0.43301, 0, 0, 0)
+shadow_enabled = true
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
-shape = SubResource("ConvexPolygonShape3D_ybo2w")
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_6ty48")
+
+[node name="floor" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1, 0)
+material_override = SubResource("StandardMaterial3D_dvsge")
+use_collision = true
+size = Vector3(1000, 1, 1000)
+
+[node name="PuppetModels" type="Node" parent="."]
+
+[node name="ClientModels" type="Node" parent="."]
+
+[node name="MultiplayerSpawner" type="MultiplayerSpawner" parent="."]
+_spawnable_scenes = PackedStringArray("res://scenes/actorScenes/PuppetPlayer.tscn")
+spawn_path = NodePath("../PuppetModels")
+
+[node name="MultiplayerSpawner2" type="MultiplayerSpawner" parent="."]
+_spawnable_scenes = PackedStringArray("res://scenes/actorScenes/player.tscn")
+spawn_path = NodePath("../ClientModels")
