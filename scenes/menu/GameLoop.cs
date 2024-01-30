@@ -9,7 +9,7 @@ public partial class GameLoop : Node
 
     public override void _Ready()
     {
-        //PushScene(ResourceLoader.Load<PackedScene>("res://Scenes/GameLoopScenes/TitleScreen.tscn").Instantiate());
+        PushScene(ResourceLoader.Load<PackedScene>("res://scenes/menu/MainMenu.tscn").Instantiate());
         // put settings here
     }
 
