@@ -31,7 +31,6 @@ func _enter_tree():
 func _ready():
 	# this is more stuff that will break when converting to model/controller
 	if not is_multiplayer_authority(): return
-	
 	camera_3d.current = true;
 	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 	

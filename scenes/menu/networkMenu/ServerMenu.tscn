@@ -4,7 +4,7 @@
 
 [node name="Node2D" type="Node2D"]
 script = ExtResource("1_tvh56")
-IPAdress = "127.0.0.1"
+IPAddress = "50.47.173.115"
 
 [node name="Control" type="Control" parent="."]
 layout_mode = 3
@@ -31,6 +31,8 @@ offset_top = 35.0
 offset_right = 1106.0
 offset_bottom = 520.0
 columns = 2
+allow_reselect = true
+enable_recursive_folding = false
 select_mode = 1
 metadata/_edit_use_anchors_ = true
 

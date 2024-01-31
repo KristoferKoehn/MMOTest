@@ -9,12 +9,13 @@ public partial class ServerMenu : Node2D
 	LineEdit serverName;
 	Timer timer;
 	[Export]
-	string IPAdress = "0.0.0.0";
+	string IPAddress = "0.0.0.0";
 
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
 	{
-		connector = new UniversalConnector(IPAdress, 9999);
+		GD.Print(IPAddress);
+		connector = new UniversalConnector(IPAddress, 9999);
 		tree = this.GetNode<Tree>("Control/Panel/Tree");
         serverName = this.GetNode<LineEdit>("Control/Panel/ServerName");
         tree.CreateItem();
@@ -51,6 +52,7 @@ public partial class ServerMenu : Node2D
 
 	public void updateTree()
 	{
+
 		tree.Clear();
 		tree.CreateItem();
 
@@ -58,14 +60,15 @@ public partial class ServerMenu : Node2D
 		if (serverList.Count < 1)
 		{
 			return;
-		} 
-        foreach (string server in serverList)
-        {
-            string[] strings = server.Split(new char[] { ' ' }, 2);
-            TreeItem ti = tree.CreateItem();
+		}
+		foreach (string server in serverList)
+		{
+			string[] strings = server.Split(new char[] { ' ' }, 2);
+			TreeItem ti = tree.CreateItem();
             ti.SetText(0, strings[0]);
             ti.SetText(1, strings[1]);
         }
+
     }
 
 	public void _on_join_pressed()
