@@ -1,19 +1,26 @@
-[gd_scene load_steps=2 format=3 uid="uid://c7nwkp45mrnmd"]
+[gd_scene load_steps=3 format=3 uid="uid://c7nwkp45mrnmd"]
+
+[ext_resource type="Script" path="res://scenes/menu/MainMenu.cs" id="1_efluq"]
 
 [sub_resource type="LabelSettings" id="LabelSettings_jxigk"]
 font_size = 32
 
 [node name="MainMenu" type="Node3D"]
+script = ExtResource("1_efluq")
 
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
 
 [node name="Control" type="Control" parent="CanvasLayer"]
 layout_mode = 3
-anchors_preset = 0
-offset_left = 6.0
-offset_top = -1.0
-offset_right = 1151.0
-offset_bottom = 652.0
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 608.0
+offset_top = 319.0
+offset_right = -608.0
+offset_bottom = -319.0
+grow_horizontal = 2
+grow_vertical = 2
 
 [node name="Label" type="Label" parent="CanvasLayer/Control"]
 layout_mode = 1
@@ -45,15 +52,19 @@ offset_bottom = 50.5
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="Host" type="Button" parent="CanvasLayer/Control/VBoxContainer"]
+[node name="Connect" type="Button" parent="CanvasLayer/Control/VBoxContainer"]
 layout_mode = 2
-text = "Host"
-
-[node name="Join" type="Button" parent="CanvasLayer/Control/VBoxContainer"]
-layout_mode = 2
-text = "Join"
+text = "Connect"
 
 [node name="Solo" type="Button" parent="CanvasLayer/Control/VBoxContainer"]
 layout_mode = 2
 text = "Solo
 "
+
+[node name="Quit" type="Button" parent="CanvasLayer/Control/VBoxContainer"]
+layout_mode = 2
+text = "Quit"
+
+[connection signal="pressed" from="CanvasLayer/Control/VBoxContainer/Connect" to="." method="_on_connect_pressed"]
+[connection signal="pressed" from="CanvasLayer/Control/VBoxContainer/Solo" to="." method="_on_solo_pressed"]
+[connection signal="pressed" from="CanvasLayer/Control/VBoxContainer/Quit" to="." method="_on_quit_pressed"]

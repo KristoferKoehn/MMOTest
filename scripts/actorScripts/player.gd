@@ -1,3 +1,4 @@
+class_name player
 extends CharacterBody3D
 
 @onready var camera_mount = $cameraMount
@@ -22,10 +23,22 @@ var isLocked
 # Get the gravity from the project settings to be synced with RigidBody nodes.
 var gravity = ProjectSettings.get_setting("physics/3d/default_gravity")
 
+func _enter_tree():
+	# converting player controller will break this. Don't worry about it
+	set_multiplayer_authority(str(name).to_int())
+
+
 func _ready():
+	# this is more stuff that will break when converting to model/controller
+	if not is_multiplayer_authority(): return
+	camera_3d.current = true;
 	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 	
 func _input(event):
+	# this is more stuff that will break when converting to model/controller
+	if not is_multiplayer_authority(): return
+	# end stuff that will break
+	
 	if event is InputEventMouseMotion:
 		rotate_y(deg_to_rad(-event.relative.x * horizontalMouseSensitivity))
 		visuals.rotate_y(deg_to_rad(event.relative.x * horizontalMouseSensitivity))
@@ -47,6 +60,10 @@ func _input(event):
 			# go to next camera mode. Could set this up to toggle between first and 3rd person, like skyrim. And just not allow zoom.
 
 func _physics_process(delta):
+	# this is more stuff that will break when converting to model/controller
+	if not is_multiplayer_authority(): return
+	# end stuff that will break
+	
 	if !animation_player.is_playing():
 		isLocked = false
 	
@@ -76,6 +93,7 @@ func _physics_process(delta):
 	# Here are all the animations that would override walking / running / idle / falling. Right now it is just kick.
 	# There is an issue with being able to slide on the ground during a kick, but I think this is actually desired for most actions. Just not kicking.
 	if Input.is_action_just_pressed("kick"):
+		
 		if !isLocked and animation_player.current_animation != "kick":
 			animation_player.play("kick")
 			isLocked = true
