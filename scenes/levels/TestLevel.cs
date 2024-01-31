@@ -5,7 +5,7 @@ public partial class TestLevel : Node3D
 {
 
     const int PORT = 9001;
-    public string ServerAdress = "localhost";
+    public string ServerAddress = "localhost";
     public bool host = false;
     public bool headless = false;
     string PuppetNodePath = "PuppetModels";
@@ -63,13 +63,8 @@ public partial class TestLevel : Node3D
     public void Join()
     {
         
-
-
-        GD.Print(ServerAdress);
-        EnetPeer.CreateClient(ServerAdress, PORT);
+        GD.Print( "Joining on Address: " + ServerAddress);
+        EnetPeer.CreateClient(ServerAddress, PORT);
         Multiplayer.MultiplayerPeer = EnetPeer;
     }
-
-
-
 }

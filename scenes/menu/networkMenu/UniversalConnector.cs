@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net.Sockets;
+using System.Runtime.InteropServices;
 using System.Text.Json;
 using System.Xml.Linq;
 
@@ -97,7 +98,9 @@ public class UniversalConnector
     public string Join(string UUID)
     {
         string msg = SendCommand($"{{\"request_type\": \"join\",\"data\": {{\"unique_identifier\": \"{UUID}\"}}}}");
+        GD.Print(msg);
         JsonElement jso = Utf8StringToJson(msg);
+        GD.Print(jso.GetProperty("data").GetProperty("ip").ToString());
         return jso.GetProperty("data").GetProperty("ip").ToString();
     }
 

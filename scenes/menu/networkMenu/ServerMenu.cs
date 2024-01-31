@@ -1,6 +1,7 @@
 using Godot;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 
 public partial class ServerMenu : Node2D
 {
@@ -8,6 +9,7 @@ public partial class ServerMenu : Node2D
 	Tree tree;
 	LineEdit serverName;
 	Timer timer;
+	int PORT = 9001;
 	[Export]
 	string IPAddress = "0.0.0.0";
 
@@ -25,7 +27,6 @@ public partial class ServerMenu : Node2D
 		timer.Timeout += updateTree;
 		timer.Start(2);
 		updateTree();
-
     }
 
 
@@ -68,7 +69,6 @@ public partial class ServerMenu : Node2D
             ti.SetText(0, strings[0]);
             ti.SetText(1, strings[1]);
         }
-
     }
 
 	public void _on_join_pressed()
@@ -78,13 +78,13 @@ public partial class ServerMenu : Node2D
 			TreeItem selection = tree.GetSelected();
 			string ip = connector.Join(selection.GetText(0));
             TestLevel tL = GD.Load<PackedScene>("res://scenes/levels/TestLevel.tscn").Instantiate<TestLevel>();
-			tL.ServerAdress = ip;
+			tL.ServerAddress = ip;
             this.GetParent<GameLoop>().PushScene(tL);
         } else if (this.GetNode<TextEdit>("Control/TextEdit").Text.Length > 0)
 		{
             string ip = this.GetNode<TextEdit>("Control/TextEdit").Text;
             TestLevel tL = GD.Load<PackedScene>("res://scenes/levels/TestLevel.tscn").Instantiate<TestLevel>();
-            tL.ServerAdress = ip;
+            tL.ServerAddress = ip;
             this.GetParent<GameLoop>().PushScene(tL);
         }
 	}
@@ -100,22 +100,15 @@ public partial class ServerMenu : Node2D
         Upnp upnp = new Upnp();
 
         int result = upnp.Discover();
-        if ((Upnp.UpnpResult)result != Upnp.UpnpResult.Success)
-        {
-            GD.Print($"UPNP DISCOVER FAILED! ERROR {result}");
-        }
 
-        if (upnp.GetGateway() == null && !upnp.GetGateway().IsValidGateway())
-        {
-            GD.Print("ESTABLISH GATEWAY FAILEDD");
-        }
+		Debug.Assert((Upnp.UpnpResult)result == Upnp.UpnpResult.Success, $"UPNP DISCOVER FAILED! ERROR {result}");
 
-        int MapResult = upnp.AddPortMapping(9001);
-        if (MapResult != 0)
-        {
-            GD.Print("INVALID PORT MAPPING");
-        }
+		Debug.Assert(upnp.GetGateway() != null && upnp.GetGateway().IsValidGateway(), "ESTABLISH GATEWAY FAILED");
 
+        int MapResult = upnp.AddPortMapping(PORT);
+		Debug.Assert(MapResult == 0, "INVALID PORT MAPPING");
+
+		GD.Print($"SUCCESSFUL UPNP SETUP? map result: {MapResult} - valid gateway: {upnp.GetGateway().IsValidGateway()}");
         return upnp.QueryExternalAddress();
 
     }
