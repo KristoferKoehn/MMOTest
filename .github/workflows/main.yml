@@ -13,7 +13,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: KristoferKoehn/MMOTest
       - name: exportGame
         uses: firebelley:godot-export@5.2.1
         with: 
