@@ -6,7 +6,7 @@ using System.Diagnostics;
 public partial class GameLoop : Node
 {
     public Stack<Node> sceneStack = new Stack<Node>();
-    int PORT = 9001;
+    int PORT = 9999;
 
     public override void _Ready()
     {
