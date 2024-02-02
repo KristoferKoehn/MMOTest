@@ -1,17 +1,27 @@
 using Godot;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 
 public partial class GameLoop : Node
 {
     public Stack<Node> sceneStack = new Stack<Node>();
-
+    int PORT = 9001;
 
     public override void _Ready()
     {
         if (OS.HasFeature("dedicated_server"))
         {
-            GD.Print("wahoo checking deditated sewvew :>");
+            
+            string ip = UpnpSetup();
+            UniversalConnector connector = new UniversalConnector(ip, PORT);
+            connector.Host("DEDICATED SERVER", ip);
+            //start host
+
+            TestLevel tL = GD.Load<PackedScene>("res://scenes/levels/TestLevel.tscn").Instantiate<TestLevel>();
+            tL.Connector = connector;
+            tL.host = true;
+            this.GetParent<GameLoop>().PushScene(tL);
         } else
         {
             PushScene(ResourceLoader.Load<PackedScene>("res://scenes/menu/MainMenu.tscn").Instantiate());
@@ -38,5 +48,23 @@ public partial class GameLoop : Node
         this.RemoveChild(node);
         node.QueueFree();
         this.AddChild(sceneStack.Peek());
+    }
+
+    public string UpnpSetup()
+    {
+        Upnp upnp = new Upnp();
+
+        int result = upnp.Discover();
+
+        Debug.Assert((Upnp.UpnpResult)result == Upnp.UpnpResult.Success, $"UPNP DISCOVER FAILED! ERROR {result}");
+
+        Debug.Assert(upnp.GetGateway() != null && upnp.GetGateway().IsValidGateway(), "ESTABLISH GATEWAY FAILED");
+
+        int MapResult = upnp.AddPortMapping(PORT);
+        Debug.Assert(MapResult == 0, "INVALID PORT MAPPING");
+
+        GD.Print($"SUCCESSFUL UPNP SETUP? map result: {MapResult} - valid gateway: {upnp.GetGateway().IsValidGateway()}");
+        return upnp.QueryExternalAddress();
+
     }
 }

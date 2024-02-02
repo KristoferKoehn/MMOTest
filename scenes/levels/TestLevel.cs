@@ -19,8 +19,10 @@ public partial class TestLevel : Node3D
     public override void _Ready()
     {
         EnetPeer = new ENetMultiplayerPeer();
-
-
+        if (OS.HasFeature("dedicated_server"))
+        {
+            headless = true;
+        }
 
         if (host && !headless)
         {
