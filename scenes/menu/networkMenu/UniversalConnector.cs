@@ -124,8 +124,17 @@ public class UniversalConnector
     /// </summary>
     /// <param name="ServerName"></param>
     /// <returns></returns>
-    public string Host(string ServerName, string ip_address) { 
-        return SendCommand($"{{\"request_type\": \"host\", \"data\": {{\"ip_address\":\"{ip_address}\",\"server_name\":\"{ServerName}\"}}}}");
+    public string Host(string ServerName, string ip_address)
+    {
+        string response = SendCommand($"{{\"request_type\": \"host\", \"data\": {{\"ip_address\":\"{ip_address}\",\"server_name\":\"{ServerName}\"}}}}");
+        JsonElement message = Utf8StringToJson(response);
+        this.HostUUID = message.GetProperty("uuid").ToString();
+        return HostUUID;
+    }
+
+    public void HostRefresh()
+    {
+        SendCommand($"{{\"request_type\": \"host_refresh\", \"uuid\": \"{HostUUID}\"}}");
     }
 
     /// <summary>

@@ -9,7 +9,15 @@ public partial class GameLoop : Node
 
     public override void _Ready()
     {
-        PushScene(ResourceLoader.Load<PackedScene>("res://scenes/menu/MainMenu.tscn").Instantiate());
+        if (OS.HasFeature("dedicated_server"))
+        {
+            GD.Print("wahoo checking deditated sewvew :>");
+        } else
+        {
+            PushScene(ResourceLoader.Load<PackedScene>("res://scenes/menu/MainMenu.tscn").Instantiate());
+        }
+
+        
         // put settings here
     }
 
