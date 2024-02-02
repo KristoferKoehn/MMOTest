@@ -28,6 +28,15 @@ public partial class TestLevel : Node3D
         }
     }
 
+    public void HeadlessHost()
+    {
+
+        Multiplayer.MultiplayerPeer = EnetPeer;
+        Multiplayer.PeerConnected += AddPlayer;
+        Multiplayer.PeerConnected += PeerConnectedToServer;
+
+    }
+
 
     public void PeerHost()
     {
