@@ -21,7 +21,7 @@ public partial class GameLoop : Node
             TestLevel tL = GD.Load<PackedScene>("res://scenes/levels/TestLevel.tscn").Instantiate<TestLevel>();
             tL.Connector = connector;
             tL.host = true;
-            this.GetParent<GameLoop>().PushScene(tL);
+            this.PushScene(tL);
         } else
         {
             PushScene(ResourceLoader.Load<PackedScene>("res://scenes/menu/MainMenu.tscn").Instantiate());
