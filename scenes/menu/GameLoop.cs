@@ -14,7 +14,7 @@ public partial class GameLoop : Node
         {
             
             string ip = UpnpSetup();
-            UniversalConnector connector = new UniversalConnector(ip, PORT);
+            UniversalConnector connector = new UniversalConnector("50.47.173.115", PORT);
             connector.Host("DEDICATED SERVER", ip);
             //start host
 
