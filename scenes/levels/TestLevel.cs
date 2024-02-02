@@ -48,7 +48,7 @@ public partial class TestLevel : Node3D
 
     public void HeadlessHost()
     {
-
+        EnetPeer.CreateServer(PORT);
         Multiplayer.MultiplayerPeer = EnetPeer;
         Multiplayer.PeerConnected += AddPlayer;
         Multiplayer.PeerConnected += PeerConnectedToServer;

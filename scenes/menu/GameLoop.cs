@@ -12,12 +12,10 @@ public partial class GameLoop : Node
     {
         if (OS.HasFeature("dedicated_server"))
         {
-            
+            GD.Print("UWU PLEASE DO NO BREAK");
             string ip = UpnpSetup();
             UniversalConnector connector = new UniversalConnector("50.47.173.115", PORT);
             connector.Host("DEDICATED SERVER", ip);
-            //start host
-
             TestLevel tL = GD.Load<PackedScene>("res://scenes/levels/TestLevel.tscn").Instantiate<TestLevel>();
             tL.Connector = connector;
             tL.host = true;
