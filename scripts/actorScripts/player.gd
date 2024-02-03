@@ -10,23 +10,22 @@ extends CharacterBody3D
 @export var verticalMouseSensitivity = 0.2
 @export var scrollSensitivity = 0.25
 
-var SPEED = 3.0
-
-@export var walkingSpeed = 3.0
-@export var runningSpeed = 5.0
-
-var JUMP_VELOCITY = runningSpeed # Gives 45 degree take offs
-
-var isRunning
-var isLocked
-
+@export var SPEED = 5.0
+@export var JUMP_VELOCITY = 3.0
+@export var jetpackAcceleration = 0.25
 # Get the gravity from the project settings to be synced with RigidBody nodes.
 var gravity = ProjectSettings.get_setting("physics/3d/default_gravity")
+
+@export var jetpackMaxFuel = 10
+var jetpackFuel = jetpackMaxFuel
+@export var jetpackFuelConsumptionRate = 0.1
+@export var jetpackRefuelRate = 0.5
+
+var isLocked = false
 
 func _enter_tree():
 	# converting player controller will break this. Don't worry about it
 	set_multiplayer_authority(str(name).to_int())
-
 
 func _ready():
 	# this is more stuff that will break when converting to model/controller
@@ -47,17 +46,6 @@ func _input(event):
 			camera_mount.rotation.x = deg_to_rad(90)
 		if camera_mount.rotation.x < deg_to_rad(-90):
 			camera_mount.rotation.x = deg_to_rad(-90)
-	
-	if event is InputEventMouseButton:
-		if event.button_index == MOUSE_BUTTON_WHEEL_DOWN && camera_3d.transform.origin.z < 10:
-			# Not quite right. But, something like this. camera_3d.position = camera_3d.position.lerp(position + scrollsensitivity, cameraFollowSpeed)
-			camera_3d.transform.origin.z += scrollSensitivity
-		
-		if event.button_index == MOUSE_BUTTON_WHEEL_UP && camera_3d.transform.origin.z > 0:
-			camera_3d.transform.origin.z -= scrollSensitivity
-		
-		# if event.button_index == MOUSE_BUTTON_MIDDLE:
-			# go to next camera mode. Could set this up to toggle between first and 3rd person, like skyrim. And just not allow zoom.
 
 func _physics_process(delta):
 	# this is more stuff that will break when converting to model/controller
@@ -67,34 +55,20 @@ func _physics_process(delta):
 	if !animation_player.is_playing():
 		isLocked = false
 	
-	# Add the gravity.
-	if not is_on_floor() and not isLocked:
-		velocity.y -= gravity * delta
-		# Todo: play falling animation
-	
 	# Handle Jump.
 	if Input.is_action_just_pressed("ui_accept") and is_on_floor():
 		velocity.y = JUMP_VELOCITY
 		# need an animation here too
-	
-	# Toggle Running
-	if Input.is_action_pressed("run"):
-		isRunning = true
-	else:
-		isRunning = false
 		
-	# Adjust speed to match running / walking state if on floor	
-	if is_on_floor():
-		if isRunning:
-			SPEED = runningSpeed
-		else:
-			SPEED = walkingSpeed
+	if Input.is_action_pressed("ui_accept"):
+		if jetpackFuel > 0:
+			jetpackFuel -= jetpackFuelConsumptionRate
+			velocity.y += jetpackAcceleration
+		
 	
-	# Here are all the animations that would override walking / running / idle / falling. Right now it is just kick.
-	# There is an issue with being able to slide on the ground during a kick, but I think this is actually desired for most actions. Just not kicking.
+	# Here are all the animations that would override movement. Right now it is just kick.
 	if Input.is_action_just_pressed("kick"):
-		
-		if !isLocked and animation_player.current_animation != "kick":
+		if !isLocked and animation_player.current_animation != "kick":# and is_on_floor():
 			animation_player.play("kick")
 			isLocked = true
 
@@ -102,27 +76,40 @@ func _physics_process(delta):
 	# As good practice, you should replace UI actions with custom gameplay actions.
 	var input_dir = Input.get_vector("left", "right", "forward", "backward")
 	var direction = (transform.basis * Vector3(input_dir.x, 0, input_dir.y)).normalized()
-	if direction:
-		if !isLocked:
-			if isRunning:
-				if animation_player.current_animation != "running":
-					animation_player.play("running")
-			else:
-				if animation_player.current_animation != "walking":
-					animation_player.play("walking")
-			visuals.look_at(position + direction)
-		
-		#if is_on_floor():
-		velocity.x = direction.x * SPEED
-		velocity.z = direction.z * SPEED
-	else:
-		if !isLocked:
+	
+	if !isLocked:
+		if not is_on_floor():
+			velocity.y -= gravity * delta
+			# TODO: Replace with "falling"
 			if animation_player.current_animation != "idle":
 				animation_player.play("idle")
-		# Need to figure out how this plays with the whole locked thing
-		if is_on_floor():
-			velocity.x = move_toward(velocity.x, 0, SPEED)
-			velocity.z = move_toward(velocity.z, 0, SPEED)
-
-	#if !isLocked:
-	move_and_slide()
+			
+			if direction:
+				visuals.look_at(position + direction)
+				velocity.x = direction.x * SPEED
+				velocity.z = direction.z * SPEED
+			else:
+				velocity.x = move_toward(velocity.x, 0, SPEED)
+				velocity.z = move_toward(velocity.z, 0, SPEED)
+			
+		else:
+			if jetpackFuel < jetpackMaxFuel:
+				jetpackFuel += jetpackRefuelRate
+				
+			if direction:
+				if animation_player.current_animation != "running":
+					animation_player.play("running")
+				visuals.look_at(position + direction)
+				velocity.x = direction.x * SPEED
+				velocity.z = direction.z * SPEED
+			
+			else:
+				if animation_player.current_animation != "idle":
+					animation_player.play("idle")
+				velocity.x = move_toward(velocity.x, 0, SPEED)
+				velocity.z = move_toward(velocity.z, 0, SPEED)
+		
+		# If other, not locking action pressed, execute action and over write animation / merge animation
+		
+		
+		move_and_slide()
