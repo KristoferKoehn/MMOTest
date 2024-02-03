@@ -41,6 +41,7 @@ public partial class ServerMenu : Node2D
             //start host
 
             TestLevel tL = GD.Load<PackedScene>("res://scenes/levels/TestLevel.tscn").Instantiate<TestLevel>();
+			tL.Connector = connector;
 			tL.host = true;
             this.GetParent<GameLoop>().PushScene(tL);
         }

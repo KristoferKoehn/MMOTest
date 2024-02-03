@@ -6,6 +6,7 @@ public partial class TestLevel : Node3D
 
     const int PORT = 9001;
     public string ServerAddress = "localhost";
+    public UniversalConnector Connector;
     public bool host = false;
     public bool headless = false;
     string PuppetNodePath = "PuppetModels";
@@ -18,14 +19,44 @@ public partial class TestLevel : Node3D
     public override void _Ready()
     {
         EnetPeer = new ENetMultiplayerPeer();
+        if (OS.HasFeature("dedicated_server"))
+        {
+            headless = true;
+        }
 
         if (host && !headless)
         {
             PeerHost();
-        } else
+        } 
+        else if (host && headless)
+        {
+            HeadlessHost();
+        }
+        else
         {
             Join();
         }
+
+
+
+    }
+
+    public override void _Process(double delta)
+    {
+        
+    }
+
+    public void HeadlessHost()
+    {
+        EnetPeer.CreateServer(PORT);
+        Multiplayer.MultiplayerPeer = EnetPeer;
+        Multiplayer.PeerConnected += AddPlayer;
+        Multiplayer.PeerConnected += PeerConnectedToServer;
+        Timer t = new Timer();
+        this.AddChild(t);
+        t.Start(5);
+        t.Timeout += Connector.HostRefresh;
+
     }
 
 
