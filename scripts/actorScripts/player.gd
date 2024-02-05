@@ -3,6 +3,7 @@ extends CharacterBody3D
 
 @onready var camera_mount = $cameraMount
 @onready var camera_3d = $cameraMount/Camera3D
+@onready var rayCast_3d = $cameraMount/Camera3D/RayCast3D
 @onready var visuals = $visuals
 @onready var animation_player = $visuals/mixamoBase/AnimationPlayer
 
@@ -11,7 +12,7 @@ extends CharacterBody3D
 @export var scrollSensitivity = 0.25
 
 @export var SPEED = 5.0
-@export var JUMP_VELOCITY = 3.0
+@export var JUMP_VELOCITY = 5.0
 @export var jetpackAcceleration = 0.25
 # Get the gravity from the project settings to be synced with RigidBody nodes.
 var gravity = ProjectSettings.get_setting("physics/3d/default_gravity")
@@ -21,7 +22,7 @@ var jetpackFuel = jetpackMaxFuel
 @export var jetpackFuelConsumptionRate = 0.1
 @export var jetpackRefuelRate = 0.5
 
-var isLocked = false
+var isPositionLocked = false
 
 func _enter_tree():
 	# converting player controller will break this. Don't worry about it
@@ -53,31 +54,30 @@ func _physics_process(delta):
 	# end stuff that will break
 	
 	if !animation_player.is_playing():
-		isLocked = false
+		isPositionLocked = false
 	
 	# Handle Jump.
-	if Input.is_action_just_pressed("ui_accept") and is_on_floor():
+	if Input.is_action_just_pressed("jump_dodge") and is_on_floor():
 		velocity.y = JUMP_VELOCITY
 		# need an animation here too
 		
-	if Input.is_action_pressed("ui_accept"):
+	if Input.is_action_pressed("movementAbility"):
 		if jetpackFuel > 0:
 			jetpackFuel -= jetpackFuelConsumptionRate
 			velocity.y += jetpackAcceleration
 		
-	
 	# Here are all the animations that would override movement. Right now it is just kick.
-	if Input.is_action_just_pressed("kick"):
-		if !isLocked and animation_player.current_animation != "kick":# and is_on_floor():
+	if Input.is_action_just_pressed("melee"):
+		if !isPositionLocked and animation_player.current_animation != "kick": # and is_on_floor(): # We can add this and is on floor for our own sanity. It depends on what kind of canned animation we are doing.
 			animation_player.play("kick")
-			isLocked = true
+			isPositionLocked = true
 
 	# Get the input direction and handle the movement/deceleration.
 	# As good practice, you should replace UI actions with custom gameplay actions.
 	var input_dir = Input.get_vector("left", "right", "forward", "backward")
 	var direction = (transform.basis * Vector3(input_dir.x, 0, input_dir.y)).normalized()
 	
-	if !isLocked:
+	if !isPositionLocked:
 		if not is_on_floor():
 			velocity.y -= gravity * delta
 			# TODO: Replace with "falling"
@@ -110,6 +110,10 @@ func _physics_process(delta):
 				velocity.z = move_toward(velocity.z, 0, SPEED)
 		
 		# If other, not locking action pressed, execute action and over write animation / merge animation
-		
+		if Input.is_action_just_pressed("shoot_throw"):
+			# Spawn projectile
+			var target = rayCast_3d.get_collision_point()
+			
+			
 		
 		move_and_slide()
