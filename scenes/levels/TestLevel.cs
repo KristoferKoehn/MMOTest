@@ -37,8 +37,6 @@ public partial class TestLevel : Node3D
             Join();
         }
 
-
-
     }
 
     public override void _Process(double delta)
@@ -70,7 +68,6 @@ public partial class TestLevel : Node3D
         Multiplayer.PeerConnected += PeerConnectedToServer;
         Multiplayer.PeerDisconnected += RemovePlayer;
 
-
         AddPlayer(Multiplayer.GetUniqueId());
 
     }
@@ -83,12 +80,16 @@ public partial class TestLevel : Node3D
 
     public void AddPlayer(long PeerId)
     {
-        var player = PlayerController.Instantiate<Node3D>();
+        Node3D player = PlayerController.Instantiate<Node3D>();
         player.Name = PeerId.ToString();
+        player.GetNode<MultiplayerSynchronizer>("MultiplayerSynchronizer").SetVisibilityFor(1, true);
+        player.GetNode<MultiplayerSynchronizer>("MultiplayerSynchronizer").PublicVisibility = false;
+
         this.GetNode<Node>(ClientNodePath).AddChild(player);
         player.Position = new Vector3(0, 3, 0);
         Node3D puppet = PuppetPlayer.Instantiate<Node3D>();
         puppet.Name = PeerId.ToString();
+        puppet.GetNode<MultiplayerSynchronizer>("MultiplayerSynchronizer").SetVisibilityFor((int)PeerId, false);
         this.GetNode<Node>(PuppetNodePath).AddChild(puppet);
         puppet.Position = new Vector3(0, 3, 0);
     }
