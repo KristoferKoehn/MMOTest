@@ -49,7 +49,6 @@ public partial class TestLevel : Node3D
         {
             p.GlobalPosition = GetNode<Node>("ClientModels").GetNode<Node3D>(p.TrackingPeerId.ToString()).GlobalPosition;
         }
-
     }
 
     public void HeadlessHost()
@@ -98,12 +97,12 @@ public partial class TestLevel : Node3D
 
         PuppetPlayer puppet = PuppetPlayer.Instantiate<PuppetPlayer>();
         puppet.SetMultiplayerAuthority(1);
-        puppet.GetNode<MultiplayerSynchronizer>("MultiplayerSynchronizer").SetVisibilityFor((int)PeerId, false);
+        //puppet.GetNode<MultiplayerSynchronizer>("MultiplayerSynchronizer").SetVisibilityFor((int)PeerId, false);
         puppet.Name = puppet.Name + PeerId.ToString();
         puppet.Position = new Vector3(0, 3, 0);
         puppet.TrackingPeerId = PeerId;
         this.GetNode<Node>(PuppetNodePath).AddChild(puppet);
-        GD.Print((int)PeerId + " " + Multiplayer.GetUniqueId());
+        //GD.Print((int)PeerId + " " + Multiplayer.GetUniqueId());
         
     }
 
@@ -123,6 +122,7 @@ public partial class TestLevel : Node3D
         {
             Puppet.QueueFree();
         }
+        GD.Print("Peer left " +  PeerId);
     }
 
 
