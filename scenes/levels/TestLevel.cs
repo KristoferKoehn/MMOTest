@@ -48,9 +48,13 @@ public partial class TestLevel : Node3D
         foreach (PuppetPlayer p in GetNode<Node>("PuppetModels").GetChildren())
         {
             p.GlobalPosition = GetNode<Node>("ClientModels").GetNode<Node3D>(p.PuppetId.ToString()).GlobalPosition;
-            GD.Print(p.GlobalPosition);
         }
 
+
+        foreach (Node3D n in GetNode<Node>("PuppetModels").GetChildren())
+        {
+            GD.Print(n.GetMultiplayerAuthority() + " at " + n.GlobalPosition.ToString());
+        }
 
     }
 
@@ -114,6 +118,7 @@ public partial class TestLevel : Node3D
             if (p.PuppetId == PeerId)
             {
                 Puppet = p;
+
             }
         }
 
