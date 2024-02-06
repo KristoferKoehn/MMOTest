@@ -52,6 +52,7 @@ public partial class TestLevel : Node3D
         Multiplayer.MultiplayerPeer = EnetPeer;
         Multiplayer.PeerConnected += AddPlayer;
         Multiplayer.PeerConnected += PeerConnectedToServer;
+        Multiplayer.PeerDisconnected += RemovePlayer;
         Timer t = new Timer();
         this.AddChild(t);
         t.Start(5);
@@ -67,6 +68,7 @@ public partial class TestLevel : Node3D
         Multiplayer.MultiplayerPeer = EnetPeer;
         Multiplayer.PeerConnected += AddPlayer;
         Multiplayer.PeerConnected += PeerConnectedToServer;
+        Multiplayer.PeerDisconnected += RemovePlayer;
 
 
         AddPlayer(Multiplayer.GetUniqueId());
@@ -90,6 +92,14 @@ public partial class TestLevel : Node3D
         this.GetNode<Node>(PuppetNodePath).AddChild(puppet);
         puppet.Position = new Vector3(0, 3, 0);
     }
+
+    public void RemovePlayer(long PeerId) {
+        var player = this.GetNode<Node>(ClientNodePath).GetNodeOrNull(PeerId.ToString());
+        var puppet = this.GetNode<Node>(PuppetNodePath).GetNodeOrNull(PeerId.ToString());
+        player.QueueFree();
+        puppet.QueueFree();
+    }
+
 
     public void Join()
     {
