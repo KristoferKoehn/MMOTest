@@ -85,20 +85,30 @@ public partial class TestLevel : Node3D
 
         this.GetNode<Node>(ClientNodePath).AddChild(player);
         player.Position = new Vector3(0, 3, 0);
-        Node3D puppet = PuppetPlayer.Instantiate<Node3D>();
-        puppet.Name = PeerId.ToString();
+        PuppetPlayer puppet = PuppetPlayer.Instantiate<PuppetPlayer>();
         puppet.GetNode<MultiplayerSynchronizer>("MultiplayerSynchronizer").SetVisibilityFor((int)PeerId, false);
         this.GetNode<Node>(PuppetNodePath).AddChild(puppet);
         puppet.Position = new Vector3(0, 3, 0);
+        puppet.PuppetId = PeerId;
         GD.Print("join func on peer " + Multiplayer.GetUniqueId());
 
     }
 
     public void RemovePlayer(long PeerId) {
         var player = this.GetNode<Node>(ClientNodePath).GetNodeOrNull(PeerId.ToString());
-        var puppet = this.GetNode<Node>(PuppetNodePath).GetNodeOrNull(PeerId.ToString());
+        PuppetPlayer Puppet = null;
+        foreach (PuppetPlayer p in this.GetNode<Node>(PuppetNodePath).GetChildren())
+        {
+            if (p.PuppetId == PeerId)
+            {
+                Puppet = p;
+            }
+        }
         player.QueueFree();
-        puppet.QueueFree();
+        if (Puppet != null)
+        {
+            Puppet.QueueFree();
+        }
     }
 
 
@@ -112,7 +122,7 @@ public partial class TestLevel : Node3D
 
     public void _on_puppet_models_child_entered_tree(Node node)
     {
-
+        GD.Print("puppet added " + node.GetMultiplayerAuthority());
         if (node.GetMultiplayerAuthority() == this.Multiplayer.GetUniqueId())
         {
             ((Node3D)node).Visible = false;
@@ -122,10 +132,10 @@ public partial class TestLevel : Node3D
 
     public void _on_client_models_child_entered_tree(Node node)
     {
-        GD.Print("called");
-        if (node.GetMultiplayerAuthority() == this.Multiplayer.GetUniqueId())
+        GD.Print("client model added " + node.GetMultiplayerAuthority());
+        if (node.GetMultiplayerAuthority() != this.Multiplayer.GetUniqueId())
         {
-            ((Node3D)node).Visible = true;
+            ((Node3D)node).Visible = false;
         }
     }
 
