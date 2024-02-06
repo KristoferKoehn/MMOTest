@@ -40,7 +40,17 @@ public partial class TestLevel : Node3D
 
     public override void _Process(double delta)
     {
-        
+        if (Multiplayer.GetUniqueId() != 1)
+        {
+            return;
+        }
+
+        foreach (PuppetPlayer p in GetNode<Node>("PuppetModels").GetChildren())
+        {
+            p.GlobalPosition = GetNode<Node>("ClientModels").GetNode<Node3D>(p.PuppetId.ToString()).GlobalPosition;
+        }
+
+
     }
 
     public void HeadlessHost()
