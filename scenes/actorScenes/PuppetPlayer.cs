@@ -9,6 +9,9 @@ public partial class PuppetPlayer : Node3D
 
     public override void _Process(double delta)
     {
-
+        if (SimulationPeerId == TrackingPeerId)
+        {
+            this.Visible = false;
+        }
     }
 }

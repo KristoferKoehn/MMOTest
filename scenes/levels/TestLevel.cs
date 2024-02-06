@@ -90,17 +90,17 @@ public partial class TestLevel : Node3D
         Node3D player = PlayerController.Instantiate<Node3D>();
         player.Position = new Vector3(0, 3, 0);
         player.Name = PeerId.ToString();
-        player.SetMultiplayerAuthority((int)PeerId);
         player.GetNode<MultiplayerSynchronizer>("MultiplayerSynchronizer").PublicVisibility = false;
         player.GetNode<MultiplayerSynchronizer>("MultiplayerSynchronizer").SetVisibilityFor(1, true);
+        player.SetMultiplayerAuthority((int)PeerId);
         this.GetNode<Node>(ClientNodePath).AddChild(player);
 
         PuppetPlayer puppet = PuppetPlayer.Instantiate<PuppetPlayer>();
-        puppet.SetMultiplayerAuthority(1);
         //puppet.GetNode<MultiplayerSynchronizer>("MultiplayerSynchronizer").SetVisibilityFor((int)PeerId, false);
         puppet.Name = puppet.Name + PeerId.ToString();
         puppet.Position = new Vector3(0, 3, 0);
         puppet.TrackingPeerId = PeerId;
+        puppet.SetMultiplayerAuthority(1);
         this.GetNode<Node>(PuppetNodePath).AddChild(puppet);
         //GD.Print((int)PeerId + " " + Multiplayer.GetUniqueId());
         
@@ -144,12 +144,6 @@ public partial class TestLevel : Node3D
     {
         PuppetPlayer p = ((PuppetPlayer)node);
         p.SimulationPeerId = this.Multiplayer.GetUniqueId();
-        GD.Print(this.Multiplayer.GetUniqueId() + " " + p.TrackingPeerId);
-        if (p.SimulationPeerId == p.TrackingPeerId)
-        {
-            p.Visible = false;
-            GD.Print("made invis");
-        }
     }
 
 
