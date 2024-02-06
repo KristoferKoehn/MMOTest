@@ -51,7 +51,7 @@ public partial class TestLevel : Node3D
         }
 
 
-        foreach (Node3D n in GetNode<Node>("PuppetModels").GetChildren())
+        foreach (Node3D n in GetNode<Node>("ClientModels").GetChildren())
         {
             GD.Print(n.GetMultiplayerAuthority() + " at " + n.GlobalPosition.ToString());
         }
