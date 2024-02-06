@@ -16,6 +16,7 @@ properties/2/spawn = true
 properties/2/replication_mode = 1
 
 [node name="PuppetPlayer" type="Node3D"]
+visible = false
 script = ExtResource("1_hebtc")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="."]

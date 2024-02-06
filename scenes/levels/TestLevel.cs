@@ -120,20 +120,6 @@ public partial class TestLevel : Node3D
         Multiplayer.MultiplayerPeer = EnetPeer;
     }
 
-
-    public void _on_puppet_models_child_entered_tree(Node node)
-    {
-        GD.Print("puppet added " + node.GetMultiplayerAuthority());
-
-        GD.Print(((PuppetPlayer)node).PuppetId + " " + this.Multiplayer.GetUniqueId());
-
-        if (((PuppetPlayer)node).PuppetId == this.Multiplayer.GetUniqueId())
-        {
-            ((Node3D)node).Visible = false;
-        }
-
-    }
-
     public void _on_client_models_child_entered_tree(Node node)
     {
         GD.Print("client model added " + node.GetMultiplayerAuthority());
