@@ -78,19 +78,22 @@ public partial class TestLevel : Node3D
 
     public void AddPlayer(long PeerId)
     {
+        GD.Print("join func on peer " + Multiplayer.GetUniqueId());
+
+
         Node3D player = PlayerController.Instantiate<Node3D>();
+        player.Position = new Vector3(0, 3, 0);
         player.Name = PeerId.ToString();
         player.GetNode<MultiplayerSynchronizer>("MultiplayerSynchronizer").SetVisibilityFor(1, true);
         player.GetNode<MultiplayerSynchronizer>("MultiplayerSynchronizer").PublicVisibility = false;
-
         this.GetNode<Node>(ClientNodePath).AddChild(player);
-        player.Position = new Vector3(0, 3, 0);
+
         PuppetPlayer puppet = PuppetPlayer.Instantiate<PuppetPlayer>();
         puppet.GetNode<MultiplayerSynchronizer>("MultiplayerSynchronizer").SetVisibilityFor((int)PeerId, false);
-        this.GetNode<Node>(PuppetNodePath).AddChild(puppet);
+        puppet.Name = puppet.Name + PeerId.ToString();
         puppet.Position = new Vector3(0, 3, 0);
         puppet.PuppetId = PeerId;
-        GD.Print("join func on peer " + Multiplayer.GetUniqueId());
+        this.GetNode<Node>(PuppetNodePath).AddChild(puppet);
 
     }
 
@@ -123,7 +126,7 @@ public partial class TestLevel : Node3D
     public void _on_puppet_models_child_entered_tree(Node node)
     {
         GD.Print("puppet added " + node.GetMultiplayerAuthority());
-        if (node.GetMultiplayerAuthority() == this.Multiplayer.GetUniqueId())
+        if (((PuppetPlayer)node).PuppetId == this.Multiplayer.GetUniqueId())
         {
             ((Node3D)node).Visible = false;
         }
