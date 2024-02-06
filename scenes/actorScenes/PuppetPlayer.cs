@@ -8,11 +8,6 @@ public partial class PuppetPlayer : Node3D
 
     public override void _Process(double delta)
     {
-        if (this.GlobalPosition != new Vector3(0,3,0))
-        {
-            this.Visible = true;
-        }
+
     }
-
-
 }

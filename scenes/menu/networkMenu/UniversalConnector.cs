@@ -68,7 +68,7 @@ public class UniversalConnector
     public List<string> Browse()
     {
         string response = SendCommand("{\"request_type\": \"browse\",\"data\":{}}");
-        GD.Print(response);
+        //GD.Print(response);
         JsonElement dict = Utf8StringToJson(response);
         List<string> result = new List<string>();
         if (dict.TryGetProperty("data", out JsonElement dataElement))
@@ -98,7 +98,7 @@ public class UniversalConnector
     public string Join(string UUID)
     {
         string msg = SendCommand($"{{\"request_type\": \"join\",\"data\": {{\"unique_identifier\": \"{UUID}\"}}}}");
-        GD.Print(msg);
+        //GD.Print(msg);
         JsonElement jso = Utf8StringToJson(msg);
         GD.Print(jso.GetProperty("data").GetProperty("ip").ToString());
         return jso.GetProperty("data").GetProperty("ip").ToString();

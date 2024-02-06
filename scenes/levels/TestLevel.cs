@@ -103,13 +103,15 @@ public partial class TestLevel : Node3D
         this.GetNode<Node>(ClientNodePath).AddChild(player);
 
         PuppetPlayer puppet = PuppetPlayer.Instantiate<PuppetPlayer>();
+        puppet.SetMultiplayerAuthority(1);
         puppet.GetNode<MultiplayerSynchronizer>("MultiplayerSynchronizer").SetVisibilityFor((int)PeerId, false);
         puppet.Name = puppet.Name + PeerId.ToString();
         puppet.Position = new Vector3(0, 3, 0);
         puppet.PuppetId = PeerId;
-        puppet.SetMultiplayerAuthority(1);
         this.GetNode<Node>(PuppetNodePath).AddChild(puppet);
-        if (PeerId == Multiplayer.GetUniqueId())
+        GD.Print((int)PeerId + " " + Multiplayer.GetUniqueId());
+
+        if ((int)PeerId == Multiplayer.GetUniqueId())
         {
             puppet.Visible = false;
             GD.Print("make invisible");
@@ -125,7 +127,6 @@ public partial class TestLevel : Node3D
             if (p.PuppetId == PeerId)
             {
                 Puppet = p;
-                GD.Print($"{p.Name} deleted");
             }
         }
 
