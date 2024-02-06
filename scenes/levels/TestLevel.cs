@@ -63,7 +63,7 @@ public partial class TestLevel : Node3D
 
         Multiplayer.MultiplayerPeer = EnetPeer;
         Multiplayer.PeerConnected += AddPlayer;
-        Multiplayer.PeerConnected += PeerConnectedToServer;
+        //Multiplayer.PeerConnected += PeerConnectedToServer;
         Multiplayer.PeerDisconnected += RemovePlayer;
 
         AddPlayer(Multiplayer.GetUniqueId());
@@ -78,8 +78,6 @@ public partial class TestLevel : Node3D
 
     public void AddPlayer(long PeerId)
     {
-        GD.Print("join func on peer " + Multiplayer.GetUniqueId());
-
 
         Node3D player = PlayerController.Instantiate<Node3D>();
         player.Position = new Vector3(0, 3, 0);
@@ -107,6 +105,7 @@ public partial class TestLevel : Node3D
                 Puppet = p;
             }
         }
+
         player.QueueFree();
         if (Puppet != null)
         {
@@ -117,7 +116,6 @@ public partial class TestLevel : Node3D
 
     public void Join()
     {
-        GD.Print( "Joining on Address: " + ServerAddress);
         EnetPeer.CreateClient(ServerAddress, PORT);
         Multiplayer.MultiplayerPeer = EnetPeer;
     }
@@ -126,6 +124,9 @@ public partial class TestLevel : Node3D
     public void _on_puppet_models_child_entered_tree(Node node)
     {
         GD.Print("puppet added " + node.GetMultiplayerAuthority());
+
+        GD.Print(((PuppetPlayer)node).PuppetId + " " + this.Multiplayer.GetUniqueId());
+
         if (((PuppetPlayer)node).PuppetId == this.Multiplayer.GetUniqueId())
         {
             ((Node3D)node).Visible = false;
