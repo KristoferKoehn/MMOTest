@@ -109,6 +109,11 @@ public partial class TestLevel : Node3D
         puppet.PuppetId = PeerId;
         puppet.SetMultiplayerAuthority(1);
         this.GetNode<Node>(PuppetNodePath).AddChild(puppet);
+        if (PeerId == Multiplayer.GetUniqueId())
+        {
+            puppet.Visible = false;
+            GD.Print("make invisible");
+        }
 
     }
 
@@ -120,7 +125,7 @@ public partial class TestLevel : Node3D
             if (p.PuppetId == PeerId)
             {
                 Puppet = p;
-
+                GD.Print($"{p.Name} deleted");
             }
         }
 
@@ -143,7 +148,7 @@ public partial class TestLevel : Node3D
         GD.Print("client model added " + node.GetMultiplayerAuthority());
         if (node.GetMultiplayerAuthority() != this.Multiplayer.GetUniqueId())
         {
-            //((Node3D)node).Visible = false;
+            ((Node3D)node).Visible = false;
         }
     }
 
