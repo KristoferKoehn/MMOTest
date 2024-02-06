@@ -54,3 +54,4 @@ _spawnable_scenes = PackedStringArray("res://scenes/abilities/TestAbility.tscn")
 spawn_path = NodePath("../AbilityModels")
 
 [connection signal="child_entered_tree" from="PuppetModels" to="." method="_on_puppet_models_child_entered_tree"]
+[connection signal="child_entered_tree" from="ClientModels" to="." method="_on_client_models_child_entered_tree"]

@@ -112,23 +112,20 @@ public partial class TestLevel : Node3D
 
     public void _on_puppet_models_child_entered_tree(Node node)
     {
-        if (node is Node3D)
+
+        if (node.GetMultiplayerAuthority() == this.Multiplayer.GetUniqueId())
         {
-            if (node.GetMultiplayerAuthority() == this.Multiplayer.GetUniqueId())
-            {
-                ((Node3D)node).Visible = false;
-            }
+            ((Node3D)node).Visible = false;
         }
+
     }
 
     public void _on_client_models_child_entered_tree(Node node)
     {
-        if (node is Node3D)
+        GD.Print("called");
+        if (node.GetMultiplayerAuthority() == this.Multiplayer.GetUniqueId())
         {
-            if (node.GetMultiplayerAuthority() == this.Multiplayer.GetUniqueId())
-            {
-                ((Node3D)node).Visible = true;
-            }
+            ((Node3D)node).Visible = true;
         }
     }
 
