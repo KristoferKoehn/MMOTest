@@ -36,7 +36,6 @@ public partial class TestLevel : Node3D
         {
             Join();
         }
-
     }
 
     public override void _Process(double delta)
@@ -57,7 +56,6 @@ public partial class TestLevel : Node3D
         t.Timeout += Connector.HostRefresh;
 
     }
-
 
     public void PeerHost()
     {
@@ -92,6 +90,8 @@ public partial class TestLevel : Node3D
         puppet.GetNode<MultiplayerSynchronizer>("MultiplayerSynchronizer").SetVisibilityFor((int)PeerId, false);
         this.GetNode<Node>(PuppetNodePath).AddChild(puppet);
         puppet.Position = new Vector3(0, 3, 0);
+        GD.Print("join func on peer " + Multiplayer.GetUniqueId());
+
     }
 
     public void RemovePlayer(long PeerId) {
@@ -104,9 +104,32 @@ public partial class TestLevel : Node3D
 
     public void Join()
     {
-        
         GD.Print( "Joining on Address: " + ServerAddress);
         EnetPeer.CreateClient(ServerAddress, PORT);
         Multiplayer.MultiplayerPeer = EnetPeer;
     }
+
+
+    public void _on_puppet_models_child_entered_tree(Node node)
+    {
+        if (node is Node3D)
+        {
+            if (node.GetMultiplayerAuthority() == this.Multiplayer.GetUniqueId())
+            {
+                ((Node3D)node).Visible = false;
+            }
+        }
+    }
+
+    public void _on_client_models_child_entered_tree(Node node)
+    {
+        if (node is Node3D)
+        {
+            if (node.GetMultiplayerAuthority() == this.Multiplayer.GetUniqueId())
+            {
+                ((Node3D)node).Visible = true;
+            }
+        }
+    }
+
 }
