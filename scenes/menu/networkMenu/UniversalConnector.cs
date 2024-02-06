@@ -100,7 +100,7 @@ public class UniversalConnector
         string msg = SendCommand($"{{\"request_type\": \"join\",\"data\": {{\"unique_identifier\": \"{UUID}\"}}}}");
         //GD.Print(msg);
         JsonElement jso = Utf8StringToJson(msg);
-        GD.Print(jso.GetProperty("data").GetProperty("ip").ToString());
+        //GD.Print(jso.GetProperty("data").GetProperty("ip").ToString());
         return jso.GetProperty("data").GetProperty("ip").ToString();
     }
 

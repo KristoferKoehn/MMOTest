@@ -47,7 +47,7 @@ public partial class TestLevel : Node3D
 
         foreach (PuppetPlayer p in GetNode<Node>("PuppetModels").GetChildren())
         {
-            p.GlobalPosition = GetNode<Node>("ClientModels").GetNode<Node3D>(p.PuppetId.ToString()).GlobalPosition;
+            p.GlobalPosition = GetNode<Node>("ClientModels").GetNode<Node3D>(p.TrackingPeerId.ToString()).GlobalPosition;
         }
 
     }
@@ -101,16 +101,10 @@ public partial class TestLevel : Node3D
         puppet.GetNode<MultiplayerSynchronizer>("MultiplayerSynchronizer").SetVisibilityFor((int)PeerId, false);
         puppet.Name = puppet.Name + PeerId.ToString();
         puppet.Position = new Vector3(0, 3, 0);
-        puppet.PuppetId = PeerId;
+        puppet.TrackingPeerId = PeerId;
         this.GetNode<Node>(PuppetNodePath).AddChild(puppet);
         GD.Print((int)PeerId + " " + Multiplayer.GetUniqueId());
-
-        if ((int)PeerId != Multiplayer.GetUniqueId())
-        {
-            puppet.Visible = true;
-            GD.Print("make invisible");
-        }
-
+        
     }
 
     public void RemovePlayer(long PeerId) {
@@ -118,7 +112,7 @@ public partial class TestLevel : Node3D
         PuppetPlayer Puppet = null;
         foreach (PuppetPlayer p in this.GetNode<Node>(PuppetNodePath).GetChildren())
         {
-            if (p.PuppetId == PeerId)
+            if (p.TrackingPeerId == PeerId)
             {
                 Puppet = p;
             }
@@ -140,11 +134,23 @@ public partial class TestLevel : Node3D
 
     public void _on_client_models_child_entered_tree(Node node)
     {
-        GD.Print("client model added " + node.GetMultiplayerAuthority());
         if (node.GetMultiplayerAuthority() != this.Multiplayer.GetUniqueId())
         {
             ((Node3D)node).Visible = false;
         }
     }
+
+    public void _on_puppet_models_child_entered_tree(Node node)
+    {
+        PuppetPlayer p = ((PuppetPlayer)node);
+        p.SimulationPeerId = this.Multiplayer.GetUniqueId();
+        GD.Print(this.Multiplayer.GetUniqueId() + " " + p.TrackingPeerId);
+        if (p.SimulationPeerId == p.TrackingPeerId)
+        {
+            p.Visible = false;
+            GD.Print("made invis");
+        }
+    }
+
 
 }
