@@ -50,12 +50,6 @@ public partial class TestLevel : Node3D
             p.GlobalPosition = GetNode<Node>("ClientModels").GetNode<Node3D>(p.PuppetId.ToString()).GlobalPosition;
         }
 
-
-        foreach (Node3D n in GetNode<Node>("ClientModels").GetChildren())
-        {
-            GD.Print(n.GetMultiplayerAuthority() + " at " + n.GlobalPosition.ToString());
-        }
-
     }
 
     public void HeadlessHost()
@@ -111,9 +105,9 @@ public partial class TestLevel : Node3D
         this.GetNode<Node>(PuppetNodePath).AddChild(puppet);
         GD.Print((int)PeerId + " " + Multiplayer.GetUniqueId());
 
-        if ((int)PeerId == Multiplayer.GetUniqueId())
+        if ((int)PeerId != Multiplayer.GetUniqueId())
         {
-            puppet.Visible = false;
+            puppet.Visible = true;
             GD.Print("make invisible");
         }
 
