@@ -98,12 +98,12 @@ public partial class TestLevel : Node3D
         player.Position = new Vector3(0, 3, 0);
         player.Name = PeerId.ToString();
         player.SetMultiplayerAuthority((int)PeerId);
-        //player.GetNode<MultiplayerSynchronizer>("MultiplayerSynchronizer").SetVisibilityFor(1, true);
-        //player.GetNode<MultiplayerSynchronizer>("MultiplayerSynchronizer").PublicVisibility = false;
+        player.GetNode<MultiplayerSynchronizer>("MultiplayerSynchronizer").PublicVisibility = false;
+        player.GetNode<MultiplayerSynchronizer>("MultiplayerSynchronizer").SetVisibilityFor(1, true);
         this.GetNode<Node>(ClientNodePath).AddChild(player);
 
         PuppetPlayer puppet = PuppetPlayer.Instantiate<PuppetPlayer>();
-        //puppet.GetNode<MultiplayerSynchronizer>("MultiplayerSynchronizer").SetVisibilityFor((int)PeerId, false);
+        puppet.GetNode<MultiplayerSynchronizer>("MultiplayerSynchronizer").SetVisibilityFor((int)PeerId, false);
         puppet.Name = puppet.Name + PeerId.ToString();
         puppet.Position = new Vector3(0, 3, 0);
         puppet.PuppetId = PeerId;
@@ -143,7 +143,7 @@ public partial class TestLevel : Node3D
         GD.Print("client model added " + node.GetMultiplayerAuthority());
         if (node.GetMultiplayerAuthority() != this.Multiplayer.GetUniqueId())
         {
-            ((Node3D)node).Visible = false;
+            //((Node3D)node).Visible = false;
         }
     }
 
