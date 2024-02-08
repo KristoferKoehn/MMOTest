@@ -132,25 +132,18 @@ public partial class TestLevel : Node3D
         Multiplayer.MultiplayerPeer = EnetPeer;
     }
 
-    public void _on_client_models_child_entered_tree(Node node)
-    {
-        if (node.GetMultiplayerAuthority() != this.Multiplayer.GetUniqueId())
-        {
-            ((Node3D)node).Visible = false;
-        }
-    }
-
-    public void _on_puppet_models_child_entered_tree(Node node)
-    {
-        PuppetPlayer p = ((PuppetPlayer)node);
-        p.SimulationPeerId = this.Multiplayer.GetUniqueId();
-    }
 
     [Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = false, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
     public void CastAbility(string SceneName, float[] args)
     {
         if(host)
         {
+            TestAbility fb = GD.Load<PackedScene>("res://scenes/abilities/TestAbility.tscn").Instantiate<TestAbility>();
+            fb.ApplyHost(host);
+            Vector3 position = new Vector3(args[0], args[1], args[2]);
+            Vector3 velocity = new Vector3(args[3], args[4], args[5]);
+            fb.Position = position + velocity * 2;
+            GetNode<Node>("AbilityModels").AddChild(fb);
             GD.Print("server detected user activated ability " + SceneName + " with " + args.Length + " length arg");
             GD.Print("pos x" + args[0]);
             GD.Print("pos y" + args[1]);
@@ -166,5 +159,24 @@ public partial class TestLevel : Node3D
     {
         RpcId(1, "CastAbility", SceneName, args);
     }
+    public void _on_client_models_child_entered_tree(Node node)
+    {
+        if (node.GetMultiplayerAuthority() != this.Multiplayer.GetUniqueId())
+        {
+            ((Node3D)node).Visible = false;
+        }
+    }
 
+    public void _on_puppet_models_child_entered_tree(Node node)
+    {
+        PuppetPlayer p = ((PuppetPlayer)node);
+        p.SimulationPeerId = this.Multiplayer.GetUniqueId();
+    }
+
+    public void _on_ability_models_child_entered_tree(Node node)
+    {
+        TestAbility t = (TestAbility)node;
+        t.ApplyHost(host);
+        t.ApplyVisibility(!headless);
+    }
 }
