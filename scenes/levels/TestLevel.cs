@@ -146,5 +146,14 @@ public partial class TestLevel : Node3D
         p.SimulationPeerId = this.Multiplayer.GetUniqueId();
     }
 
+    [Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = false, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
+    public void CastAbility(string SceneName, float[] args)
+    {
+        if(host)
+        {
+            GD.Print("server detected user activated ability " + SceneName + " with " + args.Length + " length arg");
+        }
+    }
+
 
 }
