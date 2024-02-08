@@ -8,7 +8,7 @@ public partial class TestAbility : RigidBody3D
 
     public override void _EnterTree()
     {
-        this.Visible = false;
+        //this.Visible = false;
     }
 
 
