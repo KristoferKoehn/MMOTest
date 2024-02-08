@@ -21,7 +21,7 @@ public partial class TestAbility : RigidBody3D
     {
         if (host)
         {
-            this.GetNode<CollisionShape3D>("MeshInstance3D/Area3D/CollisionShape3D").Disabled = false;
+            this.GetNode<CollisionShape3D>("CollisionShape3D").Disabled = false;
         }
     }
 
