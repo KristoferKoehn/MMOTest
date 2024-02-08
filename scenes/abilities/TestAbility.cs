@@ -20,13 +20,8 @@ public partial class TestAbility : RigidBody3D
     public void ApplyHost(bool host)
     {
         GD.Print("Collision: " + host);
-        if (host)
-        {
-            this.GetNode<CollisionShape3D>("CollisionShape3D").Disabled = false;
-        } else
-        {
-            this.GetNode<CollisionShape3D>("CollisionShape3D").Disabled = true;
-        }
+        this.GetNode<Area3D>("Area3D").Monitoring = host;
+        this.GetNode<Area3D>("Area3D").Monitorable = host;
     }
 
     public void ApplyVisibility(bool visible)
