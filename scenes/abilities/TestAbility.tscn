@@ -1,8 +1,14 @@
-[gd_scene load_steps=5 format=3 uid="uid://bf0223hldf5n1"]
+[gd_scene load_steps=6 format=3 uid="uid://bf0223hldf5n1"]
 
 [ext_resource type="Script" path="res://scenes/abilities/TestAbility.cs" id="1_a0ta4"]
 
 [sub_resource type="SphereMesh" id="SphereMesh_imrvu"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_v6lc1"]
+transparency = 4
+albedo_color = Color(1, 0.294118, 0, 0.847059)
+emission_enabled = true
+emission = Color(1, 0.372549, 0, 1)
 
 [sub_resource type="SphereShape3D" id="SphereShape3D_v0eie"]
 radius = 0.500084
@@ -16,10 +22,12 @@ properties/1/spawn = true
 properties/1/replication_mode = 1
 
 [node name="TestAbility" type="RigidBody3D"]
+gravity_scale = 0.6
 script = ExtResource("1_a0ta4")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="."]
 mesh = SubResource("SphereMesh_imrvu")
+surface_material_override/0 = SubResource("StandardMaterial3D_v6lc1")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
 shape = SubResource("SphereShape3D_v0eie")

@@ -142,7 +142,7 @@ public partial class TestLevel : Node3D
             
 
             fb.ApplyHost(host);
-            Vector3 position = new Vector3(args[0], args[1] + 0.5f, args[2]);
+            Vector3 position = new Vector3(args[0], args[1], args[2]);
             Vector3 velocity = new Vector3(args[3], args[4], args[5]);
             fb.Position = position + velocity * 2;
             fb.LinearVelocity = velocity * 20;
