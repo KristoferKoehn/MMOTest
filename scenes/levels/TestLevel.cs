@@ -143,6 +143,7 @@ public partial class TestLevel : Node3D
             Vector3 position = new Vector3(args[0], args[1], args[2]);
             Vector3 velocity = new Vector3(args[3], args[4], args[5]);
             fb.Position = position + velocity * 2;
+            fb.LinearVelocity = velocity * 20;
             GetNode<Node>("AbilityModels").AddChild(fb);
             GD.Print("server detected user activated ability " + SceneName + " with " + args.Length + " length arg");
             GD.Print("pos x" + args[0]);
@@ -151,7 +152,6 @@ public partial class TestLevel : Node3D
             GD.Print("vel x" + args[3]);
             GD.Print("vel y" + args[4]);
             GD.Print("vel z" + args[5]);
-
         }
     }
 

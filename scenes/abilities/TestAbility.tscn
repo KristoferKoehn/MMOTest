@@ -1,4 +1,4 @@
-[gd_scene load_steps=4 format=3 uid="uid://bf0223hldf5n1"]
+[gd_scene load_steps=5 format=3 uid="uid://bf0223hldf5n1"]
 
 [ext_resource type="Script" path="res://scenes/abilities/TestAbility.cs" id="1_a0ta4"]
 
@@ -6,6 +6,14 @@
 
 [sub_resource type="SphereShape3D" id="SphereShape3D_v0eie"]
 radius = 0.500084
+
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_6ap8y"]
+properties/0/path = NodePath(".:position")
+properties/0/spawn = true
+properties/0/replication_mode = 1
+properties/1/path = NodePath(".:linear_velocity")
+properties/1/spawn = true
+properties/1/replication_mode = 1
 
 [node name="TestAbility" type="RigidBody3D"]
 script = ExtResource("1_a0ta4")
@@ -15,3 +23,6 @@ mesh = SubResource("SphereMesh_imrvu")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
 shape = SubResource("SphereShape3D_v0eie")
+
+[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
+replication_config = SubResource("SceneReplicationConfig_6ap8y")
