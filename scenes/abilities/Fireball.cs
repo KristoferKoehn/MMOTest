@@ -1,7 +1,7 @@
 using Godot;
 using System;
 
-public partial class TestAbility : RigidBody3D
+public partial class Fireball : RigidBody3D, IAbility
 {
 
     public bool host = false;
@@ -19,24 +19,21 @@ public partial class TestAbility : RigidBody3D
 
     public void ApplyHost(bool host)
     {
-        GD.Print("Collision: " + host);
         this.GetNode<Area3D>("Area3D").Monitoring = host;
         this.GetNode<Area3D>("Area3D").Monitorable = host;
     }
 
-    public void ApplyVisibility(bool visible)
+    public void IsVisible(bool visible)
     {
-        if (visible)
-        {
-            this.Visible = true;
-        }
+        this.Visible = visible;
     }
 
     public void _on_area_3d_body_entered(Node node)
     {
         GD.Print("Fireball Collided!!");
         this.QueueFree();
-    }
 
+
+    }
 
 }

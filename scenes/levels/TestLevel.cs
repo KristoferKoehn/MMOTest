@@ -138,7 +138,7 @@ public partial class TestLevel : Node3D
     {
         if(host)
         {
-            TestAbility fb = GD.Load<PackedScene>("res://scenes/abilities/TestAbility.tscn").Instantiate<TestAbility>();
+            Fireball fb = GD.Load<PackedScene>($"res://scenes/abilities/{SceneName}.tscn").Instantiate<Fireball>();
             Vector3 position = new Vector3(args[0], args[1], args[2]);
             Vector3 velocity = new Vector3(args[3], args[4], args[5]);
             fb.Position = position + velocity * 2;
@@ -174,8 +174,10 @@ public partial class TestLevel : Node3D
 
     public void _on_ability_models_child_entered_tree(Node node)
     {
-        TestAbility t = (TestAbility)node;
+        
+
+        IAbility t = (IAbility)node;
         t.ApplyHost(host);
-        t.ApplyVisibility(!headless);
+        t.SetVisible(!headless);
     }
 }

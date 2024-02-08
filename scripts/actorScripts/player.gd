@@ -72,7 +72,7 @@ func _physics_process(delta):
 			animation_player.play("kick")
 			var point: Vector3  = (rayCast_3d.global_position - camera_3d.global_position).normalized()
 			var arr = [position.x, position.y + 1.5, position.z, point.x, point.y, point.z]
-			get_node("../../").CastAbilityCall("fireball", arr)
+			get_node("../../").CastAbilityCall("Fireball", arr)
 			isPositionLocked = true
 
 	# Get the input direction and handle the movement/deceleration.
