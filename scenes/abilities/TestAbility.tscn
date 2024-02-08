@@ -3,6 +3,8 @@
 [ext_resource type="Script" path="res://scenes/abilities/TestAbility.cs" id="1_a0ta4"]
 
 [sub_resource type="SphereMesh" id="SphereMesh_imrvu"]
+radius = 0.3
+height = 0.6
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_v6lc1"]
 transparency = 4
@@ -11,7 +13,7 @@ emission_enabled = true
 emission = Color(1, 0.372549, 0, 1)
 
 [sub_resource type="SphereShape3D" id="SphereShape3D_v0eie"]
-radius = 0.500084
+radius = 0.3
 
 [sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_6ap8y"]
 properties/0/path = NodePath(".:position")
