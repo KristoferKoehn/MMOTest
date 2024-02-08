@@ -70,8 +70,9 @@ func _physics_process(delta):
 	if Input.is_action_just_pressed("melee"):
 		if !isPositionLocked and animation_player.current_animation != "kick": # and is_on_floor(): # We can add this and is on floor for our own sanity. It depends on what kind of canned animation we are doing.
 			animation_player.play("kick")
-			var arr = [0.0,0.0,0.0,0.0]
-			get_node("../../").CastAbility("test", arr).rpc()
+			var point: Vector3  = (rayCast_3d.get_collision_point() - camera_3d.position).normalized()
+			var arr = [position.x,position.y,position.z,point.x,point.y,point.z]
+			get_node("../../").CastAbilityCall("fireball", arr)
 			isPositionLocked = true
 
 	# Get the input direction and handle the movement/deceleration.

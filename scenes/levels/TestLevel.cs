@@ -152,8 +152,19 @@ public partial class TestLevel : Node3D
         if(host)
         {
             GD.Print("server detected user activated ability " + SceneName + " with " + args.Length + " length arg");
+            GD.Print("pos x" + args[0]);
+            GD.Print("pos y" + args[1]);
+            GD.Print("pos z" + args[2]);
+            GD.Print("vel x" + args[3]);
+            GD.Print("vel y" + args[4]);
+            GD.Print("vel z" + args[5]);
+
         }
     }
 
+    public void CastAbilityCall(string SceneName, float[] args)
+    {
+        RpcId(1, "CastAbility", SceneName, args);
+    }
 
 }
