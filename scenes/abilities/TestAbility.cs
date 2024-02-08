@@ -37,7 +37,7 @@ public partial class TestAbility : RigidBody3D
         }
     }
 
-    public void _on_body_entered(Node node)
+    public void _on_area_3d_body_entered(Node node)
     {
         GD.Print("Fireball Collided!!");
         this.QueueFree();
