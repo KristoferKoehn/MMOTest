@@ -50,7 +50,7 @@ _spawnable_scenes = PackedStringArray("res://scenes/actorScenes/player.tscn")
 spawn_path = NodePath("../ClientModels")
 
 [node name="MultiplayerSpawner3" type="MultiplayerSpawner" parent="."]
-_spawnable_scenes = PackedStringArray("res://scenes/abilities/TestAbility.tscn")
+_spawnable_scenes = PackedStringArray("res://scenes/abilities/Fireball.tscn")
 spawn_path = NodePath("../AbilityModels")
 
 [connection signal="child_entered_tree" from="PuppetModels" to="." method="_on_puppet_models_child_entered_tree"]

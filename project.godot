@@ -22,7 +22,8 @@ project/assembly_name="MMOTest"
 [file_customization]
 
 folder_colors={
-"res://scenes/abilities/": "red"
+"res://scenes/abilities/": "red",
+"res://scenes/abilities/Abstractions/": "orange"
 }
 
 [input]

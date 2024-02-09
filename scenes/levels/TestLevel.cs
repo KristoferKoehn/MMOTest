@@ -138,11 +138,7 @@ public partial class TestLevel : Node3D
     {
         if(host)
         {
-            Fireball fb = GD.Load<PackedScene>($"res://scenes/abilities/{SceneName}.tscn").Instantiate<Fireball>();
-            Vector3 position = new Vector3(args[0], args[1], args[2]);
-            Vector3 velocity = new Vector3(args[3], args[4], args[5]);
-            fb.Position = position + velocity * 2;
-            fb.LinearVelocity = velocity * 20;
+            AbstractAbility fb = GD.Load<PackedScene>($"res://scenes/abilities/{SceneName}.tscn").Instantiate<AbstractAbility>();
             GetNode<Node>("AbilityModels").AddChild(fb, forceReadableName: true);
             GD.Print("server detected user activated ability " + SceneName + " with " + args.Length + " length arg");
             GD.Print("pos x" + args[0]);
