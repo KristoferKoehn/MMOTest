@@ -12,10 +12,7 @@ public partial class FireballExplosion : AbstractAbility
     {
         Tween t = CreateTween();
         t.TweenProperty(this, "scale", new Vector3(20,20,20), ExplosionSpeed);
-        if (HostDelete)
-        {
-            t.Finished += QueueFree;
-        }
+        t.Finished += QueueFree;
         t.Play();
 
     }
