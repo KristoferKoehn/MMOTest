@@ -40,8 +40,6 @@ public partial class Fireball : AbstractAbility
     {
         GD.Print("Fireball Collided!!");
         this.QueueFree();
-
-
     }
 
 }
