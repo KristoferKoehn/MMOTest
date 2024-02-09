@@ -4,17 +4,6 @@ using System;
 public partial class Fireball : AbstractAbility
 {
 
-    public override void _EnterTree()
-    {
-        //this.Visible = false;
-    }
-
-
-    public override void _Ready()
-    {
-
-    }
-
     public override void Initialize(float[] args, int CasterAuthority, Actor CasterOwner)
     {
         Vector3 position = new Vector3(args[0], args[1], args[2]);
@@ -25,11 +14,8 @@ public partial class Fireball : AbstractAbility
 
     public override void ApplyHost(bool Host)
     {
-        GD.Print("Applying Host: " + Host);
         this.GetNode<Area3D>("Area3D").Monitoring = Host;
         this.GetNode<Area3D>("Area3D").Monitorable = Host;
-        GD.Print("Monitoring: " + this.GetNode<Area3D>("Area3D").Monitoring);
-        GD.Print("Monitorable: " + this.GetNode<Area3D>("Area3D").Monitorable);
     }
 
     public override void SetVisible(bool Visible)
@@ -40,6 +26,8 @@ public partial class Fireball : AbstractAbility
     public void _on_area_3d_body_entered(Node3D node)
     {
         GD.Print("Fireball Collided!!");
+        float[] args = { this.Position.X, this.Position.Y, this.Position.Z };
+        this.GetParent<Node>().GetParent<TestLevel>().CastAbility("FireballExplosion", args);
         this.QueueFree();
     }
 
