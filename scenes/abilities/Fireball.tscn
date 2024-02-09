@@ -2,9 +2,6 @@
 
 [ext_resource type="Script" path="res://scenes/abilities/Fireball.cs" id="1_j4lpo"]
 
-[sub_resource type="SphereShape3D" id="SphereShape3D_v0eie"]
-radius = 0.333907
-
 [sub_resource type="SphereMesh" id="SphereMesh_imrvu"]
 radius = 0.3
 height = 0.6
@@ -23,12 +20,12 @@ properties/1/path = NodePath(".:linear_velocity")
 properties/1/spawn = true
 properties/1/replication_mode = 1
 
+[sub_resource type="SphereShape3D" id="SphereShape3D_v0eie"]
+radius = 0.431379
+
 [node name="TestAbility" type="RigidBody3D"]
 gravity_scale = 0.6
 script = ExtResource("1_j4lpo")
-
-[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
-shape = SubResource("SphereShape3D_v0eie")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="."]
 mesh = SubResource("SphereMesh_imrvu")

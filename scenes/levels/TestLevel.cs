@@ -141,13 +141,6 @@ public partial class TestLevel : Node3D
             AbstractAbility fb = GD.Load<PackedScene>($"res://scenes/abilities/{SceneName}.tscn").Instantiate<AbstractAbility>();
             fb.Initialize(args, CasterAuthority:0, CasterOwner:null);
             GetNode<Node>("AbilityModels").AddChild(fb, forceReadableName: true);
-            GD.Print("server detected user activated ability " + SceneName + " with " + args.Length + " length arg");
-            GD.Print("pos x" + args[0]);
-            GD.Print("pos y" + args[1]);
-            GD.Print("pos z" + args[2]);
-            GD.Print("vel x" + args[3]);
-            GD.Print("vel y" + args[4]);
-            GD.Print("vel z" + args[5]);
         }
     }
 
