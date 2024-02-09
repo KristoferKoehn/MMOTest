@@ -155,6 +155,10 @@ public partial class TestLevel : Node3D
         {
             ((Node3D)node).Visible = false;
             ((Node3D)node).Position = new Vector3(0, -20, 0);
+        } else
+        {
+            RandomNumberGenerator rng = new RandomNumberGenerator();
+            ((Node3D)node).Position = new Vector3(rng.RandfRange(-20, -10), 3, rng.RandfRange(10, 20));
         }
     }
 
