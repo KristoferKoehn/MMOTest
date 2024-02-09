@@ -25,9 +25,8 @@ public partial class Fireball : AbstractAbility
 
     public void _on_area_3d_body_entered(Node3D node)
     {
-        GD.Print("Fireball Collided!!");
         float[] args = { this.Position.X, this.Position.Y, this.Position.Z };
-        RpcId(1, "CastAbility", "FireballExplosion", args);
+        this.GetParent().GetParent<TestLevel>().RpcId(1, "CastAbility", "FireballExplosion", args);
         //this.GetParent<Node>().GetParent<TestLevel>().CastAbility("FireballExplosion", args);
         this.QueueFree();
     }
