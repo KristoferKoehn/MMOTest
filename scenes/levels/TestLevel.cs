@@ -148,6 +148,7 @@ public partial class TestLevel : Node3D
     {
         RpcId(1, "CastAbility", SceneName, args);
     }
+
     public void _on_client_models_child_entered_tree(Node node)
     {
         if (node.GetMultiplayerAuthority() != this.Multiplayer.GetUniqueId())
