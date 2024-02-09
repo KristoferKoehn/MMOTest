@@ -4,8 +4,6 @@ using System;
 public partial class Fireball : AbstractAbility
 {
 
-    public bool host = false;
-
     public override void _EnterTree()
     {
         //this.Visible = false;
@@ -27,9 +25,9 @@ public partial class Fireball : AbstractAbility
 
     public override void ApplyHost(bool Host)
     {
-        GD.Print("Applying Host");
-        this.GetNode<Area3D>("Area3D").Monitoring = host;
-        this.GetNode<Area3D>("Area3D").Monitorable = host;
+        GD.Print("Applying Host: " + Host);
+        this.GetNode<Area3D>("Area3D").Monitoring = Host;
+        this.GetNode<Area3D>("Area3D").Monitorable = Host;
         GD.Print("Monitoring: " + this.GetNode<Area3D>("Area3D").Monitoring);
         GD.Print("Monitorable: " + this.GetNode<Area3D>("Area3D").Monitorable);
     }
