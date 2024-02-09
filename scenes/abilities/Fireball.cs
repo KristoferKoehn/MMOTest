@@ -27,7 +27,6 @@ public partial class Fireball : AbstractAbility
     {
         float[] args = { this.Position.X, this.Position.Y, this.Position.Z };
         this.GetParent().GetParent<TestLevel>().RpcId(1, "CastAbility", "FireballExplosion", args);
-        //this.GetParent<Node>().GetParent<TestLevel>().CastAbility("FireballExplosion", args);
         this.QueueFree();
     }
 

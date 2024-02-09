@@ -5,16 +5,17 @@ public partial class FireballExplosion : AbstractAbility
 {
     private bool HostDelete = false;
 
+    [Export]
+    private float ExplosionSpeed = 1.7f;
 
     public override void _EnterTree()
     {
         Tween t = CreateTween();
-        t.TweenProperty(this, "scale", new Vector3(13,13,13), 2);
+        t.TweenProperty(this, "scale", new Vector3(20,20,20), ExplosionSpeed);
         if (HostDelete)
         {
             t.Finished += QueueFree;
         }
-
         t.Play();
 
     }
