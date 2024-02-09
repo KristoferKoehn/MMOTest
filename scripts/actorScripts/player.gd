@@ -26,7 +26,7 @@ var isPositionLocked = false
 
 func _enter_tree():
 	# converting player controller will break this. Don't worry about it
-	set_multiplayer_authority(str(name).to_int())
+	visible = false
 
 func _ready():
 	# this is more stuff that will break when converting to model/controller

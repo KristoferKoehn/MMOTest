@@ -154,6 +154,7 @@ public partial class TestLevel : Node3D
         if (node.GetMultiplayerAuthority() != this.Multiplayer.GetUniqueId())
         {
             ((Node3D)node).Visible = false;
+            ((Node3D)node).Position = new Vector3(0, -20, 0);
         }
     }
 
@@ -168,6 +169,5 @@ public partial class TestLevel : Node3D
         GD.Print("CHild entered tree. Host: " + host);
         AbstractAbility t = (AbstractAbility)node;
         t.ApplyHost(host);
-        //t.SetVisible(!headless);
     }
 }
