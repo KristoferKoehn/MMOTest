@@ -23,7 +23,7 @@ properties/1/replication_mode = 1
 [sub_resource type="SphereShape3D" id="SphereShape3D_v0eie"]
 radius = 0.431379
 
-[node name="TestAbility" type="RigidBody3D"]
+[node name="Fireball" type="RigidBody3D"]
 gravity_scale = 0.6
 script = ExtResource("1_j4lpo")
 

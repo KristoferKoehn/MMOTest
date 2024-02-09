@@ -174,4 +174,10 @@ public partial class TestLevel : Node3D
         AbstractAbility t = (AbstractAbility)node;
         t.ApplyHost(host);
     }
+
+    public void _on_ability_spawner_despawned(Node node)
+    {
+        node.QueueFree();
+    }
+
 }
