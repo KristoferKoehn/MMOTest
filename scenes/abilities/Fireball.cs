@@ -28,8 +28,10 @@ public partial class Fireball : AbstractAbility
     public override void ApplyHost(bool Host)
     {
         GD.Print("Applying Host");
-        //this.GetNode<Area3D>("Area3D").Monitoring = host;
-        //this.GetNode<Area3D>("Area3D").Monitorable = host;
+        this.GetNode<Area3D>("Area3D").Monitoring = host;
+        this.GetNode<Area3D>("Area3D").Monitorable = host;
+        GD.Print("Monitoring: " + this.GetNode<Area3D>("Area3D").Monitoring);
+        GD.Print("Monitorable: " + this.GetNode<Area3D>("Area3D").Monitorable);
     }
 
     public override void SetVisible(bool Visible)
