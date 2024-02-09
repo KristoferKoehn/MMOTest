@@ -19,6 +19,10 @@ config/icon="res://icon.svg"
 
 project/assembly_name="MMOTest"
 
+[editor]
+
+movie_writer/movie_file="C:/Users/Kristofer/Documents/GodotMovieSave/test.avi"
+
 [file_customization]
 
 folder_colors={

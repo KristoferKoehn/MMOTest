@@ -9,7 +9,7 @@ public partial class Fireball : AbstractAbility
         Vector3 position = new Vector3(args[0], args[1], args[2]);
         Vector3 velocity = new Vector3(args[3], args[4], args[5]);
         this.Position = position + velocity * 2;
-        this.LinearVelocity = velocity * 20;
+        this.LinearVelocity = velocity * 30;
     }
 
     public override void ApplyHost(bool Host)
