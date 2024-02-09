@@ -37,7 +37,7 @@ public partial class Fireball : AbstractAbility
         this.Visible = Visible;
     }
 
-    public void _on_area_3d_body_entered(Node node)
+    public void _on_area_3d_body_entered(Node3D node)
     {
         GD.Print("Fireball Collided!!");
         this.QueueFree();
