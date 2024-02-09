@@ -172,7 +172,7 @@ public partial class TestLevel : Node3D
     {
         
 
-        IAbility t = (IAbility)node;
+        AbstractAbility t = (AbstractAbility)node;
         t.ApplyHost(host);
         t.SetVisible(!headless);
     }
