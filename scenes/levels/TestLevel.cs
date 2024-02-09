@@ -88,7 +88,7 @@ public partial class TestLevel : Node3D
     {
 
         Node3D player = PlayerController.Instantiate<Node3D>();
-        player.Position = new Vector3(0, 3, 0);
+        player.Position = new Vector3(3, 3, 0);
         player.Name = PeerId.ToString();
         player.GetNode<MultiplayerSynchronizer>("MultiplayerSynchronizer").PublicVisibility = false;
         player.GetNode<MultiplayerSynchronizer>("MultiplayerSynchronizer").SetVisibilityFor(1, true);
@@ -98,7 +98,7 @@ public partial class TestLevel : Node3D
         PuppetPlayer puppet = PuppetPlayer.Instantiate<PuppetPlayer>();
         //puppet.GetNode<MultiplayerSynchronizer>("MultiplayerSynchronizer").SetVisibilityFor((int)PeerId, false);
         puppet.Name = puppet.Name + PeerId.ToString();
-        puppet.Position = new Vector3(0, 3, 0);
+        puppet.Position = new Vector3(3, 3, 0);
         puppet.TrackingPeerId = PeerId;
         puppet.SetMultiplayerAuthority(1);
         this.GetNode<Node>(PuppetNodePath).AddChild(puppet);
