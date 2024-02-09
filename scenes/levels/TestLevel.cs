@@ -133,7 +133,7 @@ public partial class TestLevel : Node3D
     }
 
 
-    [Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = false, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
+    [Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
     public void CastAbility(string SceneName, float[] args)
     {
         if(host)
