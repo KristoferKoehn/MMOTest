@@ -177,7 +177,9 @@ public partial class TestLevel : Node3D
 
     public void _on_ability_spawner_despawned(Node node)
     {
-        node.QueueFree();
+        Timer T = new Timer();
+        T.Timeout += node.QueueFree;
+        T.Start(0.1);
     }
 
 }
