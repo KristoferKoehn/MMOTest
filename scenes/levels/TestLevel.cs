@@ -140,6 +140,7 @@ public partial class TestLevel : Node3D
         {
             AbstractAbility fb = GD.Load<PackedScene>($"res://scenes/abilities/{SceneName}.tscn").Instantiate<AbstractAbility>();
             fb.Initialize(args, CasterAuthority:0, CasterOwner:null);
+            fb.SetMultiplayerAuthority(1);
             GetNode<Node>("AbilityModels").AddChild(fb, forceReadableName: true);
         }
     }
@@ -177,9 +178,7 @@ public partial class TestLevel : Node3D
 
     public void _on_ability_spawner_despawned(Node node)
     {
-        Timer T = new Timer();
-        T.Timeout += node.QueueFree;
-        T.Start(0.1);
+
     }
 
 }
