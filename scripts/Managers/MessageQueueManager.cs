@@ -28,6 +28,7 @@ namespace MMOTest.scripts.Managers
                 {
                     AbstractAbility fb = GD.Load<PackedScene>($"res://scenes/abilities/{m.Property("spell").Value}.tscn").Instantiate<AbstractAbility>();
                     fb.Initialize(m);
+                    fb.SetMultiplayerAuthority(1);
                     SceneTreeRoot.GetNode<Node>("GameLoop/TestLevel/AbilityModels").AddChild(fb, forceReadableName: true);
                 }
                 //do something here

@@ -9,6 +9,7 @@ public partial class FireballExplosion : AbstractAbility
 
     [Export]
     private float ExplosionSpeed = 1.7f;
+    bool host;
 
     public override void _EnterTree()
     {
@@ -25,8 +26,9 @@ public partial class FireballExplosion : AbstractAbility
 
     public override void ApplyHost(bool Host)
     {
-        this.GetNode<Area3D>("Area3D").Monitoring = !Host;
-        this.GetNode<Area3D>("Area3D").Monitorable = !Host;
+        this.GetNode<Area3D>("Area3D").Monitoring = true;
+        this.GetNode<Area3D>("Area3D").Monitorable = true;
+        host = Host;
     }
 
     public override void Initialize(float[] args, int CasterAuthority, Actor CasterOwner)
@@ -41,11 +43,20 @@ public partial class FireballExplosion : AbstractAbility
 
     public void _on_area_3d_body_entered(Node3D node)
     {
+        
+
         if(node is Godot.CharacterBody3D)
         {
-            GD.Print("WE DID IT");
+            if (host)
+            {
+                // damage message
+            }
+            else
+            {
+                ((CharacterBody3D)node).Velocity += ((this.Position + node.Position).Normalized() + Vector3.Up).Normalized() * 20;
+                GD.Print("WE GET IT");
+            }
         }
-        //if node is player
-        //velocity = (center + position + up).normalized() * 20
+        
     }
 }
