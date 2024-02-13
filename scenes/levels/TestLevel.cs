@@ -220,7 +220,6 @@ public partial class TestLevel : Node3D
 
     public void _on_ability_models_child_entered_tree(Node node)
     {
-        GD.Print("CHild entered tree. Host: " + host);
         AbstractAbility t = (AbstractAbility)node;
         t.ApplyHost(host);
     }

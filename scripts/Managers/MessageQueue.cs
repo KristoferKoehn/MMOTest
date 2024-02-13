@@ -20,12 +20,7 @@ namespace MMOTest.scripts.Managers
 
         public static MessageQueue GetInstance()
         {
-
-       /*     if (instance == null)
-            {
-                instance = new MessageQueue();
-            }
-         */   return instance;
+            return instance;
         }
 
         public void AddMessage(JObject message)

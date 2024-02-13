@@ -21,22 +21,11 @@ namespace MMOTest.scripts.Managers
         public void ProcessMessages()
         {
             MessageQueue mq = MessageQueue.GetInstance();
-
-            if(mq == null)
-            {
-                GD.Print("NPDE");
-            }
-            
             while (mq.Count() > 0)
             {
-                GD.Print("Count of queue " + mq.Count());
                 JObject m = mq.PopMessage();
-                GD.Print(m == null);
-                GD.Print("PIECE OF SHIT");
-                GD.Print(m.Property("type").Value.ToString() + " == " + "cast");
                 if (m.Property("type").Value.ToString() == "cast")
                 {
-                    GD.Print(" DOES IT GET HERE?!");
                     AbstractAbility fb = GD.Load<PackedScene>($"res://scenes/abilities/{m.Property("spell").Value}.tscn").Instantiate<AbstractAbility>();
                     fb.Initialize(m);
                     SceneTreeRoot.GetNode<Node>("GameLoop/TestLevel/AbilityModels").AddChild(fb, forceReadableName: true);

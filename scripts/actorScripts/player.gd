@@ -1,4 +1,3 @@
-class_name player
 extends CharacterBody3D
 
 @onready var camera_mount = $cameraMount
