@@ -14,11 +14,13 @@ public partial class FireballExplosion : AbstractAbility
     public override void _EnterTree()
     {
         Tween t = CreateTween();
-        t.TweenProperty(this, "scale", new Vector3(20,20,20), ExplosionSpeed);
+        Tween G = CreateTween();
+        t.TweenProperty(this.GetNode<MeshInstance3D>("MeshInstance3D"), "scale", new Vector3(20,20,20), ExplosionSpeed);
         SphereShape3D sphereShape3D = (SphereShape3D)GetNode<CollisionShape3D>("Area3D/CollisionShape3D").Shape;
-        t.TweenProperty(sphereShape3D, "radius", 6.06, ExplosionSpeed);
-        t.Finished += QueueFree;
+        G.TweenProperty(sphereShape3D, "radius", 6.06f, ExplosionSpeed);
+        t.Finished += KillSelf;
         t.Play();
+        G.Play();
     }
 
     public override void Initialize(JObject obj)
@@ -43,6 +45,11 @@ public partial class FireballExplosion : AbstractAbility
         this.Visible = Visible;
     }
 
+    private void KillSelf()
+    {
+        this.QueueFree();
+    }
+
     public void _on_area_3d_body_entered(Node3D node)
     {
         
@@ -57,7 +64,7 @@ public partial class FireballExplosion : AbstractAbility
             }
             else
             {
-                ((CharacterBody3D)node).Velocity += ((this.Position + node.Position).Normalized() + Vector3.Up).Normalized() * 20;
+                ((CharacterBody3D)node).Velocity += ((this.Position - node.Position).Normalized() + new Vector3(0, 0.1f, 0)).Normalized() * 20;
                 GD.Print("WE GET IT");
             }
         }

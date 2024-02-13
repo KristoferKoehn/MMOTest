@@ -226,7 +226,7 @@ public partial class TestLevel : Node3D
 
     public void _on_ability_spawner_despawned(Node node)
     {
-        
+        GD.Print("Authority On Delete: " + node.GetMultiplayerAuthority());
     }
 
 }
