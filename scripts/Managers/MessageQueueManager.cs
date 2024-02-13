@@ -31,7 +31,8 @@ namespace MMOTest.scripts.Managers
             {
                 GD.Print("Count of queue " + mq.Count());
                 JObject m = mq.PopMessage();
-                GD.Print("Piece of shit " + m == null);
+                GD.Print(m == null);
+                GD.Print("PIECE OF SHIT");
                 if (m.Property("type").ToString() == "cast")
                 {
                     GD.Print(" DOES IT GET HERE?!");
