@@ -30,7 +30,7 @@ namespace MMOTest.scripts.Managers
 
         public void AddMessage(JObject message)
         {
-            GD.Print("ADDED " +  message.ToString());
+            //GD.Print("ADDED " +  message.ToString());
             queue.Enqueue(message);
         }
 
