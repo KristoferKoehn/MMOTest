@@ -63,7 +63,10 @@ public partial class TestLevel : Node3D
         
 
         // message queue manager processing
-        // 
+        if(messageQueueManager == null)
+        {
+            GD.Print("FUCK");
+        }
         messageQueueManager.ProcessMessages();
 
     }
