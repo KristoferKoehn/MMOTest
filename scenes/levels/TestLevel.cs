@@ -20,10 +20,15 @@ public partial class TestLevel : Node3D
     ENetMultiplayerPeer EnetPeer;
     PackedScene PuppetPlayer = GD.Load<PackedScene>("res://scenes/actorScenes/PuppetPlayer.tscn");
     PackedScene PlayerController = GD.Load<PackedScene>("res://scenes/actorScenes/player.tscn");
+    public override void _EnterTree()
+    {
+        messageQueueManager = new MessageQueueManager(this.GetTree().Root);
+    }
+
 
     public override void _Ready()
     {
-        messageQueueManager = new MessageQueueManager(this.GetTree().Root);
+        
         EnetPeer = new ENetMultiplayerPeer();
         if (OS.HasFeature("dedicated_server"))
         {
