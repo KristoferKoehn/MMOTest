@@ -33,6 +33,7 @@ namespace MMOTest.scripts.Managers
                 JObject m = mq.PopMessage();
                 GD.Print(m == null);
                 GD.Print("PIECE OF SHIT");
+                GD.Print(m.Property("type").ToString() + " == " + "cast");
                 if (m.Property("type").ToString() == "cast")
                 {
                     GD.Print(" DOES IT GET HERE?!");
