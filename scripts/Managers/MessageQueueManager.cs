@@ -26,9 +26,10 @@ namespace MMOTest.scripts.Managers
                 JObject m = mq.PopMessage();
                 if (m.Property("type").Value.ToString() == "cast")
                 {
+                    GD.Print(m.Property("spell").Value);
                     AbstractAbility fb = GD.Load<PackedScene>($"res://scenes/abilities/{m.Property("spell").Value}.tscn").Instantiate<AbstractAbility>();
-                    fb.Initialize(m);
                     fb.SetMultiplayerAuthority(1);
+                    fb.Initialize(m);
                     SceneTreeRoot.GetNode<Node>("GameLoop/TestLevel/AbilityModels").AddChild(fb, forceReadableName: true);
                 }
                 //do something here

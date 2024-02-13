@@ -15,6 +15,8 @@ public partial class FireballExplosion : AbstractAbility
     {
         Tween t = CreateTween();
         t.TweenProperty(this, "scale", new Vector3(20,20,20), ExplosionSpeed);
+        SphereShape3D sphereShape3D = (SphereShape3D)GetNode<CollisionShape3D>("Area3D/CollisionShape3D").Shape;
+        t.TweenProperty(sphereShape3D, "radius", 6.06, ExplosionSpeed);
         t.Finished += QueueFree;
         t.Play();
     }
@@ -47,6 +49,8 @@ public partial class FireballExplosion : AbstractAbility
 
         if(node is Godot.CharacterBody3D)
         {
+
+            GD.Print("We get here");
             if (host)
             {
                 // damage message
