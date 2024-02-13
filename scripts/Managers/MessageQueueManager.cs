@@ -14,7 +14,7 @@ namespace MMOTest.scripts.Managers
 
         public MessageQueueManager(Node SceneTreeRoot) {
             this.SceneTreeRoot = SceneTreeRoot;
-            MessageQueue.GetInstance();
+            ;
         }
         //get thing from queue
         //if spell, call spellcastmanager?
@@ -29,6 +29,7 @@ namespace MMOTest.scripts.Managers
             
             while (mq.Count() > 0)
             {
+                GD.Print(mq.Count());
                 JObject m = mq.PopMessage();
 
                 if (m.Property("Type").ToString() == "Cast")

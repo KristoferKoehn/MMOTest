@@ -22,9 +22,7 @@ public partial class TestLevel : Node3D
     PackedScene PlayerController = GD.Load<PackedScene>("res://scenes/actorScenes/player.tscn");
     public override void _EnterTree()
     {
-        GD.Print(messageQueueManager == null);
         messageQueueManager = new MessageQueueManager(this.GetTree().Root);
-        GD.Print(messageQueueManager == null);
     }
 
 
@@ -62,13 +60,7 @@ public partial class TestLevel : Node3D
             p.GlobalPosition = GetNode<Node>("ClientModels").GetNode<Node3D>(p.TrackingPeerId.ToString()).GlobalPosition;
         }
 
-        
 
-        // message queue manager processing
-        if(messageQueueManager == null)
-        {
-            GD.Print("FUCK");
-        }
         messageQueueManager.ProcessMessages();
 
     }
