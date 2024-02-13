@@ -60,6 +60,8 @@ public partial class TestLevel : Node3D
             p.GlobalPosition = GetNode<Node>("ClientModels").GetNode<Node3D>(p.TrackingPeerId.ToString()).GlobalPosition;
         }
 
+        
+
         // message queue manager processing
         // 
         messageQueueManager.ProcessMessages();

@@ -20,6 +20,11 @@ namespace MMOTest.scripts.Managers
         public void ProcessMessages()
         {
             MessageQueue mq = MessageQueue.GetInstance();
+            if(mq == null)
+            {
+                GD.Print("NPDE");
+            }
+            
 
             while (mq.Count() > 0)
             {
