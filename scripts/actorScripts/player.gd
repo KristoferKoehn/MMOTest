@@ -84,6 +84,7 @@ func _physics_process(delta):
 			dic["spell"] = "Fireball"
 			get_node("../../").SendMessageCall(JSON.stringify(dic))
 			isPositionLocked = true
+			
 	# Get the input direction and handle the movement/deceleration.
 	# As good practice, you should replace UI actions with custom gameplay actions.
 	var input_dir = Input.get_vector("left", "right", "forward", "backward")

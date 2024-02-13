@@ -61,6 +61,7 @@ public partial class TestLevel : Node3D
         }
 
 
+
         messageQueueManager.ProcessMessages();
 
     }
@@ -194,6 +195,7 @@ public partial class TestLevel : Node3D
     public void SendMessageCall(string message)
     {
         RpcId(1, "SendMessage", message);
+
     }
 
 

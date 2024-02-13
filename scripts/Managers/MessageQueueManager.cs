@@ -14,7 +14,7 @@ namespace MMOTest.scripts.Managers
 
         public MessageQueueManager(Node SceneTreeRoot) {
             this.SceneTreeRoot = SceneTreeRoot;
-            ;
+            
         }
         //get thing from queue
         //if spell, call spellcastmanager?
@@ -29,6 +29,8 @@ namespace MMOTest.scripts.Managers
             
             while (mq.Count() > 0)
             {
+                
+
                 GD.Print(mq.Count());
                 JObject m = mq.PopMessage();
                 GD.Print("Piece of shit " + m == null);
