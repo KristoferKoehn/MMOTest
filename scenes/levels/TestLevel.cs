@@ -198,14 +198,14 @@ public partial class TestLevel : Node3D
 
     }
 
-
     public void _on_client_models_child_entered_tree(Node node)
     {
         if (node.GetMultiplayerAuthority() != this.Multiplayer.GetUniqueId())
         {
             ((Node3D)node).Visible = false;
             ((Node3D)node).Position = new Vector3(0, -20, 0);
-        } else
+        } 
+        else
         {
             RandomNumberGenerator rng = new RandomNumberGenerator();
             ((Node3D)node).Position = new Vector3(rng.RandfRange(-20, -10), 3, rng.RandfRange(10, 20));
@@ -227,7 +227,7 @@ public partial class TestLevel : Node3D
 
     public void _on_ability_spawner_despawned(Node node)
     {
-
+        
     }
 
 }
