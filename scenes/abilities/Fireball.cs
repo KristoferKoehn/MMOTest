@@ -42,7 +42,7 @@ public partial class Fireball : AbstractAbility
     {
         JObject m = new JObject
         {
-            { "type", "Cast"},
+            { "type", "cast"},
             { "spell", "FireballExplosion"},
             { "posx", this.Position.X },
             { "posy", this.Position.Y },
