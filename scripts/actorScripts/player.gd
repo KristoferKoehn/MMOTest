@@ -80,7 +80,7 @@ func _physics_process(delta):
 			dic["velx"] = point.x
 			dic["vely"] = point.y
 			dic["velz"] = point.z
-			dic["type"] = "Cast"
+			dic["type"] = "cast"
 			dic["spell"] = "Fireball"
 			get_node("../../").SendMessageCall(JSON.stringify(dic))
 			isPositionLocked = true

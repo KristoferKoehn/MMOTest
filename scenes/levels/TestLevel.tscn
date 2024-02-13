@@ -19,7 +19,7 @@ tonemap_mode = 2
 albedo_texture = ExtResource("2_vyinc")
 uv1_triplanar = true
 
-[node name="Node3D" type="Node3D"]
+[node name="TestLevel" type="Node3D"]
 script = ExtResource("1_s7cfu")
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
