@@ -22,7 +22,6 @@ namespace MMOTest.scripts.Managers
         {
             MessageQueue mq = MessageQueue.GetInstance();
 
-            GD.Print("IN PROCESS MESSAGESs");
             if(mq == null)
             {
                 GD.Print("NPDE");
