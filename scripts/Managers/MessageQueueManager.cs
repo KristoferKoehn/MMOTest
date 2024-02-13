@@ -33,11 +33,11 @@ namespace MMOTest.scripts.Managers
                 JObject m = mq.PopMessage();
                 GD.Print(m == null);
                 GD.Print("PIECE OF SHIT");
-                GD.Print(m.Property("type").ToString() + " == " + "cast");
-                if (m.Property("type").ToString() == "cast")
+                GD.Print(m.Property("type").Value.ToString() + " == " + "cast");
+                if (m.Property("type").Value.ToString() == "cast")
                 {
                     GD.Print(" DOES IT GET HERE?!");
-                    AbstractAbility fb = GD.Load<PackedScene>($"res://scenes/abilities/{m.Property("spell")}.tscn").Instantiate<AbstractAbility>();
+                    AbstractAbility fb = GD.Load<PackedScene>($"res://scenes/abilities/{m.Property("spell").Value}.tscn").Instantiate<AbstractAbility>();
                     fb.Initialize(m);
                     SceneTreeRoot.GetNode<Node>("GameLoop/TestLevel/AbilityModels").AddChild(fb, forceReadableName: true);
                 }
