@@ -22,7 +22,9 @@ public partial class TestLevel : Node3D
     PackedScene PlayerController = GD.Load<PackedScene>("res://scenes/actorScenes/player.tscn");
     public override void _EnterTree()
     {
+        GD.Print(messageQueueManager == null);
         messageQueueManager = new MessageQueueManager(this.GetTree().Root);
+        GD.Print(messageQueueManager == null);
     }
 
 
