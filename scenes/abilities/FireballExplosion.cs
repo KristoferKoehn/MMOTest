@@ -1,5 +1,8 @@
 using Godot;
+using Newtonsoft.Json.Linq;
+using scripts.server;
 using System;
+
 
 public partial class FireballExplosion : AbstractAbility
 {
@@ -15,6 +18,11 @@ public partial class FireballExplosion : AbstractAbility
         t.Finished += QueueFree;
         t.Play();
 
+    }
+
+    public override void Initialize(JObject obj)
+    {
+        this.Position = new Vector3((float)obj.Property("posx"), (float)obj.Property("posy"), (float)obj.Property("posz"));
     }
 
 

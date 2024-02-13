@@ -72,7 +72,17 @@ func _physics_process(delta):
 			animation_player.play("kick")
 			var point: Vector3  = (rayCast_3d.global_position - camera_3d.global_position).normalized()
 			var arr = [position.x, position.y + 1.5, position.z, point.x, point.y, point.z]
-			get_node("../../").CastAbilityCall("Fireball", arr)
+			#get_node("../../").CastAbilityCall("Fireball", arr)
+			var dic = Dictionary()
+			dic["posx"] = position.x
+			dic["posy"] = position.y + 1.5
+			dic["posz"] = position.z
+			dic["velx"] = point.x
+			dic["vely"] = point.y
+			dic["velz"] = point.z
+			dic["type"] = "Cast"
+			dic["spell"] = "Fireball"
+			get_node("../../").SendMessageCall(dic.stringify())
 			isPositionLocked = true
 
 	# Get the input direction and handle the movement/deceleration.
@@ -94,7 +104,6 @@ func _physics_process(delta):
 			else:
 				velocity.x = move_toward(velocity.x, 0, SPEED)
 				velocity.z = move_toward(velocity.z, 0, SPEED)
-			
 		else:
 			if jetpackFuel < jetpackMaxFuel:
 				jetpackFuel += jetpackRefuelRate

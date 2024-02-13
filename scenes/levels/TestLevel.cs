@@ -1,5 +1,8 @@
 using Godot;
+using MMOTest.scripts.Managers;
+using Newtonsoft.Json.Linq;
 using System;
+using System.Runtime.CompilerServices;
 
 public partial class TestLevel : Node3D
 {
@@ -11,6 +14,8 @@ public partial class TestLevel : Node3D
     public bool headless = false;
     string PuppetNodePath = "PuppetModels";
     string ClientNodePath = "ClientModels";
+    MessageQueueManager messageQueueManager;
+    
 
     ENetMultiplayerPeer EnetPeer;
     PackedScene PuppetPlayer = GD.Load<PackedScene>("res://scenes/actorScenes/PuppetPlayer.tscn");
@@ -18,12 +23,12 @@ public partial class TestLevel : Node3D
 
     public override void _Ready()
     {
+        messageQueueManager = new MessageQueueManager(this.GetTree().Root);
         EnetPeer = new ENetMultiplayerPeer();
         if (OS.HasFeature("dedicated_server"))
         {
             headless = true;
         }
-
         if (host && !headless)
         {
             PeerHost();
@@ -49,6 +54,11 @@ public partial class TestLevel : Node3D
         {
             p.GlobalPosition = GetNode<Node>("ClientModels").GetNode<Node3D>(p.TrackingPeerId.ToString()).GlobalPosition;
         }
+
+        // message queue manager processing
+        // 
+        messageQueueManager.ProcessMessages();
+
     }
 
     public void HeadlessHost()
@@ -144,10 +154,43 @@ public partial class TestLevel : Node3D
         }
     }
 
+
+    [Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
+    public void SendMessage(string message)
+    {
+        JObject jsonMessagePayload = JObject.Parse(message);
+        MessageQueue.GetInstance().AddMessage(jsonMessagePayload);
+    }
+    /* 
+    Quest Manager stuff
+    public void Listener(SpellEvent ddd)
+    {
+        // userID
+        // spellID
+        // targetUserID
+
+        // Fireball is associated with questId 1
+
+        // each player will have a dict of quests called Quests
+        
+        // get Quests for UserId
+        // if Quests contains quests associated with spellId
+        // if emprty do nothing
+        // if exists then change stored Quest state
+    }
+    */
+
+
     public void CastAbilityCall(string SceneName, float[] args)
     {
         RpcId(1, "CastAbility", SceneName, args);
     }
+
+    public void SendMessageCall(string message)
+    {
+        RpcId(1, "SendMessage", message);
+    }
+
 
     public void _on_client_models_child_entered_tree(Node node)
     {

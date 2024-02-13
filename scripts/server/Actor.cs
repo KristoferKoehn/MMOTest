@@ -1,10 +1,15 @@
 using Godot;
 using System;
+using Backend.StatBlock;
 
-public partial class Actor : Node
+namespace scripts.server
 {
-    public Node3D ClientModelReference;
-    public Node3D PuppetModelReference;
-    public int ActorMultiplayerAuthority;
-    //stat block here
+    public class Actor
+    {
+        public Node3D ClientModelReference;
+        public Node3D PuppetModelReference;
+        public int ActorMultiplayerAuthority;
+        public StatBlock stats;
+    }
+
 }
