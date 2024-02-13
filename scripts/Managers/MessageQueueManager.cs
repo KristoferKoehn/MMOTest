@@ -31,8 +31,8 @@ namespace MMOTest.scripts.Managers
             {
                 GD.Print(mq.Count());
                 JObject m = mq.PopMessage();
-
-                if (m.Property("Type").ToString() == "Cast")
+                GD.Print("Piece of shit " + m == null);
+                if (m.Property("type").ToString() == "Cast")
                 {
                     AbstractAbility fb = GD.Load<PackedScene>($"res://scenes/abilities/{m.Property("spell")}.tscn").Instantiate<AbstractAbility>();
                     fb.Initialize(m);
