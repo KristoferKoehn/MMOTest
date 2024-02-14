@@ -21,6 +21,7 @@ properties/0/replication_mode = 1
 radius = 0.303217
 
 [node name="FireballExplosion" type="RigidBody3D"]
+gravity_scale = 0.0
 script = ExtResource("1_b4oa3")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="."]
