@@ -1,0 +1,9 @@
+[gd_resource type="StandardMaterial3D" load_steps=2 format=3 uid="uid://bwrbennqhdys"]
+
+[ext_resource type="Texture2D" uid="uid://bb26lhvf3wukl" path="res://assets/FoliageTextures/Tree_Dead_Branch.png" id="1_2jdwq"]
+
+[resource]
+transparency = 2
+alpha_scissor_threshold = 0.5
+alpha_antialiasing_mode = 0
+albedo_texture = ExtResource("1_2jdwq")

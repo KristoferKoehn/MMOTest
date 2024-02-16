@@ -67,9 +67,12 @@ func _physics_process(delta):
 		
 	# Here are all the animations that would override movement. Right now it is just kick.
 	if Input.is_action_just_pressed("melee"):
-		if !isPositionLocked and animation_player.current_animation != "kick": # and is_on_floor(): # We can add this and is on floor for our own sanity. It depends on what kind of canned animation we are doing.
+		if !isPositionLocked and animation_player.current_animation != "kick": 
+			# and is_on_floor(): # We can add this and is on floor for our own sanity. 
+			# It depends on what kind of canned animation we are doing.
 			animation_player.play("kick")
-			var point: Vector3  = (rayCast_3d.global_position - camera_3d.global_position).normalized()
+			var point: Vector3  = (rayCast_3d.global_position - \
+			camera_3d.global_position).normalized()
 			var arr = [position.x, position.y + 1.5, position.z, point.x, point.y, point.z]
 			#get_node("../../").CastAbilityCall("Fireball", arr)
 			var dic = Dictionary()
@@ -120,7 +123,8 @@ func _physics_process(delta):
 				velocity.x = move_toward(velocity.x, 0, SPEED)
 				velocity.z = move_toward(velocity.z, 0, SPEED)
 		
-		# If other, not locking action pressed, execute action and over write animation / merge animation
+		# If other, not locking action pressed, execute action and over write 
+		# animation / merge animation
 		if Input.is_action_just_pressed("shoot_throw"):
 			# Spawn projectile
 			var target = rayCast_3d.get_collision_point()

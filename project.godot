@@ -27,6 +27,7 @@ movie_writer/movie_file="C:/Users/Kristofer/Documents/GodotMovieSave/test.avi"
 
 folder_colors={
 "res://Backend/": "teal",
+"res://assets/models/Environment/": "purple",
 "res://scenes/abilities/": "red",
 "res://scenes/abilities/Abstractions/": "orange"
 }

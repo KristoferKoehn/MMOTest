@@ -1,0 +1,54 @@
+[remap]
+
+importer="scene"
+importer_version=1
+type="PackedScene"
+uid="uid://113d7ed8l3lx"
+path="res://.godot/imported/SM_Tree_Generic_Giant_01.fbx-92ade438f41d4d2ce8e2fcaff37dc992.scn"
+
+[deps]
+
+source_file="res://assets/models/Environment/SM_Tree_Generic_Giant_01.fbx"
+dest_files=["res://.godot/imported/SM_Tree_Generic_Giant_01.fbx-92ade438f41d4d2ce8e2fcaff37dc992.scn"]
+
+[params]
+
+nodes/root_type="Node3D"
+nodes/root_name="Large Tree"
+nodes/apply_root_scale=true
+nodes/root_scale=1.0
+meshes/ensure_tangents=true
+meshes/generate_lods=true
+meshes/create_shadow_meshes=true
+meshes/light_baking=1
+meshes/lightmap_texel_size=0.2
+meshes/force_disable_compression=false
+skins/use_named_skins=true
+animation/import=true
+animation/fps=30
+animation/trimming=false
+animation/remove_immutable_tracks=true
+import_script/path=""
+_subresources={
+"materials": {
+"Leave": {
+"use_external/enabled": true,
+"use_external/path": "res://assets/resources/Leaves_1.tres"
+},
+"Leaves_Dead": {
+"use_external/enabled": true,
+"use_external/path": "res://assets/resources/Leaves_2.tres"
+},
+"Trunk": {
+"use_external/enabled": true,
+"use_external/path": "res://assets/resources/nature_01_material.tres"
+}
+},
+"nodes": {
+"PATH:AnimationPlayer": {
+"import/skip_import": true
+}
+}
+}
+gltf/naming_version=1
+gltf/embedded_image_handling=1
