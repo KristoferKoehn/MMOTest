@@ -111,7 +111,7 @@ public partial class TestLevel : Node3D
         this.GetNode<Node>(ClientNodePath).AddChild(player);
         */
         RpcId(PeerId, "SpawnClientModel", PeerId);
-
+        SpawnClientModel(PeerId);
         PuppetPlayer puppet = PuppetPlayer.Instantiate<PuppetPlayer>();
         //puppet.GetNode<MultiplayerSynchronizer>("MultiplayerSynchronizer").SetVisibilityFor((int)PeerId, false);
         puppet.Name = puppet.Name + PeerId.ToString();
@@ -152,6 +152,7 @@ public partial class TestLevel : Node3D
     [Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
     public void SpawnClientModel(long PeerId)
     {
+        GD.Print("Spawning Client Model");
         Node3D player = PlayerController.Instantiate<Node3D>();
         player.Position = new Vector3(3, 3, 0);
         player.Name = PeerId.ToString();
