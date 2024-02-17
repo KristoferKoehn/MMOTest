@@ -1,10 +1,9 @@
 using Godot;
-using System;
 using System.Collections.Generic;
 using scripts.server;
 using Newtonsoft.Json.Linq;
 
-public partial class ActorManager : Node
+public class ActorManager
 {
 	private bool host;
 
@@ -15,30 +14,21 @@ public partial class ActorManager : Node
 		this.host = host;
 	}
 
-	// Called when the node enters the scene tree for the first time.
-	public override void _Ready()
-	{
-
-	}
-
-    [Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
+    [Rpc(MultiplayerApi.RpcMode.AnyPeer, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
 	public void UpdateClientStats(string json)
 	{
 		JObject dict = new JObject(json);
-		//update local stat block with this dict
+		// update local stat block with this dict
+		// 
 	}
 
-    // Called every frame. 'delta' is the elapsed time since the previous frame.
-    public override void _Process(double delta)
+	//what makes an actor
+	public void CreateActor(Node3D player, Node3D puppet, int ClientID) 
 	{
-		if(host)
-		{
-			
-		} 
-		else
-		{
-
-		}
-
+		Actor actor = new Actor();
+		actor.ClientModelReference = player;
+		actor.PuppetModelReference = puppet;
+		actor.ActorMultiplayerAuthority = ClientID;
+		actors.Add(actor);
 	}
 }
