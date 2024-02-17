@@ -154,6 +154,7 @@ public partial class TestLevel : Node3D
     {
         GD.Print("Spawning Client Model");
         Node3D player = PlayerController.Instantiate<Node3D>();
+        player.GetNode<MultiplayerSynchronizer>("MultiplayerSynchronizer").SetVisibilityFor(1, true);
         player.Position = new Vector3(3, 3, 0);
         player.Name = PeerId.ToString();
 
