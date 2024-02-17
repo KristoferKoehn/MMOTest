@@ -101,7 +101,7 @@ public partial class TestLevel : Node3D
 
     public void AddPlayer(long PeerId)
     {
-        /*
+        
         Node3D player = PlayerController.Instantiate<Node3D>();
         player.Position = new Vector3(3, 3, 0);
         player.Name = PeerId.ToString();
@@ -109,9 +109,9 @@ public partial class TestLevel : Node3D
         player.GetNode<MultiplayerSynchronizer>("MultiplayerSynchronizer").SetVisibilityFor(1, true);
         player.SetMultiplayerAuthority((int)PeerId);
         this.GetNode<Node>(ClientNodePath).AddChild(player);
-        */
-        RpcId(PeerId, "SpawnClientModel", PeerId);
-        SpawnClientModel(PeerId);
+        
+        //RpcId(PeerId, "SpawnClientModel", PeerId);
+        //SpawnClientModel(PeerId);
         PuppetPlayer puppet = PuppetPlayer.Instantiate<PuppetPlayer>();
         //puppet.GetNode<MultiplayerSynchronizer>("MultiplayerSynchronizer").SetVisibilityFor((int)PeerId, false);
         puppet.Name = puppet.Name + PeerId.ToString();
