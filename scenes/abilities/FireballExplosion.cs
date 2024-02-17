@@ -18,6 +18,7 @@ public partial class FireballExplosion : AbstractAbility
         t.TweenProperty(this.GetNode<MeshInstance3D>("MeshInstance3D"), "scale", new Vector3(20,20,20), ExplosionSpeed);
         SphereShape3D sphereShape3D = (SphereShape3D)GetNode<CollisionShape3D>("Area3D/CollisionShape3D").Shape;
         G.TweenProperty(sphereShape3D, "radius", 6.06f, ExplosionSpeed);
+        /*
         if (!host)
         {
             Timer timer = new Timer();
@@ -25,6 +26,12 @@ public partial class FireballExplosion : AbstractAbility
             this.AddChild(timer);
             timer.Start(ExplosionSpeed + 0.1);
         }else
+        {
+            t.Finished += QueueFree;
+        }
+        */
+
+        if (host)
         {
             t.Finished += QueueFree;
         }
