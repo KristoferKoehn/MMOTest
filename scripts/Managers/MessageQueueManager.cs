@@ -14,8 +14,8 @@ namespace MMOTest.scripts.Managers
 
         public MessageQueueManager(Node SceneTreeRoot) {
             this.SceneTreeRoot = SceneTreeRoot;
-            
         }
+
         //get thing from queue
         //if spell, call spellcastmanager?
         public void ProcessMessages()

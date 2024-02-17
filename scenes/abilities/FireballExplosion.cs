@@ -57,19 +57,16 @@ public partial class FireballExplosion : AbstractAbility
     public void _on_area_3d_body_entered(Node3D node)
     {
         
-
         if(node is Godot.CharacterBody3D)
         {
 
-            GD.Print("We get here");
             if (host)
             {
                 // damage message
             }
             else
             {
-                ((CharacterBody3D)node).Velocity += ((this.Position - node.Position).Normalized() + new Vector3(0, 0.1f, 0)).Normalized() * 20;
-                GD.Print("WE GET IT");
+                ((CharacterBody3D)node).Velocity += (((node.Position + new Vector3(0, 1.0f, 0)) - this.Position).Normalized()) * 20 ;//+ new Vector3(0, 0.1f, 0)).Normalized() * 20;
             }
         }
         

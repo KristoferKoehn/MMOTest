@@ -15,7 +15,6 @@ public partial class TestLevel : Node3D
     string PuppetNodePath = "PuppetModels";
     string ClientNodePath = "ClientModels";
     MessageQueueManager messageQueueManager;
-    
 
     ENetMultiplayerPeer EnetPeer;
     PackedScene PuppetPlayer = GD.Load<PackedScene>("res://scenes/actorScenes/PuppetPlayer.tscn");
@@ -60,8 +59,6 @@ public partial class TestLevel : Node3D
             p.GlobalPosition = GetNode<Node>("ClientModels").GetNode<Node3D>(p.TrackingPeerId.ToString()).GlobalPosition;
         }
 
-
-
         messageQueueManager.ProcessMessages();
 
     }
@@ -101,7 +98,7 @@ public partial class TestLevel : Node3D
 
     public void AddPlayer(long PeerId)
     {
-
+        
         Node3D player = PlayerController.Instantiate<Node3D>();
         player.Position = new Vector3(3, 3, 0);
         player.Name = PeerId.ToString();
@@ -117,9 +114,11 @@ public partial class TestLevel : Node3D
         puppet.TrackingPeerId = PeerId;
         puppet.SetMultiplayerAuthority(1);
         this.GetNode<Node>(PuppetNodePath).AddChild(puppet);
+        RpcId(PeerId, "SpawnRemotePlayer", PeerId);
         //GD.Print((int)PeerId + " " + Multiplayer.GetUniqueId());
-        
     }
+
+
 
     public void RemovePlayer(long PeerId) {
         var player = this.GetNode<Node>(ClientNodePath).GetNodeOrNull(PeerId.ToString());
@@ -140,6 +139,14 @@ public partial class TestLevel : Node3D
         GD.Print("Peer left " +  PeerId);
     }
 
+    [Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
+    public void SpawnRemotePlayer(int ClientID)
+    {
+        Node3D player = GD.Load<PackedScene>("res://scenes/actorScenes/player.tscn").Instantiate<Node3D>();
+        RandomNumberGenerator rng = new RandomNumberGenerator();
+        player.Position = new Vector3(rng.RandfRange(-20, -10), 3, rng.RandfRange(10, 20));
+        player.SetMultiplayerAuthority(ClientID);
+    }
 
     public void Join()
     {
@@ -195,7 +202,6 @@ public partial class TestLevel : Node3D
     public void SendMessageCall(string message)
     {
         RpcId(1, "SendMessage", message);
-
     }
 
     public void _on_client_models_child_entered_tree(Node node)
@@ -229,5 +235,4 @@ public partial class TestLevel : Node3D
         if (node.IsQueuedForDeletion()) { return; }
         node.QueueFree();
     }
-
 }

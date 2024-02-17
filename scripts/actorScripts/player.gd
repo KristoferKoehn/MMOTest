@@ -11,6 +11,7 @@ extends CharacterBody3D
 @export var scrollSensitivity = 0.25
 
 @export var SPEED = 5.0
+@export var accelerationRate = 1.0;
 @export var JUMP_VELOCITY = 5.0
 @export var jetpackAcceleration = 0.25
 # Get the gravity from the project settings to be synced with RigidBody nodes.
@@ -71,22 +72,23 @@ func _physics_process(delta):
 			# and is_on_floor(): # We can add this and is on floor for our own sanity. 
 			# It depends on what kind of canned animation we are doing.
 			animation_player.play("kick")
-			var point: Vector3  = (rayCast_3d.global_position - \
-			camera_3d.global_position).normalized()
-			var arr = [position.x, position.y + 1.5, position.z, point.x, point.y, point.z]
-			#get_node("../../").CastAbilityCall("Fireball", arr)
-			var dic = Dictionary()
-			dic["posx"] = position.x
-			dic["posy"] = position.y + 1.5
-			dic["posz"] = position.z
-			dic["velx"] = point.x
-			dic["vely"] = point.y
-			dic["velz"] = point.z
-			dic["type"] = "cast"
-			dic["spell"] = "Fireball"
-			get_node("../../").SendMessageCall(JSON.stringify(dic))
 			isPositionLocked = true
 			
+	if Input.is_action_just_pressed("shoot_throw"):
+		var point: Vector3  = (rayCast_3d.global_position - \
+		camera_3d.global_position).normalized()
+		#get_node("../../").CastAbilityCall("Fireball", arr)
+		var dic = Dictionary()
+		dic["posx"] = position.x
+		dic["posy"] = position.y + 1.5
+		dic["posz"] = position.z
+		dic["velx"] = point.x
+		dic["vely"] = point.y
+		dic["velz"] = point.z
+		dic["type"] = "cast"
+		dic["spell"] = "Fireball"
+		get_node("../../").SendMessageCall(JSON.stringify(dic))
+
 	# Get the input direction and handle the movement/deceleration.
 	# As good practice, you should replace UI actions with custom gameplay actions.
 	var input_dir = Input.get_vector("left", "right", "forward", "backward")
@@ -100,12 +102,24 @@ func _physics_process(delta):
 				animation_player.play("idle")
 			
 			if direction:
-				visuals.look_at(position + direction)
-				velocity.x = direction.x * SPEED
-				velocity.z = direction.z * SPEED
+				visuals.look_at(position + direction);
+				var accelerationVector = direction * accelerationRate;
+				
+				if (velocity.x * direction.x) > 0: # same sign
+					if velocity.x < SPEED:
+						velocity.x += accelerationVector.x;
+				else:
+					velocity.x += accelerationVector.x;
+				
+				if (velocity.z * direction.z) > 0: # same sign
+					if velocity.z < SPEED:
+						velocity.z += accelerationVector.z;
+				else:
+					velocity.z += accelerationVector.z;
+					
 			else:
-				velocity.x = move_toward(velocity.x, 0, SPEED)
-				velocity.z = move_toward(velocity.z, 0, SPEED)
+				var accelerationVector = -1 * velocity.normalized() * accelerationRate;
+				velocity += accelerationVector;   
 		else:
 			if jetpackFuel < jetpackMaxFuel:
 				jetpackFuel += jetpackRefuelRate
@@ -122,13 +136,11 @@ func _physics_process(delta):
 					animation_player.play("idle")
 				velocity.x = move_toward(velocity.x, 0, SPEED)
 				velocity.z = move_toward(velocity.z, 0, SPEED)
-		
+				
 		# If other, not locking action pressed, execute action and over write 
 		# animation / merge animation
 		if Input.is_action_just_pressed("shoot_throw"):
 			# Spawn projectile
 			var target = rayCast_3d.get_collision_point()
 			
-			
-		
 		move_and_slide()

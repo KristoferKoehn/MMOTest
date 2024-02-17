@@ -11,5 +11,4 @@ namespace scripts.server
         public int ActorMultiplayerAuthority;
         public StatBlock stats;
     }
-
 }

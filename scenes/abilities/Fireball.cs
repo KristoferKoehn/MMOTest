@@ -48,7 +48,6 @@ public partial class Fireball : AbstractAbility
             { "posy", this.Position.Y },
             { "posz", this.Position.Z },
         };
-        float[] args = { this.Position.X, this.Position.Y, this.Position.Z };
         MessageQueue.GetInstance().AddMessage(m);
         this.QueueFree();
     }

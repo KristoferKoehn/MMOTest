@@ -19,15 +19,15 @@ namespace Backend.StatBlock
 
     public class StatBlock
     {
-        private Dictionary<StatType, double> statblock = new Dictionary<StatType, double>();
+        private Dictionary<StatType, float> statblock = new Dictionary<StatType, float>();
         public StatBlock() { }
 
-        public void SetStat(StatType statType, double value)
+        public void SetStat(StatType statType, float value)
         {
             statblock[statType] = value;
         }
 
-        public double GetStat(StatType statType)
+        public float GetStat(StatType statType)
         {
             return statblock.ContainsKey(statType) ? statblock[statType] : 0;
         }
