@@ -11,7 +11,7 @@ public partial class FireballExplosion : AbstractAbility
     private float ExplosionSpeed = 1.7f;
     bool host;
 
-    public override void _EnterTree()
+    public override void _Ready()
     {
         Tween t = CreateTween();
         Tween G = CreateTween();
@@ -30,11 +30,12 @@ public partial class FireballExplosion : AbstractAbility
             t.Finished += QueueFree;
         }
         */
-
+        
         if (host)
         {
             t.Finished += QueueFree;
         }
+        
         t.Play();
         G.Play();
     }
