@@ -142,6 +142,7 @@ public partial class TestLevel : Node3D
     [Rpc(MultiplayerApi.RpcMode.AnyPeer, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
     public void SpawnRemotePlayer(int ClientID)
     {
+        GD.Print("HELOO");
         Node3D player = GD.Load<PackedScene>("res://scenes/actorScenes/player.tscn").Instantiate<Node3D>();
         RandomNumberGenerator rng = new RandomNumberGenerator();
         player.Position = new Vector3(rng.RandfRange(-20, -10), 3, rng.RandfRange(10, 20));
@@ -150,6 +151,7 @@ public partial class TestLevel : Node3D
 
     public void Join()
     {
+
         EnetPeer.CreateClient(ServerAddress, PORT);
         Multiplayer.MultiplayerPeer = EnetPeer;
     }
