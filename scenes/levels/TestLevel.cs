@@ -139,7 +139,7 @@ public partial class TestLevel : Node3D
         GD.Print("Peer left " +  PeerId);
     }
 
-    [Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
+    [Rpc(MultiplayerApi.RpcMode.AnyPeer, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
     public void SpawnRemotePlayer(int ClientID)
     {
         Node3D player = GD.Load<PackedScene>("res://scenes/actorScenes/player.tscn").Instantiate<Node3D>();
