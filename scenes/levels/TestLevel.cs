@@ -118,7 +118,7 @@ public partial class TestLevel : Node3D
         RpcId(PeerId, "SpawnClientModel", PeerId);
         SpawnClientModel(PeerId);
         CharacterBody3D puppet = PuppetPlayer.Instantiate<CharacterBody3D>();
-        //puppet.GetNode<MultiplayerSynchronizer>("MultiplayerSynchronizer").SetVisibilityFor((int)PeerId, false);
+        puppet.GetNode<MultiplayerSynchronizer>("MultiplayerSynchronizer").SetVisibilityFor((int)PeerId, false);
         puppet.Name = PeerId.ToString();
         puppet.Position = new Vector3(3, 3, 0);
         puppet.SetMultiplayerAuthority(1);
