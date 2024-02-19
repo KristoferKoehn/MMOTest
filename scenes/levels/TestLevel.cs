@@ -106,15 +106,7 @@ public partial class TestLevel : Node3D
 
     public void AddPlayer(long PeerId)
     {
-        /*
-        Node3D player = PlayerController.Instantiate<Node3D>();
-        player.Position = new Vector3(3, 3, 0);
-        player.Name = PeerId.ToString();
-        player.GetNode<MultiplayerSynchronizer>("MultiplayerSynchronizer").PublicVisibility = false;
-        player.GetNode<MultiplayerSynchronizer>("MultiplayerSynchronizer").SetVisibilityFor(1, true);
-        player.SetMultiplayerAuthority((int)PeerId);
-        this.GetNode<Node>(ClientNodePath).AddChild(player);
-        */
+
         RpcId(PeerId, "SpawnClientModel", PeerId);
         SpawnClientModel(PeerId);
         CharacterBody3D puppet = PuppetPlayer.Instantiate<CharacterBody3D>();
@@ -230,7 +222,7 @@ public partial class TestLevel : Node3D
     public void _on_puppet_models_child_entered_tree(Node node)
     {
         CharacterBody3D p = (CharacterBody3D)node;
-        p.Name = this.Multiplayer.GetUniqueId().ToString();
+        p.Name = p.GetMultiplayerAuthority().ToString();
     }
 
     public void _on_ability_models_child_entered_tree(Node node)
