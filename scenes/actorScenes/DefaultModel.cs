@@ -5,7 +5,7 @@ public partial class DefaultModel : CharacterBody3D
 {
     [Export]
     public long TrackingPeerId { get; set; } = -1;
-    public long SimulationPeerId { get; set; } = -2;
+    public long SimulationPeerId { get; set; } = -1;
 
     public override void _EnterTree()
     {
