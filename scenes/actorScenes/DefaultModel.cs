@@ -18,6 +18,7 @@ public partial class DefaultModel : CharacterBody3D
         if (TrackingPeerId == SimulationPeerId)
         {
             this.Visible = false;
+            this.GetNode<CollisionShape3D>("CollisionShape3D").Disabled = true;
         }
     }
 
