@@ -118,10 +118,12 @@ public partial class TestLevel : Node3D
         RpcId(PeerId, "SpawnClientModel", PeerId);
         SpawnClientModel(PeerId);
         CharacterBody3D puppet = PuppetPlayer.Instantiate<CharacterBody3D>();
-        //puppet.GetNode<MultiplayerSynchronizer>("MultiplayerSynchronizer").SetVisibilityFor((int)PeerId, false);
+        puppet.GetNode<MultiplayerSynchronizer>("MultiplayerSynchronizer").SetVisibilityFor(0, true);
+        puppet.GetNode<MultiplayerSynchronizer>("MultiplayerSynchronizer").SetVisibilityFor((int)PeerId, false);
         puppet.Name = PeerId.ToString();
         puppet.Position = new Vector3(3, 3, 0);
         puppet.SetMultiplayerAuthority(1);
+        
         this.GetNode<Node>(PuppetNodePath).AddChild(puppet);
         //GD.Print((int)PeerId + " " + Multiplayer.GetUniqueId());
         
@@ -200,25 +202,6 @@ public partial class TestLevel : Node3D
         JObject jsonMessagePayload = JObject.Parse(message);
         MessageQueue.GetInstance().AddMessage(jsonMessagePayload);
     }
-
-    /* 
-    Quest Manager stuff
-    public void Listener(SpellEvent ddd)
-    {
-        // userID
-        // spellID
-        // targetUserID
-
-        // Fireball is associated with questId 1
-
-        // each player will have a dict of quests called Quests
-        
-        // get Quests for UserId
-        // if Quests contains quests associated with spellId
-        // if emprty do nothing
-        // if exists then change stored Quest state
-    }
-    */
 
     public void CastAbilityCall(string SceneName, float[] args)
     {
