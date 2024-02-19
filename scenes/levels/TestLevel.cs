@@ -163,6 +163,7 @@ public partial class TestLevel : Node3D
         PlayerModel.GetNode<MultiplayerSynchronizer>("MultiplayerSynchronizer").SetVisibilityFor(1, true);
         PlayerModel.SetMultiplayerAuthority((int)PeerId);
         this.GetNode<Node>(ClientNodePath).AddChild(PlayerModel);
+        PlayerModel.Name = PeerId.ToString();
 
         if (!host)
         {
