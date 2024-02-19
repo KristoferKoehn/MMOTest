@@ -37,7 +37,7 @@ _subresources={
 },
 "Leaves_Dead": {
 "use_external/enabled": true,
-"use_external/path": "res://assets/resources/Leaves_2.tres"
+"use_external/path": "res://assets/resources/Leaves_3.tres"
 },
 "Trunk": {
 "use_external/enabled": true,

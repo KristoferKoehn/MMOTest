@@ -60,8 +60,6 @@ public partial class TestLevel : Node3D
             p.GlobalPosition = GetNode<Node>("ClientModels").GetNode<Node3D>(p.TrackingPeerId.ToString()).GlobalPosition;
         }
 
-
-
         messageQueueManager.ProcessMessages();
 
     }
@@ -88,9 +86,7 @@ public partial class TestLevel : Node3D
         Multiplayer.PeerConnected += AddPlayer;
         //Multiplayer.PeerConnected += PeerConnectedToServer;
         Multiplayer.PeerDisconnected += RemovePlayer;
-
         AddPlayer(Multiplayer.GetUniqueId());
-
     }
 
     public void PeerConnectedToServer(long numby)
@@ -152,14 +148,28 @@ public partial class TestLevel : Node3D
     [Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
     public void SpawnClientModel(long PeerId)
     {
+        
         GD.Print("Spawning Client Model");
+        /*
         Node3D player = PlayerController.Instantiate<Node3D>();
         player.GetNode<MultiplayerSynchronizer>("MultiplayerSynchronizer").SetVisibilityFor(1, true);
         player.Position = new Vector3(3, 3, 0);
         player.Name = PeerId.ToString();
-
         player.SetMultiplayerAuthority((int)PeerId);
         this.GetNode<Node>(ClientNodePath).AddChild(player);
+        */
+
+        CharacterBody3D PlayerModel = GD.Load<PackedScene>("res://scenes/actorScenes/DefaultModel.tscn").Instantiate<CharacterBody3D>();
+        PlayerModel.GetNode<MultiplayerSynchronizer>("MultiplayerSynchronizer").SetVisibilityFor(1, true);
+        PlayerModel.SetMultiplayerAuthority((int)PeerId);
+        this.GetNode<Node>(ClientNodePath).AddChild(PlayerModel);
+
+        if (!host)
+        {
+            //attach controller ????
+            GetNode<PlayerController>("PlayerController").AttachModel(PlayerModel);
+        }
+
     }
 
 
@@ -175,13 +185,13 @@ public partial class TestLevel : Node3D
         }
     }
 
-
     [Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
     public void SendMessage(string message)
     {
         JObject jsonMessagePayload = JObject.Parse(message);
         MessageQueue.GetInstance().AddMessage(jsonMessagePayload);
     }
+
     /* 
     Quest Manager stuff
     public void Listener(SpellEvent ddd)
@@ -201,7 +211,6 @@ public partial class TestLevel : Node3D
     }
     */
 
-
     public void CastAbilityCall(string SceneName, float[] args)
     {
         RpcId(1, "CastAbility", SceneName, args);
@@ -210,7 +219,6 @@ public partial class TestLevel : Node3D
     public void SendMessageCall(string message)
     {
         RpcId(1, "SendMessage", message);
-
     }
 
     public void _on_client_models_child_entered_tree(Node node)
