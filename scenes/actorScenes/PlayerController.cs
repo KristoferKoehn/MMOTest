@@ -113,16 +113,14 @@ public partial class PlayerController : Node3D
                 Model.Velocity = new Vector3(direction.X * Speed, Model.Velocity.Y, direction.Z * Speed);
                 
             } 
-            else
-            {
-                
-            }
+            
         }
         else
         {
-            // do flying things
+            Model.Velocity -= new Vector3(Model.Velocity.X, gravity * (float)delta, Model.Velocity.Z);
         }
 
+        Model.MoveAndSlide();
 
     }
 
