@@ -65,7 +65,7 @@ size = Vector3(5, 2, 4)
 [node name="AbilityModels" type="Node" parent="."]
 
 [node name="MultiplayerSpawner" type="MultiplayerSpawner" parent="."]
-_spawnable_scenes = PackedStringArray("res://scenes/actorScenes/PuppetPlayer.tscn")
+_spawnable_scenes = PackedStringArray("res://scenes/actorScenes/PuppetPlayer.tscn", "res://scenes/actorScenes/DefaultModel.tscn")
 spawn_path = NodePath("../PuppetModels")
 
 [node name="AbilitySpawner" type="MultiplayerSpawner" parent="."]
