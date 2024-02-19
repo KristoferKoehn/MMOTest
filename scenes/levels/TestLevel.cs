@@ -93,15 +93,10 @@ public partial class TestLevel : Node3D
 
         Multiplayer.MultiplayerPeer = EnetPeer;
         Multiplayer.PeerConnected += AddPlayer;
-        //Multiplayer.PeerConnected += PeerConnectedToServer;
         Multiplayer.PeerDisconnected += RemovePlayer;
         AddPlayer(Multiplayer.GetUniqueId());
     }
 
-    public void PeerConnectedToServer(long numby)
-    {
-        GD.Print("Peer connected to server " + numby);
-    }
 
 
     public void AddPlayer(long PeerId)
@@ -109,10 +104,11 @@ public partial class TestLevel : Node3D
 
         RpcId(PeerId, "SpawnClientModel", PeerId);
         SpawnClientModel(PeerId);
-        CharacterBody3D puppet = PuppetPlayer.Instantiate<CharacterBody3D>();
+        DefaultModel puppet = PuppetPlayer.Instantiate<DefaultModel>();
         puppet.GetNode<MultiplayerSynchronizer>("MultiplayerSynchronizer").SetVisibilityFor(0, true);
         puppet.GetNode<MultiplayerSynchronizer>("MultiplayerSynchronizer").SetVisibilityFor((int)PeerId, false);
         puppet.Name = PeerId.ToString();
+        puppet.TrackingPeerId = PeerId;
         puppet.Position = new Vector3(3, 3, 0);
         puppet.SetMultiplayerAuthority(1);
         
@@ -221,7 +217,8 @@ public partial class TestLevel : Node3D
 
     public void _on_puppet_models_child_entered_tree(Node node)
     {
-        
+        DefaultModel dm = (DefaultModel)node;
+        dm.SimulationPeerId = this.Multiplayer.GetUniqueId();
     }
 
     public void _on_ability_models_child_entered_tree(Node node)
