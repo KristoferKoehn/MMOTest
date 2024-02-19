@@ -55,9 +55,18 @@ public partial class TestLevel : Node3D
             return;
         }
 
-        foreach (PuppetPlayer p in GetNode<Node>("PuppetModels").GetChildren())
+        foreach (CharacterBody3D p in GetNode<Node>("PuppetModels").GetChildren())
         {
-            p.GlobalPosition = GetNode<Node>("ClientModels").GetNode<Node3D>(p.TrackingPeerId.ToString()).GlobalPosition;
+            Node3D clientModel = GetNode<Node>("ClientModels").GetNode<Node3D>(p.Name.ToString());
+            p.GlobalPosition = clientModel.GlobalPosition;
+            p.Rotation = clientModel.Rotation;
+            AnimationPlayer puppetAnim = p.GetNode<AnimationPlayer>("AnimationPlayer");
+            AnimationPlayer clientAnim = clientModel.GetNode<AnimationPlayer>("AnimationPlayer");
+            if (puppetAnim.CurrentAnimation != clientAnim.CurrentAnimation)
+            {
+                puppetAnim.Play(clientAnim.CurrentAnimation);
+            }
+            
         }
 
         messageQueueManager.ProcessMessages();
@@ -108,11 +117,10 @@ public partial class TestLevel : Node3D
         */
         RpcId(PeerId, "SpawnClientModel", PeerId);
         SpawnClientModel(PeerId);
-        PuppetPlayer puppet = PuppetPlayer.Instantiate<PuppetPlayer>();
+        CharacterBody3D puppet = PuppetPlayer.Instantiate<CharacterBody3D>();
         //puppet.GetNode<MultiplayerSynchronizer>("MultiplayerSynchronizer").SetVisibilityFor((int)PeerId, false);
-        puppet.Name = puppet.Name + PeerId.ToString();
+        puppet.Name = PeerId.ToString();
         puppet.Position = new Vector3(3, 3, 0);
-        puppet.TrackingPeerId = PeerId;
         puppet.SetMultiplayerAuthority(1);
         this.GetNode<Node>(PuppetNodePath).AddChild(puppet);
         //GD.Print((int)PeerId + " " + Multiplayer.GetUniqueId());
@@ -121,10 +129,10 @@ public partial class TestLevel : Node3D
 
     public void RemovePlayer(long PeerId) {
         var player = this.GetNode<Node>(ClientNodePath).GetNodeOrNull(PeerId.ToString());
-        PuppetPlayer Puppet = null;
-        foreach (PuppetPlayer p in this.GetNode<Node>(PuppetNodePath).GetChildren())
+        CharacterBody3D Puppet = null;
+        foreach (CharacterBody3D p in this.GetNode<Node>(PuppetNodePath).GetChildren())
         {
-            if (p.TrackingPeerId == PeerId)
+            if (long.Parse(p.Name) == PeerId)
             {
                 Puppet = p;
             }
