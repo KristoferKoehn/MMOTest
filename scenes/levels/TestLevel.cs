@@ -78,7 +78,6 @@ public partial class TestLevel : Node3D
         EnetPeer.CreateServer(PORT);
         Multiplayer.MultiplayerPeer = EnetPeer;
         Multiplayer.PeerConnected += AddPlayer;
-        Multiplayer.PeerConnected += PeerConnectedToServer;
         Multiplayer.PeerDisconnected += RemovePlayer;
         Timer t = new Timer();
         this.AddChild(t);
