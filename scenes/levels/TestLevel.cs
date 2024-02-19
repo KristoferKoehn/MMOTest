@@ -18,7 +18,7 @@ public partial class TestLevel : Node3D
     
 
     ENetMultiplayerPeer EnetPeer;
-    PackedScene PuppetPlayer = GD.Load<PackedScene>("res://scenes/actorScenes/PuppetPlayer.tscn");
+    PackedScene PuppetPlayer = GD.Load<PackedScene>("res://scenes/actorScenes/DefaultModel.tscn");
     PackedScene PlayerController = GD.Load<PackedScene>("res://scenes/actorScenes/player.tscn");
     public override void _EnterTree()
     {
