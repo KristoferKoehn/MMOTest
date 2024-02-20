@@ -30,6 +30,6 @@ public partial class DefaultModel : AbstractModel
 
     public void ApplyImpulse(Vector3 vec)
     {
-        playerController.CalculatedVelocity += vec;
+        playerController.ApplyImpulse(vec);
     }
 }
