@@ -105,7 +105,6 @@ public partial class TestLevel : Node3D
         SpawnClientModel(PeerId);
         DefaultModel puppet = PuppetPlayer.Instantiate<DefaultModel>();
         puppet.GetNode<MultiplayerSynchronizer>("MultiplayerSynchronizer").SetVisibilityFor(0, true);
-        puppet.GetNode<MultiplayerSynchronizer>("MultiplayerSynchronizer").SetVisibilityFor((int)PeerId, false);
         puppet.Name = PeerId.ToString();
         puppet.TrackingPeerId = PeerId;
         puppet.Position = new Vector3(3, 3, 0);
