@@ -156,7 +156,7 @@ public partial class TestLevel : Node3D
         this.GetNode<Node>(ClientNodePath).AddChild(player);
         */
 
-        CharacterBody3D PlayerModel = GD.Load<PackedScene>("res://scenes/actorScenes/DefaultModel.tscn").Instantiate<CharacterBody3D>();
+        DefaultModel PlayerModel = GD.Load<PackedScene>("res://scenes/actorScenes/DefaultModel.tscn").Instantiate<DefaultModel>();
         PlayerModel.GetNode<MultiplayerSynchronizer>("MultiplayerSynchronizer").SetVisibilityFor(1, true);
         PlayerModel.SetMultiplayerAuthority((int)PeerId);
         this.GetNode<Node>(ClientNodePath).AddChild(PlayerModel);

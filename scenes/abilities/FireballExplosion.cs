@@ -65,7 +65,7 @@ public partial class FireballExplosion : AbstractAbility
     public void _on_area_3d_body_entered(Node3D node)
     {
         
-        if(node is Godot.CharacterBody3D)
+        if(node is DefaultModel)
         {
 
             if (host)
@@ -74,7 +74,7 @@ public partial class FireballExplosion : AbstractAbility
             }
             else
             {
-                ((CharacterBody3D)node).Velocity += (((node.Position + new Vector3(0, 1.0f, 0)) - this.Position).Normalized()) * 20 ;//+ new Vector3(0, 0.1f, 0)).Normalized() * 20;
+                ((DefaultModel)node).ApplyImpulse((node.Position + new Vector3(0, 1.0f, 0) - this.Position).Normalized() * 20);//+ new Vector3(0, 0.1f, 0)).Normalized() * 20;
             }
         }
         

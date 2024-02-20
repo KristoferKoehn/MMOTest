@@ -13,7 +13,7 @@
 [ext_resource type="PackedScene" uid="uid://113d7ed8l3lx" path="res://assets/models/Environment/SM_Tree_Generic_Giant_01.fbx" id="11_r3c8o"]
 [ext_resource type="PackedScene" uid="uid://csd4qe34wtrt" path="res://assets/models/Environment/SM_Tree_Large_01.fbx" id="12_f71ok"]
 [ext_resource type="PackedScene" uid="uid://djwd6kogh3ovm" path="res://assets/models/Environment/SM_Rock_Cluster_Large_02.fbx" id="14_luuo1"]
-[ext_resource type="PackedScene" uid="uid://bmk783fseep4a" path="res://scenes/actorScenes/PlayerController.tscn" id="15_qcvg8"]
+[ext_resource type="PackedScene" uid="uid://bmk783fseep4a" path="res://scenes/actorScenes/Controllers/PlayerController.tscn" id="15_qcvg8"]
 [ext_resource type="PackedScene" uid="uid://btpdpe6qunryb" path="res://assets/models/Environment/SM_Tree_Willow_Large_01.fbx" id="17_uwba0"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_7bhck"]
@@ -49,7 +49,7 @@ environment = SubResource("Environment_6ty48")
 [node name="AbilityModels" type="Node" parent="."]
 
 [node name="PuppetSpawner" type="MultiplayerSpawner" parent="."]
-_spawnable_scenes = PackedStringArray("res://scenes/actorScenes/PuppetPlayer.tscn", "res://scenes/actorScenes/DefaultModel.tscn")
+_spawnable_scenes = PackedStringArray("res://scenes/actorScenes/PuppetPlayer.tscn")
 spawn_path = NodePath("../PuppetModels")
 
 [node name="AbilitySpawner" type="MultiplayerSpawner" parent="."]
