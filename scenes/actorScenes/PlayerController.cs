@@ -61,7 +61,7 @@ public partial class PlayerController : Node3D
         if(Model != null)
         {
             Tween t = CreateTween();
-            t.TweenProperty(this, "position", Model.GlobalPosition + new Vector3(0, 1.4f, 0), 0.008f);
+            t.TweenProperty(this, "position", Model.GlobalPosition + new Vector3(0, 1.4f, 0), 0.016f);
             t.Play();
         }
 	}
@@ -81,7 +81,7 @@ public partial class PlayerController : Node3D
             JObject job = new JObject
             {
                 { "posx", Model.Position.X },
-                { "posy", Model.Position.Y },
+                { "posy", Model.Position.Y + 1.5},
                 { "posz", Model.Position.Z },
                 { "velx", point.X},
                 { "vely", point.Y},
@@ -110,13 +110,14 @@ public partial class PlayerController : Node3D
                 }
 
                 Model.LookAt(Model.Position + direction);
-                Model.Velocity = new Vector3(direction.X * Speed, Model.Velocity.Y, direction.Z * Speed);
+                Model.Velocity += direction;
                 
             } 
             
         }
         else
         {
+            //this is the gravity applied to the model
             Model.Velocity -= new Vector3(Model.Velocity.X, gravity * (float)delta, Model.Velocity.Z);
         }
 
