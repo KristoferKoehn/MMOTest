@@ -30,7 +30,11 @@ public partial class DefaultModel : AbstractModel
 
     public void ApplyImpulse(Vector3 vec)
     {
-        playerController.ApplyImpulse(vec);
+        //if not puppet, apply impulse. This prevents puppets from being pushed around/throwing errors because they don't have controllers
+        if (playerController != null)
+        {
+            playerController.ApplyImpulse(vec);
+        }
     }
 
     public override long GetTrackingPeerId()

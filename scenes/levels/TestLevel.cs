@@ -117,10 +117,10 @@ public partial class TestLevel : Node3D
 
     public void RemovePlayer(long PeerId) {
         var player = this.GetNode<Node>(ClientNodePath).GetNodeOrNull(PeerId.ToString());
-        CharacterBody3D Puppet = null;
-        foreach (CharacterBody3D p in this.GetNode<Node>(PuppetNodePath).GetChildren())
+        AbstractModel Puppet = null;
+        foreach (AbstractModel p in this.GetNode<Node>(PuppetNodePath).GetChildren())
         {
-            if (long.Parse(p.Name) == PeerId)
+            if (p.GetTrackingPeerId() == PeerId)
             {
                 Puppet = p;
             }
