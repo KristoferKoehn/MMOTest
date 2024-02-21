@@ -148,7 +148,8 @@ public partial class TestLevel : Node3D
         GD.Print("Spawning Client Model");
 
         DefaultModel PlayerModel = GD.Load<PackedScene>("res://scenes/actorScenes/Models/DefaultModel.tscn").Instantiate<DefaultModel>();
-        PlayerModel.GetNode<MultiplayerSynchronizer>("MultiplayerSynchronizer").SetVisibilityFor(1, true);
+        PlayerModel.GetMultiplayerSynchronizer().SetVisibilityFor(0, false);
+        PlayerModel.GetMultiplayerSynchronizer().SetVisibilityFor(1, true);
         PlayerModel.SetMultiplayerAuthority((int)PeerId);
         this.GetNode<Node>(ClientNodePath).AddChild(PlayerModel);
         PlayerModel.Name = PeerId.ToString();

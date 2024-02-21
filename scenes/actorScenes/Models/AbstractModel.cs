@@ -7,4 +7,5 @@ public abstract partial class AbstractModel : CharacterBody3D
 	public abstract void AttachController(AbstractController controller);
 
 	public abstract long GetTrackingPeerId();
+	public abstract MultiplayerSynchronizer GetMultiplayerSynchronizer();
 }

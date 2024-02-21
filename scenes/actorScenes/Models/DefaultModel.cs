@@ -37,4 +37,10 @@ public partial class DefaultModel : AbstractModel
     {
         return this.TrackingPeerId;
     }
+
+    public override MultiplayerSynchronizer GetMultiplayerSynchronizer()
+    {
+        return this.GetNode<MultiplayerSynchronizer>("MultiplayerSynchronizer");
+    }
+
 }
