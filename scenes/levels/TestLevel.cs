@@ -55,9 +55,9 @@ public partial class TestLevel : Node3D
             return;
         }
 
-        foreach (CharacterBody3D p in GetNode<Node>("PuppetModels").GetChildren())
+        foreach (AbstractModel p in GetNode<Node>("PuppetModels").GetChildren())
         {
-            Node3D clientModel = GetNode<Node>("ClientModels").GetNode<Node3D>(p.Name.ToString());
+            Node3D clientModel = GetNode<Node>("ClientModels").GetNode<Node3D>(p.GetTrackingPeerId().ToString());
             p.GlobalPosition = clientModel.GlobalPosition;
             p.Rotation = clientModel.Rotation;
             AnimationPlayer puppetAnim = p.GetNode<AnimationPlayer>("AnimationPlayer");
@@ -104,7 +104,7 @@ public partial class TestLevel : Node3D
         RpcId(PeerId, "SpawnClientModel", PeerId);
         SpawnClientModel(PeerId);
         DefaultModel puppet = PuppetPlayer.Instantiate<DefaultModel>();
-        puppet.Name = PeerId.ToString();
+        //puppet.Name = PeerId.ToString();
         puppet.TrackingPeerId = PeerId;
         puppet.Position = new Vector3(3, 3, 0);
         puppet.SetMultiplayerAuthority(1);
@@ -147,14 +147,6 @@ public partial class TestLevel : Node3D
     {
         
         GD.Print("Spawning Client Model");
-        /*
-        Node3D player = PlayerController.Instantiate<Node3D>();
-        player.GetNode<MultiplayerSynchronizer>("MultiplayerSynchronizer").SetVisibilityFor(1, true);
-        player.Position = new Vector3(3, 3, 0);
-        player.Name = PeerId.ToString();
-        player.SetMultiplayerAuthority((int)PeerId);
-        this.GetNode<Node>(ClientNodePath).AddChild(player);
-        */
 
         DefaultModel PlayerModel = GD.Load<PackedScene>("res://scenes/actorScenes/Models/DefaultModel.tscn").Instantiate<DefaultModel>();
         PlayerModel.GetNode<MultiplayerSynchronizer>("MultiplayerSynchronizer").SetVisibilityFor(1, true);
@@ -216,6 +208,7 @@ public partial class TestLevel : Node3D
 
     public void _on_puppet_models_child_entered_tree(Node node)
     {
+        GD.Print("PUPPET ADDED TO TREE");
         DefaultModel dm = (DefaultModel)node;
         dm.SimulationPeerId = this.Multiplayer.GetUniqueId();
     }

@@ -49,7 +49,7 @@ environment = SubResource("Environment_6ty48")
 [node name="AbilityModels" type="Node" parent="."]
 
 [node name="PuppetSpawner" type="MultiplayerSpawner" parent="."]
-_spawnable_scenes = PackedStringArray("res://scenes/actorScenes/PuppetPlayer.tscn")
+_spawnable_scenes = PackedStringArray("res://scenes/actorScenes/Models/DefaultModel.tscn")
 spawn_path = NodePath("../PuppetModels")
 
 [node name="AbilitySpawner" type="MultiplayerSpawner" parent="."]

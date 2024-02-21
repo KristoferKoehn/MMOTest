@@ -32,4 +32,9 @@ public partial class DefaultModel : AbstractModel
     {
         playerController.ApplyImpulse(vec);
     }
+
+    public override long GetTrackingPeerId()
+    {
+        return this.TrackingPeerId;
+    }
 }
