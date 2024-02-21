@@ -109,10 +109,9 @@ public partial class TestLevel : Node3D
         puppet.Position = new Vector3(3, 3, 0);
         puppet.SetMultiplayerAuthority(1);
         
-        this.GetNode<Node>(PuppetNodePath).AddChild(puppet);
-        puppet.GetNode<MultiplayerSynchronizer>("MultiplayerSynchronizer").SetVisibilityFor(0, true);
-        puppet.GetNode<MultiplayerSynchronizer>("MultiplayerSynchronizer").SetVisibilityFor((int)PeerId, false);
-        //GD.Print((int)PeerId + " " + Multiplayer.GetUniqueId());
+        this.GetNode<Node>(PuppetNodePath).AddChild(puppet, forceReadableName:true);
+        //puppet.GetNode<MultiplayerSynchronizer>("MultiplayerSynchronizer").SetVisibilityFor(0, true);
+        //puppet.GetNode<MultiplayerSynchronizer>("MultiplayerSynchronizer").SetVisibilityFor((int)PeerId, false);
         
     }
 
