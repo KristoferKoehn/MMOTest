@@ -1,17 +1,17 @@
-class_name player
 extends CharacterBody3D
 
 @onready var camera_mount = $cameraMount
 @onready var camera_3d = $cameraMount/Camera3D
 @onready var rayCast_3d = $cameraMount/Camera3D/RayCast3D
 @onready var visuals = $visuals
-@onready var animation_player = $visuals/mixamoBase/AnimationPlayer
+@onready var animation_player = $AnimationPlayer
 
 @export var horizontalMouseSensitivity = 0.2
 @export var verticalMouseSensitivity = 0.2
 @export var scrollSensitivity = 0.25
 
 @export var SPEED = 5.0
+@export var accelerationRate = 1.0;
 @export var JUMP_VELOCITY = 5.0
 @export var jetpackAcceleration = 0.25
 # Get the gravity from the project settings to be synced with RigidBody nodes.
@@ -26,19 +26,19 @@ var isPositionLocked = false
 
 func _enter_tree():
 	# converting player controller will break this. Don't worry about it
-	set_multiplayer_authority(str(name).to_int())
+	set_multiplayer_authority(name.to_int())
 
 func _ready():
 	# this is more stuff that will break when converting to model/controller
 	if not is_multiplayer_authority(): return
-	camera_3d.current = true;
+	#camera_3d.current = true;
 	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
-	
+
 func _input(event):
 	# this is more stuff that will break when converting to model/controller
 	if not is_multiplayer_authority(): return
 	# end stuff that will break
-	
+
 	if event is InputEventMouseMotion:
 		rotate_y(deg_to_rad(-event.relative.x * horizontalMouseSensitivity))
 		visuals.rotate_y(deg_to_rad(event.relative.x * horizontalMouseSensitivity))
@@ -52,68 +52,88 @@ func _physics_process(delta):
 	# this is more stuff that will break when converting to model/controller
 	if not is_multiplayer_authority(): return
 	# end stuff that will break
-	
+
 	if !animation_player.is_playing():
 		isPositionLocked = false
-	
+
 	# Handle Jump.
 	if Input.is_action_just_pressed("jump_dodge") and is_on_floor():
 		velocity.y = JUMP_VELOCITY
 		# need an animation here too
-		
+
 	if Input.is_action_pressed("movementAbility"):
 		if jetpackFuel > 0:
 			jetpackFuel -= jetpackFuelConsumptionRate
 			velocity.y += jetpackAcceleration
-		
+
 	# Here are all the animations that would override movement. Right now it is just kick.
 	if Input.is_action_just_pressed("melee"):
-		if !isPositionLocked and animation_player.current_animation != "kick": # and is_on_floor(): # We can add this and is on floor for our own sanity. It depends on what kind of canned animation we are doing.
+		if !isPositionLocked and animation_player.current_animation != "kick": 
+			# and is_on_floor(): # We can add this and is on floor for our own sanity. 
+			# It depends on what kind of canned animation we are doing.
 			animation_player.play("kick")
 			isPositionLocked = true
+
+	if Input.is_action_just_pressed("shoot_throw"):
+		var point: Vector3  = (rayCast_3d.global_position - \
+		camera_3d.global_position).normalized()
+		#get_node("../../").CastAbilityCall("Fireball", arr)
+		var dic = Dictionary()
+		dic["posx"] = position.x
+		dic["posy"] = position.y + 1.5
+		dic["posz"] = position.z
+		dic["velx"] = point.x
+		dic["vely"] = point.y
+		dic["velz"] = point.z
+		dic["type"] = "cast"
+		dic["spell"] = "Fireball"
+		get_node("../../").SendMessageCall(JSON.stringify(dic))
 
 	# Get the input direction and handle the movement/deceleration.
 	# As good practice, you should replace UI actions with custom gameplay actions.
 	var input_dir = Input.get_vector("left", "right", "forward", "backward")
 	var direction = (transform.basis * Vector3(input_dir.x, 0, input_dir.y)).normalized()
-	
+
 	if !isPositionLocked:
 		if not is_on_floor():
 			velocity.y -= gravity * delta
 			# TODO: Replace with "falling"
 			if animation_player.current_animation != "idle":
 				animation_player.play("idle")
-			
 			if direction:
-				visuals.look_at(position + direction)
-				velocity.x = direction.x * SPEED
-				velocity.z = direction.z * SPEED
+				visuals.look_at(position + direction);
+				var accelerationVector = direction * accelerationRate;
+				if (velocity.x * direction.x) > 0: # same sign
+					if velocity.x < SPEED:
+						velocity.x += accelerationVector.x;
+				else:
+					velocity.x += accelerationVector.x;
+				if (velocity.z * direction.z) > 0: # same sign
+					if velocity.z < SPEED:
+						velocity.z += accelerationVector.z;
+				else:
+					velocity.z += accelerationVector.z;
 			else:
-				velocity.x = move_toward(velocity.x, 0, SPEED)
-				velocity.z = move_toward(velocity.z, 0, SPEED)
-			
+				var accelerationVector = -1 * velocity.normalized() * accelerationRate;
+				velocity += accelerationVector;   
 		else:
 			if jetpackFuel < jetpackMaxFuel:
 				jetpackFuel += jetpackRefuelRate
-				
 			if direction:
 				if animation_player.current_animation != "running":
 					animation_player.play("running")
 				visuals.look_at(position + direction)
 				velocity.x = direction.x * SPEED
 				velocity.z = direction.z * SPEED
-			
 			else:
 				if animation_player.current_animation != "idle":
 					animation_player.play("idle")
 				velocity.x = move_toward(velocity.x, 0, SPEED)
 				velocity.z = move_toward(velocity.z, 0, SPEED)
-		
-		# If other, not locking action pressed, execute action and over write animation / merge animation
+		# If other, not locking action pressed, execute action and over write 
+		# animation / merge animation
 		if Input.is_action_just_pressed("shoot_throw"):
 			# Spawn projectile
 			var target = rayCast_3d.get_collision_point()
 			
-			
-		
 		move_and_slide()

@@ -9,6 +9,11 @@
       "commandName": "Executable",
       "executablePath": "C:\\Users\\Kristofer\\Downloads\\Godot_v4.2-beta4_mono_win64\\Godot_v4.2-beta4_mono_win64\\Godot_v4.2-beta4_mono_win64.exe",
       "workingDirectory": "."
+    },
+    "Headless Server": {
+      "commandName": "Executable",
+      "executablePath": "C:\\Users\\Kristofer\\Downloads\\Godot_v4.2-beta4_mono_win64\\Godot_v4.2-beta4_mono_win64\\Godot_v4.2-beta4_mono_win64.exe",
+      "commandLineArgs": "--headless --verbose"
     }
   }
 }
