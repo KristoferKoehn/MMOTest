@@ -4,18 +4,23 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Godot;
+using Microsoft.Data.Sqlite;
 using Newtonsoft.Json.Linq;
+
+
 
 namespace MMOTest.scripts.Managers
 {
     public class MessageQueue
     {
+
         private static MessageQueue instance = new MessageQueue();
         private Queue<JObject> queue;
 
         private MessageQueue()
         {
             queue = new Queue<JObject>();
+            
         }
 
         public static MessageQueue GetInstance()
@@ -27,9 +32,6 @@ namespace MMOTest.scripts.Managers
         public void AddMessage(JObject message)
         {
             //GD.Print("ADDED " +  message.ToString());
-
-            
-
             queue.Enqueue(message);
         }
 

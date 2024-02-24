@@ -27,10 +27,10 @@ namespace MMOTest.scripts.Managers
                 if (m.Property("type").Value.ToString() == "cast")
                 {
                     GD.Print(m.Property("spell").Value);
-                    AbstractAbility fb = GD.Load<PackedScene>($"res://scenes/abilities/{m.Property("spell").Value}.tscn").Instantiate<AbstractAbility>();
-                    fb.SetMultiplayerAuthority(1);
-                    fb.Initialize(m);
-                    SceneTreeRoot.GetNode<Node>("GameLoop/TestLevel/AbilityModels").AddChild(fb, forceReadableName: true);
+                    AbstractAbility ability = GD.Load<PackedScene>($"res://scenes/abilities/{m.Property("spell").Value}.tscn").Instantiate<AbstractAbility>();
+                    ability.SetMultiplayerAuthority(1); //this will change to be pulled from json
+                    ability.Initialize(m);
+                    SceneTreeRoot.GetNode<Node>("GameLoop/TestLevel/AbilityModels").AddChild(ability, forceReadableName: true);
                 }
                 //do something here
             }

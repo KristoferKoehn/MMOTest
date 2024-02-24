@@ -1,4 +1,5 @@
 using Godot;
+using Microsoft.Data.Sqlite;
 using MMOTest.scripts.Managers;
 using Newtonsoft.Json.Linq;
 using System;
@@ -89,7 +90,6 @@ public partial class TestLevel : Node3D
     public void PeerHost()
     {
         EnetPeer.CreateServer(PORT);
-
         Multiplayer.MultiplayerPeer = EnetPeer;
         Multiplayer.PeerConnected += AddPlayer;
         Multiplayer.PeerDisconnected += RemovePlayer;
@@ -100,23 +100,44 @@ public partial class TestLevel : Node3D
 
     public void AddPlayer(long PeerId)
     {
+        //get info from database 
 
         RpcId(PeerId, "SpawnClientModel", PeerId);
         SpawnClientModel(PeerId);
         DefaultModel puppet = PuppetPlayer.Instantiate<DefaultModel>();
         //puppet.Name = PeerId.ToString();
         puppet.TrackingPeerId = PeerId;
-        puppet.Position = new Vector3(3, 3, 0);
         puppet.SetMultiplayerAuthority(1);
         
         this.GetNode<Node>(PuppetNodePath).AddChild(puppet, forceReadableName:true);
         //puppet.GetNode<MultiplayerSynchronizer>("MultiplayerSynchronizer").SetVisibilityFor(0, true);
         //puppet.GetNode<MultiplayerSynchronizer>("MultiplayerSynchronizer").SetVisibilityFor((int)PeerId, false);
-        
+
+        string connectionString = "Data Source=your_database_file_path.db";
+
+        using (SqliteConnection connection = new SqliteConnection(connectionString))
+        {
+            connection.Open();
+
+            using (SqliteCommand command = connection.CreateCommand())
+            {
+
+               //figure out connection stuff
+
+                command.CommandText = connectionString;
+                command.ExecuteReader();
+
+
+            }
+
+            connection.Close();
+
+        }
+
     }
 
     public void RemovePlayer(long PeerId) {
-        var player = this.GetNode<Node>(ClientNodePath).GetNodeOrNull(PeerId.ToString());
+        AbstractModel player = (AbstractModel)this.GetNode<AbstractModel>(ClientNodePath).GetNodeOrNull(PeerId.ToString());
         AbstractModel Puppet = null;
         foreach (AbstractModel p in this.GetNode<Node>(PuppetNodePath).GetChildren())
         {
@@ -182,47 +203,33 @@ public partial class TestLevel : Node3D
         MessageQueue.GetInstance().AddMessage(jsonMessagePayload);
     }
 
-    public void CastAbilityCall(string SceneName, float[] args)
-    {
-        RpcId(1, "CastAbility", SceneName, args);
-    }
-
-    public void SendMessageCall(string message)
-    {
-        RpcId(1, "SendMessage", message);
-    }
-
+    //when a clientmodel enters scene tree
     public void _on_client_models_child_entered_tree(Node node)
     {
-        if (node.GetMultiplayerAuthority() != this.Multiplayer.GetUniqueId())
-        {
-            ((Node3D)node).Visible = false;
-            ((Node3D)node).Position = new Vector3(0, -20, 0);
-        } 
-        else
-        {
-            RandomNumberGenerator rng = new RandomNumberGenerator();
-            ((Node3D)node).Position = new Vector3(rng.RandfRange(-20, -10), 3, rng.RandfRange(10, 20));
-        }
+        RandomNumberGenerator rng = new RandomNumberGenerator();
+        ((Node3D)node).Position = new Vector3(rng.RandfRange(-20, -10), 3, rng.RandfRange(10, 20));
     }
 
+    //when a puppetmodel enters scene tree
     public void _on_puppet_models_child_entered_tree(Node node)
     {
-        GD.Print("PUPPET ADDED TO TREE");
         DefaultModel dm = (DefaultModel)node;
         dm.SimulationPeerId = this.Multiplayer.GetUniqueId();
     }
 
+    //when an ability enters the tree
     public void _on_ability_models_child_entered_tree(Node node)
     {
         AbstractAbility t = (AbstractAbility)node;
         t.ApplyHost(host);
     }
 
+    /*
     public void _on_ability_spawner_despawned(Node node)
     {
         if (node.IsQueuedForDeletion()) { return; }
         node.QueueFree();
     }
+    */
 
 }

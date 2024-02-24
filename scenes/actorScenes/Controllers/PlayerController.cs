@@ -18,10 +18,11 @@ public partial class PlayerController : AbstractController
     [Export]
     float AccelerationRate = 1.0f;
     [Export]
-    float JumpVelocity = 5.0f;
+    float JumpVelocity = 10.0f;
     
     float gravity = (float)ProjectSettings.GetSetting("physics/3d/default_gravity");
     public Vector3 CalculatedVelocity = Vector3.Zero;
+    public Vector3 AppliedGravity = Vector3.Zero;
 
     [Export]
     float JetpackMaxFuel = 10;
@@ -55,7 +56,7 @@ public partial class PlayerController : AbstractController
 	}
 
 	// Called every frame. 'delta' is the elapsed time since the previous frame.
-	public override void _Process(double delta)
+	public override void _Process(double delta) // move controller to position of model, tween for smooth camera movement
 	{
         if(Model != null)
         {
@@ -82,48 +83,56 @@ public partial class PlayerController : AbstractController
             Vector3 point = (DirectionMarker.GlobalPosition - Camera.GlobalPosition).Normalized();
             JObject job = new JObject
             {
+                { "spell", "Fireball"},
+                { "type", "cast"},
                 { "posx", Model.Position.X },
                 { "posy", Model.Position.Y + 1.5},
                 { "posz", Model.Position.Z },
                 { "velx", point.X},
                 { "vely", point.Y},
-                { "velz", point.Z},
-                { "type", "cast"},
-                { "spell", "Fireball"}
+                { "velz", point.Z}
             };
             this.GetParent<TestLevel>().RpcId(1,"SendMessage", job.ToString());
+        }
+
+        if(Input.IsActionJustPressed("jump_dodge"))
+        {
+            CalculatedVelocity += Vector3.Up * JumpVelocity;
         }
 
         Vector2 inputDir = Input.GetVector("left", "right", "forward", "backward");
         Vector3 direction = (Transform.Basis * new Vector3(inputDir.X, 0, inputDir.Y)).Normalized();
 
+        
+
+        if (direction != Vector3.Zero)
+        {
+            if (ModelAnimation.CurrentAnimation != "running")
+            {
+                ModelAnimation.Play("running");
+            }
+
+            Model.LookAt(Model.Position + direction);
+            //CalculatedVelocity += direction;
+        }
+
+        Model.Velocity = CalculatedVelocity + AppliedGravity + (direction * Speed);
+        Model.MoveAndSlide();
         if (Model.IsOnFloor())
         {
+            AppliedGravity = Vector3.Zero;
+            CalculatedVelocity = new Vector3(CalculatedVelocity.X, 0, CalculatedVelocity.Z);
             if (JetPackFuel < JetpackMaxFuel)
             {
                 JetPackFuel += JetpackFuelRefillRate;
-            }
-
-            if (direction != Vector3.Zero)
-            {
-                if (ModelAnimation.CurrentAnimation != "running")
-                {
-                    ModelAnimation.Play("running");
-                }
-
-                Model.LookAt(Model.Position + direction);
-                CalculatedVelocity += direction;
             }
             
         }
         else
         {
             //this is the gravity applied to the model
-            CalculatedVelocity -= new Vector3(Model.Velocity.X, 1.15f *gravity * (float)delta, Model.Velocity.Z);
+            //AppliedGravity = //new Vector3(Model.Velocity.X, 1.15f *gravity * (float)delta, Model.Velocity.Z);
         }
-
-        Model.Velocity = CalculatedVelocity;
-        Model.MoveAndSlide();
     }
 
     
