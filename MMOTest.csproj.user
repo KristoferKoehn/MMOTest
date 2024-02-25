@@ -4,6 +4,6 @@
     <DebuggerFlavor>ProjectDebugger</DebuggerFlavor>
   </PropertyGroup>
   <PropertyGroup>
-    <ActiveDebugProfile>Headless Server</ActiveDebugProfile>
+    <ActiveDebugProfile>MMOTest</ActiveDebugProfile>
   </PropertyGroup>
 </Project>
