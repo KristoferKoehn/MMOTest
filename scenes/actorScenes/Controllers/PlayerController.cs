@@ -10,43 +10,34 @@ public partial class PlayerController : AbstractController
     [Export] float VerticalMouseSensitity = 0.2f;
     [Export] float ScrollSensitivity = 0.25f;
 
-    Vector3 gravity = (Vector3)ProjectSettings.GetSetting("physics/3d/default_gravity_vector");
+    Vector3 gravity = (Vector3)ProjectSettings.GetSetting("physics/3d/default_gravity_vector") * (float)ProjectSettings.GetSetting("physics/3d/default_gravity");
 
-    [Export] private float mass = 80; // kilograms. Default for all characters. A total mass with armor or whatever should be calculated later (maybe)
+    [Export] private float mass = 80; // kilograms. Default for all characters.
+    [Export] private float realMass = 100; // Total mass with armor, TODO: set this from stats or something somehow
+    
     // Alot easier to give accelerations than velocities. I might be able to swap these for max velocity with some extra math later.
     [Export] private float groundAcceleration = 1.25f;
     [Export] private float airAcceleration = 1f; // Left flexible for tuning. might need to be set porportional to ground speed, with the porportion being an "air control" value different characters have.
     [Export] private float waterAcceleration = 0.5f; // Not testable yet.
-    
-    [Export] private float jumpHeight = 0.3f;
+    [Export] private float jumpHeight = 3.0f;
 
+    // Calculated from exports
     private float instantaneousSprintForce;
-    private float instantaneousJumpForce;
+    private float jumpVelocity;
     private float instantaneousAirManueverForce;
     private float instantaneousSwimForce;
 
 
     private Vector3 totalForce = new Vector3();
     private Vector3 externalForce = new Vector3();
-    private float surfaceForce;
-
-
-    //[Export]
-    //float Speed = 5.0f;
-    //[Export]
-    //float AccelerationRate = 1.0f;
-    //[Export]
-    //float JumpVelocity = 10.0f;
-
-
-    //public Vector3 CalculatedVelocity = Vector3.Zero;
-    //public Vector3 AppliedGravity = Vector3.Zero;
+    private float surfaceForce; // Set to one of the other force values, depending on which surface we are moving on / through
+    // Actually, might want to seperate the whole on / through thing.
 
     [Export] float JetpackMaxFuel = 10;
     float JetPackFuel = 10;
     [Export] float JetpackFuelConsumptionRate = 0.1f;
     [Export] float JetpackFuelRefillRate = 0.5f;
-    [Export] private float jetPackForce = 1200;
+    [Export] private float jetPackForce = 1500; // Arbitray. Might turn into a calculation later. Give it a better handle 
 
     bool IsPositionLocked = false;
 
@@ -68,11 +59,12 @@ public partial class PlayerController : AbstractController
     // Called when the node enters the scene tree for the first time.
     public override void _Ready()
     {
-        // So this whole bit feels alittle backwards. The forces are ultimately what moves the model, we are infering what those forces should be from exported variables that are more intuitive to set.
+        // So this whole bit feels alittle backwards. The forces are ultimately what moves the model, we are inferring what those forces should be from exported variables that are more intuitive to set.
         instantaneousSprintForce = mass * groundAcceleration;
-        instantaneousJumpForce = mass * (float)Math.Sqrt(jumpHeight * 2 * gravity.Y); // This one is alittle bit of a doozy. Has to do with velocity averages and calculating time to max height
+        jumpVelocity = (float)Math.Sqrt(jumpHeight * 2 * -gravity.Y); // This one is alittle bit of a doozy. Has to do with velocity averages and calculating time to max height
         instantaneousAirManueverForce = mass * airAcceleration;
         instantaneousSwimForce = mass * waterAcceleration;
+        // At some point, it might make sense to derive these from like, strength. Its how much force you can exert to move in a direction. What you get out of that has to do with friction though. which means, mass, normal forces, etc.
     }
 
 	// Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -125,16 +117,15 @@ public partial class PlayerController : AbstractController
         {
             surfaceForce = instantaneousAirManueverForce; 
         }
-
         // Set internal force after selecting surface force
-        internalForce *= surfaceForce; 
+        internalForce *= surfaceForce;
 
         if (Input.IsActionJustPressed("jump_dodge") & Model.IsOnFloor())
         {
-            internalForce += Vector3.Up * instantaneousJumpForce;
+            Model.Velocity += Vector3.Up * jumpVelocity;
         }
 
-        if (Input.IsActionJustPressed("movementAbility"))
+        if (Input.IsActionPressed("movementAbility"))
         {
             // Change logic to reflect kit. For now -> mage hover
             ApplyImpulse(Vector3.Up * jetPackForce);
@@ -146,20 +137,12 @@ public partial class PlayerController : AbstractController
         externalForce = Vector3.Zero;
 
 
-        Model.Velocity = Model.Velocity + ((totalForce / mass) * (float)delta) + gravity;
+        Model.Velocity = Model.Velocity + ((float)delta * ((totalForce / realMass) + gravity));
         totalForce = Vector3.Zero;
         
         Model.MoveAndSlide();
 
-        //// CalculatedVelocity = CalculatedVelocity * 0.85f;
-
-        //if (Input.IsActionJustPressed("jump_dodge") & Model.IsOnFloor())
-        //{
-        //    CalculatedVelocity += Vector3.Up * JumpVelocity;
-        //}
-
-        //Vector2 inputDir = Input.GetVector("left", "right", "forward", "backward");
-        //Vector3 direction = (Transform.Basis * new Vector3(inputDir.X, 0, inputDir.Y)).Normalized();
+        
 
         //if (direction != Vector3.Zero)
         //{
