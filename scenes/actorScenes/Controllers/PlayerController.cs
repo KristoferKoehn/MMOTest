@@ -15,9 +15,9 @@ public partial class PlayerController : AbstractController
     [Export] private float mass = 80; // kilograms. Default for all characters.
     [Export] private float realMass = 100; // Total mass with armor, TODO: set this from stats or something somehow
     
-    // Alot easier to give accelerations than velocities. I might be able to swap these for max velocity with some extra math later.
+    // A lot easier to give accelerations than velocities. I might be able to swap these for max velocity with some extra math later.
     [Export] private float groundAcceleration = 1.25f;
-    [Export] private float airAcceleration = 1f; // Left flexible for tuning. might need to be set porportional to ground speed, with the porportion being an "air control" value different characters have.
+    [Export] private float airAcceleration = 1f; // Left flexible for tuning. might need to be set proportional to ground speed, with the proportion being an "air control" value different characters have.
     [Export] private float waterAcceleration = 0.5f; // Not testable yet.
     [Export] private float jumpHeight = 3.0f;
 
@@ -31,13 +31,13 @@ public partial class PlayerController : AbstractController
     private Vector3 totalForce = new Vector3();
     private Vector3 externalForce = new Vector3();
     private float surfaceForce; // Set to one of the other force values, depending on which surface we are moving on / through
-    // Actually, might want to seperate the whole on / through thing.
+    // Actually, might want to separate the whole on / through thing.
 
     [Export] float JetpackMaxFuel = 10;
     float JetPackFuel = 10;
     [Export] float JetpackFuelConsumptionRate = 0.1f;
     [Export] float JetpackFuelRefillRate = 0.5f;
-    [Export] private float jetPackForce = 1500; // Arbitray. Might turn into a calculation later. Give it a better handle 
+    [Export] private float jetPackForce = 1500; // Arbitrary. Might turn into a calculation later. Give it a better handle 
 
     bool IsPositionLocked = false;
 
@@ -59,23 +59,18 @@ public partial class PlayerController : AbstractController
     // Called when the node enters the scene tree for the first time.
     public override void _Ready()
     {
-        // So this whole bit feels alittle backwards. The forces are ultimately what moves the model, we are inferring what those forces should be from exported variables that are more intuitive to set.
+        // So this whole bit feels a little backwards. The forces are ultimately what moves the model, we are inferring what those forces should be from exported variables that are more intuitive to set.
         instantaneousSprintForce = mass * groundAcceleration;
-        jumpVelocity = (float)Math.Sqrt(jumpHeight * 2 * -gravity.Y); // This one is alittle bit of a doozy. Has to do with velocity averages and calculating time to max height
+        jumpVelocity = (float)Math.Sqrt(jumpHeight * 2 * -gravity.Y); // This one is a little bit of a doozy. Has to do with velocity averages and calculating time to max height
         instantaneousAirManueverForce = mass * airAcceleration;
         instantaneousSwimForce = mass * waterAcceleration;
-        // At some point, it might make sense to derive these from like, strength. Its how much force you can exert to move in a direction. What you get out of that has to do with friction though. which means, mass, normal forces, etc.
+        // At some point, it might make sense to derive these from like, strength. It's how much force you can exert to move in a direction. What you get out of that has to do with friction though. which means, mass, normal forces, etc.
     }
 
 	// Called every frame. 'delta' is the elapsed time since the previous frame.
-	public override void _Process(double delta) // move controller to position of model, tween for smooth camera movement
+	public override void _Process(double delta)
 	{
-        if(Model != null)
-        {
-            Tween t = CreateTween();
-            t.TweenProperty(this, "position", Model.GlobalPosition + new Vector3(0, 1.4f, 0), 0.016f);
-            t.Play();
-        }
+        
 	}
 
     public void AttachModel(AbstractModel model)
@@ -88,6 +83,8 @@ public partial class PlayerController : AbstractController
     public override void _PhysicsProcess(double delta)
     {
         if (Model == null) { return; }
+
+        this.GlobalPosition = this.Model.GlobalPosition;
 
         if (Input.IsActionJustPressed("shoot_throw")) {
             Vector3 point = (DirectionMarker.GlobalPosition - Camera.GlobalPosition).Normalized();
