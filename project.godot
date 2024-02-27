@@ -32,6 +32,12 @@ folder_colors={
 "res://scenes/abilities/Abstractions/": "orange"
 }
 
+[importer_defaults]
+
+animation_library={
+"animation/fps": 30.0
+}
+
 [input]
 
 forward={

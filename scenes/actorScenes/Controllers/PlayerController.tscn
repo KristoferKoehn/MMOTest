@@ -3,10 +3,10 @@
 [ext_resource type="Script" path="res://scenes/actorScenes/Controllers/PlayerController.cs" id="1_kwuie"]
 
 [node name="PlayerController" type="Node3D"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.4, 0)
 script = ExtResource("1_kwuie")
 
 [node name="CameraVerticalRotationPoint" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.4, 0)
 
 [node name="Marker3D" type="Marker3D" parent="CameraVerticalRotationPoint"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.618163, 0.660239)
