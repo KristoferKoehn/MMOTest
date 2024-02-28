@@ -6,8 +6,8 @@ namespace scripts.server
 {
     public class Actor
     {
-        public Node3D ClientModelReference;
-        public Node3D PuppetModelReference;
+        public AbstractModel ClientModelReference;
+        public AbstractModel PuppetModelReference;
         public int ActorMultiplayerAuthority;
         public StatBlock stats;
     }

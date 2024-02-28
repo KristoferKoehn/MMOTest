@@ -21,7 +21,7 @@
 albedo_texture = ExtResource("2_vyinc")
 uv1_triplanar = true
 
-[node name="TestLevel" type="Node3D"]
+[node name="MainLevel" type="Node3D"]
 script = ExtResource("1_s7cfu")
 
 [node name="PuppetModels" type="Node" parent="."]

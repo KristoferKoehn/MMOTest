@@ -6,7 +6,7 @@ using System.Diagnostics;
 public partial class GameLoop : Node
 {
     public Stack<Node> sceneStack = new Stack<Node>();
-    int PORT = 9999;
+    int PORT = 9998;
 
     public override void _Ready()
     {
@@ -14,7 +14,7 @@ public partial class GameLoop : Node
         {
             string ip = UpnpSetup();
             UniversalConnector connector = new UniversalConnector("50.47.173.115", PORT);
-            connector.Host("DEDICATED SERVER", ip);
+            connector.Host("ActorImplementation", ip);
             TestLevel tL = GD.Load<PackedScene>("res://scenes/levels/TestLevel.tscn").Instantiate<TestLevel>();
             tL.Connector = connector;
             tL.host = true;
