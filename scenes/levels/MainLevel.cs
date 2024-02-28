@@ -5,7 +5,7 @@ using Newtonsoft.Json.Linq;
 using System;
 using System.Runtime.CompilerServices;
 
-public partial class TestLevel : Node3D
+public partial class MainLevel : Node3D
 {
 
     const int PORT = 9001;
@@ -25,7 +25,6 @@ public partial class TestLevel : Node3D
     {
         messageQueueManager = new MessageQueueManager(this.GetTree().Root);
     }
-
 
     public override void _Ready()
     {
@@ -223,13 +222,5 @@ public partial class TestLevel : Node3D
         AbstractAbility t = (AbstractAbility)node;
         t.ApplyHost(host);
     }
-
-    /*
-    public void _on_ability_spawner_despawned(Node node)
-    {
-        if (node.IsQueuedForDeletion()) { return; }
-        node.QueueFree();
-    }
-    */
 
 }

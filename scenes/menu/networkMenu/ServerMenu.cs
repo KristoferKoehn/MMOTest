@@ -40,7 +40,7 @@ public partial class ServerMenu : Node2D
 			connector.Host(serverName.Text, ip);
             //start host
 
-            TestLevel tL = GD.Load<PackedScene>("res://scenes/levels/TestLevel.tscn").Instantiate<TestLevel>();
+            MainLevel tL = GD.Load<PackedScene>("res://scenes/levels/TestLevel.tscn").Instantiate<MainLevel>();
 			tL.Connector = connector;
 			tL.host = true;
             this.GetParent<GameLoop>().PushScene(tL);
@@ -73,13 +73,13 @@ public partial class ServerMenu : Node2D
 		{
 			TreeItem selection = tree.GetSelected();
 			string ip = connector.Join(selection.GetText(0));
-            TestLevel tL = GD.Load<PackedScene>("res://scenes/levels/TestLevel.tscn").Instantiate<TestLevel>();
+            MainLevel tL = GD.Load<PackedScene>("res://scenes/levels/TestLevel.tscn").Instantiate<MainLevel>();
 			tL.ServerAddress = ip;
             this.GetParent<GameLoop>().PushScene(tL);
         } else if (this.GetNode<TextEdit>("Control/TextEdit").Text.Length > 0)
 		{
             string ip = this.GetNode<TextEdit>("Control/TextEdit").Text;
-            TestLevel tL = GD.Load<PackedScene>("res://scenes/levels/TestLevel.tscn").Instantiate<TestLevel>();
+            MainLevel tL = GD.Load<PackedScene>("res://scenes/levels/TestLevel.tscn").Instantiate<MainLevel>();
             tL.ServerAddress = ip;
             this.GetParent<GameLoop>().PushScene(tL);
         }
