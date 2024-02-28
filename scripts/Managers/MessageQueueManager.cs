@@ -3,6 +3,7 @@ using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -24,10 +25,15 @@ namespace MMOTest.scripts.Managers
             if (instance == null)
             {
                 instance = new MessageQueueManager();
+                instance.AttachSingleton();
             }
             return instance;
         }
 
+        private void AttachSingleton()
+        {
+            GetTree().Root.GetNode<MainLevel>("GameLoop/MainLevel").AddChild(instance);
+        }
 
         //get thing from queue
         public void ProcessMessages()

@@ -11,12 +11,19 @@ public partial class ActorManager : Node
 	static ActorManager instance = null;
 
 	private ActorManager() {
-		GetTree().Root.GetNode<MainLevel>("GameLoop/MainLevel").AddChild(this);
+		
 	}
+
+	private void AttachSingleton() {
+        GetTree().Root.GetNode<MainLevel>("GameLoop/MainLevel").AddChild(instance);
+    }
 
 	public static ActorManager GetInstance()
 	{
-		if (instance == null) { instance = new ActorManager(); }
+		if (instance == null) {
+			instance = new ActorManager();
+			instance.AttachSingleton();
+        }
 		return instance;
 	}
 
