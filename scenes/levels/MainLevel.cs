@@ -27,6 +27,18 @@ public partial class MainLevel : Node3D
         MessageQueue.GetInstance();
         StatManager.GetInstance();
         MessageQueueManager.GetInstance();
+
+
+    }
+
+
+    public void PrintStatus()
+    {
+        GD.Print("Peers Connected: " + Multiplayer.GetPeers().Length);
+        foreach (int p in Multiplayer.GetPeers())
+        {
+            GD.Print("Peer ID " + p);
+        }
     }
 
     public override void _Ready()
@@ -75,6 +87,7 @@ public partial class MainLevel : Node3D
         this.AddChild(t);
         t.Start(5);
         t.Timeout += Connector.HostRefresh;
+        t.Timeout += PrintStatus;
     }
     
 

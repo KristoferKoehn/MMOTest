@@ -16,11 +16,14 @@ public enum StatType
 
 }
 
+
+
 namespace MMOTest.Backend
 {
 
     public class StatBlock
     {
+
         //private Dictionary<StatType, float> statblock = new Dictionary<StatType, float>();
         private JObject statblock = new JObject();
         public StatBlock() { }
@@ -39,6 +42,11 @@ namespace MMOTest.Backend
         public void SetStatBlock(string JString)
         {
             statblock = new JObject(JString);
+        }
+
+        public void SetStatBlock(JObject Job)
+        {
+            statblock = Job;
         }
 
         public string GetStatBlockString()

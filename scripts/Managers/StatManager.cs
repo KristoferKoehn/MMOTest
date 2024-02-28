@@ -41,10 +41,12 @@ public partial class StatManager : Node
     {
         long peerID = Multiplayer.GetRemoteSenderId();
         //call next RPC that sends the stat block to the user
-
-
+        
     }
 
+    public void AssignStatBlock(string jstr, long peerID)
+    {
 
+    }
 
 }

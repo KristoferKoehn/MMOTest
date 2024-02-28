@@ -2,6 +2,7 @@ using Godot;
 using System.Collections.Generic;
 using Newtonsoft.Json.Linq;
 using MMOTest.Backend;
+using System;
 
 public partial class ActorManager : Node
 {
@@ -28,16 +29,27 @@ public partial class ActorManager : Node
 		this.host = host;
 	}
 
-	public void CreateActor(AbstractModel player, AbstractModel puppet, long PeerID) 
+	public void CreateActor(AbstractModel player, AbstractModel puppet, long PeerID)
 	{
 		Actor actor = new Actor();
 		actor.ClientModelReference = player;
 		actor.PuppetModelReference = puppet;
 		actor.ActorMultiplayerAuthority = PeerID;
-		actor.stats = new StatBlock();
-		//TODO: define generic stat block better
-		actor.stats.SetStat(StatType.HEALTH, 100);
-        actor.stats.SetStat(StatType.MANA, 100);
+        // generic stat block
+        JObject stat = new JObject()
+		{
+			{ Enum.GetName(typeof(StatType), StatType.HEALTH) , 100 },
+            { Enum.GetName(typeof(StatType), StatType.MANA) , 100 },
+			{ Enum.GetName(typeof(StatType), StatType.MAGIC_RESIST), 13},
+			{ Enum.GetName(typeof(StatType), StatType.ARMOR), 11},
+			{ Enum.GetName(typeof(StatType), StatType.ABILITY_POINTS), 14},
+			{ Enum.GetName(typeof(StatType), StatType.CASTING_SPEED), 12},
+			{ Enum.GetName(typeof(StatType), StatType.PHYSICAL_DAMAGE), 16},
+        };
+		StatBlock statBlock = new StatBlock();
+		statBlock.SetStatBlock(stat);
+		actor.stats = statBlock;
+
         actors.Add(PeerID, actor);
 	}
 
@@ -59,7 +71,6 @@ public partial class ActorManager : Node
     {
         foreach (Actor actor in actors.Values)
 		{
-
 			//makes all the stuff line up. Assign all synced variables from client to puppet
 			actor.PuppetModelReference.GlobalPosition = actor.ClientModelReference.GlobalPosition;
             actor.PuppetModelReference.GlobalRotation = actor.ClientModelReference.GlobalRotation;
