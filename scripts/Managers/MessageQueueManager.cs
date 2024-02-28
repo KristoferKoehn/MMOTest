@@ -10,8 +10,22 @@ namespace MMOTest.scripts.Managers
 {
     public partial class MessageQueueManager : Node
     {
-        public MessageQueueManager() { 
-            
+
+        static MessageQueueManager instance = null;
+
+
+
+        private MessageQueueManager() { 
+            GetTree().Root.GetNode<MainLevel>("GameLoop/MainLevel").AddChild(this);
+        }
+
+        public static MessageQueueManager GetInstance()
+        {
+            if (instance == null)
+            {
+                instance = new MessageQueueManager();
+            }
+            return instance;
         }
 
 

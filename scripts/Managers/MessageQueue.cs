@@ -14,7 +14,7 @@ namespace MMOTest.scripts.Managers
     public partial class MessageQueue : Node
     {
 
-        private static MessageQueue instance = new MessageQueue();
+        private static MessageQueue instance = null;
         private Queue<JObject> queue;
 
         private MessageQueue()
@@ -25,6 +25,10 @@ namespace MMOTest.scripts.Managers
 
         public static MessageQueue GetInstance()
         {
+            if (instance == null)
+            {
+                instance = new MessageQueue();
+            }
             return instance;
         }
 

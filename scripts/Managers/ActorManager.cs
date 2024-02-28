@@ -8,7 +8,7 @@ public partial class ActorManager : Node
 	private bool host;
 
 	Dictionary<long, Actor> actors = new Dictionary<long, Actor>();
-	static ActorManager instance = new ActorManager();
+	static ActorManager instance = null;
 
 	private ActorManager() {
 		GetTree().Root.GetNode<MainLevel>("GameLoop/MainLevel").AddChild(this);
@@ -16,6 +16,7 @@ public partial class ActorManager : Node
 
 	public static ActorManager GetInstance()
 	{
+		if (instance == null) { instance = new ActorManager(); }
 		return instance;
 	}
 
