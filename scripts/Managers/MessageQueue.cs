@@ -20,7 +20,6 @@ namespace MMOTest.scripts.Managers
         private MessageQueue()
         {
             queue = new Queue<JObject>();
-            GetTree().Root.GetNode<MainLevel>("GameLoop/MainLevel").AddChild(this);
         }
 
         public static MessageQueue GetInstance()
