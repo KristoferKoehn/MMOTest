@@ -14,8 +14,6 @@ namespace MMOTest.scripts.Managers
 
         static MessageQueueManager instance = null;
 
-
-
         private MessageQueueManager() { 
             
         }

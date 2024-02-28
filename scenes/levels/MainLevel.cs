@@ -16,7 +16,6 @@ public partial class MainLevel : Node3D
     public bool headless = false;
     string PuppetNodePath = "PuppetModels";
     string ClientNodePath = "ClientModels";
-    MessageQueueManager messageQueueManager;
     
 
     ENetMultiplayerPeer EnetPeer;
@@ -24,7 +23,7 @@ public partial class MainLevel : Node3D
     PackedScene PlayerController = GD.Load<PackedScene>("res://scenes/actorScenes/player.tscn");
     public override void _EnterTree()
     {
-        messageQueueManager = new MessageQueueManager();
+        
     }
 
     public override void _Ready()
@@ -70,7 +69,7 @@ public partial class MainLevel : Node3D
             
         }
 
-        messageQueueManager.ProcessMessages();
+        MessageQueueManager.GetInstance().ProcessMessages();
 
     }
 
