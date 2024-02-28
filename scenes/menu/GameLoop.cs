@@ -15,7 +15,7 @@ public partial class GameLoop : Node
             string ip = UpnpSetup();
             UniversalConnector connector = new UniversalConnector("50.47.173.115", PORT);
             connector.Host("ActorImplementation", ip);
-            MainLevel tL = GD.Load<PackedScene>("res://scenes/levels/TestLevel.tscn").Instantiate<MainLevel>();
+            MainLevel tL = GD.Load<PackedScene>("res://scenes/levels/MainLevel.tscn").Instantiate<MainLevel>();
             tL.Connector = connector;
             tL.host = true;
             this.PushScene(tL);
