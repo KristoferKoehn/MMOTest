@@ -85,9 +85,9 @@ public partial class MainLevel : Node3D
         GD.Print("Peerhost functionality effectively deprecated");
         EnetPeer.CreateServer(PORT);
         Multiplayer.MultiplayerPeer = EnetPeer;
-        Multiplayer.PeerConnected += AddPlayer;
-        Multiplayer.PeerDisconnected += RemovePlayer;
-        AddPlayer(Multiplayer.GetUniqueId());
+        Multiplayer.PeerConnected += EstablishActor;
+        Multiplayer.PeerDisconnected += RemoveActor;
+        EstablishActor(Multiplayer.GetUniqueId());
     }
 
     public void AddPlayer(long PeerId)
@@ -193,19 +193,6 @@ public partial class MainLevel : Node3D
             GetNode<PlayerController>("PlayerController").AttachModel(PlayerModel);
         }
         return PlayerModel;
-    }
-
-
-    [Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
-    public void CastAbility(string SceneName, float[] args)
-    {
-        if(host)
-        {
-            AbstractAbility fb = GD.Load<PackedScene>($"res://scenes/abilities/{SceneName}.tscn").Instantiate<AbstractAbility>();
-            fb.Initialize(args, CasterAuthority:0, CasterOwner:null);
-            fb.SetMultiplayerAuthority(1);
-            GetNode<Node>("AbilityModels").AddChild(fb, forceReadableName: true);
-        }
     }
 
     [Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]

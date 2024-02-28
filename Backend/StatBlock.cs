@@ -1,3 +1,5 @@
+using Newtonsoft.Json.Linq;
+using System;
 using System.Collections.Generic;
 
 public enum StatType
@@ -19,17 +21,29 @@ namespace MMOTest.Backend
 
     public class StatBlock
     {
-        private Dictionary<StatType, float> statblock = new Dictionary<StatType, float>();
+        //private Dictionary<StatType, float> statblock = new Dictionary<StatType, float>();
+        private JObject statblock = new JObject();
         public StatBlock() { }
 
         public void SetStat(StatType statType, float value)
         {
-            statblock[statType] = value;
+            //statblock[statType] = value;
+            statblock.Add(Enum.GetName(typeof(StatType), statType), value);
         }
 
         public float GetStat(StatType statType)
         {
-            return statblock.ContainsKey(statType) ? statblock[statType] : 0;
+            return statblock.ContainsKey(Enum.GetName(typeof(StatType), statType)) ? (float)statblock.Property(Enum.GetName(typeof(StatType), statType)) : 0;
+        }
+
+        public void SetStatBlock(string JString)
+        {
+            statblock = new JObject(JString);
+        }
+
+        public string GetStatBlockString()
+        {
+            return statblock.ToString();
         }
     }
 }
