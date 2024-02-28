@@ -30,6 +30,7 @@ namespace MMOTest.scripts.Managers
 
         private void AttachSingleton()
         {
+            GD.Print(GetTree().Root.GetNode<MainLevel>("GameLoop/MainLevel").ToString());
             GetTree().Root.GetNode<MainLevel>("GameLoop/MainLevel").AddChild(instance);
         }
 
