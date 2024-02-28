@@ -14,7 +14,7 @@ public enum StatType
 
 }
 
-namespace Backend.StatBlock
+namespace MMOTest.Backend
 {
 
     public class StatBlock

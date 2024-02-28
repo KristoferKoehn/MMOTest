@@ -51,4 +51,9 @@ public partial class DefaultModel : AbstractModel
     {
         return this.GetNode<AnimationPlayer>("AnimationPlayer");
     }
+
+    public override void SetTrackingPeerId(long peerId)
+    {
+        this.TrackingPeerId = peerId;
+    }
 }

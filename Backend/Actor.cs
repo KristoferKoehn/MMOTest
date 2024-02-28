@@ -1,8 +1,7 @@
 using Godot;
 using System;
-using Backend.StatBlock;
 
-namespace scripts.server
+namespace MMOTest.Backend
 {
     public class Actor
     {

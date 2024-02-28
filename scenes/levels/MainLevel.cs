@@ -1,8 +1,8 @@
 using Godot;
 using Microsoft.Data.Sqlite;
+using MMOTest.Backend;
 using MMOTest.scripts.Managers;
 using Newtonsoft.Json.Linq;
-using scripts.server;
 using System;
 using System.Runtime.CompilerServices;
 
@@ -23,7 +23,11 @@ public partial class MainLevel : Node3D
     PackedScene PlayerController = GD.Load<PackedScene>("res://scenes/actorScenes/player.tscn");
     public override void _EnterTree()
     {
-        
+        //gonna make sure these are instantiated on client and host
+        ActorManager.GetInstance();
+        MessageQueue.GetInstance();
+        StatManager.GetInstance();
+        MessageQueueManager.GetInstance();
     }
 
     public override void _Ready()
@@ -126,6 +130,7 @@ public partial class MainLevel : Node3D
         AbstractModel client = SpawnClientModel(PeerId);
         DefaultModel puppet = PuppetPlayer.Instantiate<DefaultModel>();
         puppet.TrackingPeerId = PeerId;
+        client.SetTrackingPeerId(PeerId);
         puppet.SetMultiplayerAuthority(1);
         this.GetNode<Node>(PuppetNodePath).AddChild(puppet, forceReadableName: true);
 
@@ -166,6 +171,7 @@ public partial class MainLevel : Node3D
     {
         EnetPeer.CreateClient(ServerAddress, PORT);
         Multiplayer.MultiplayerPeer = EnetPeer;
+
     }
 
     [Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]

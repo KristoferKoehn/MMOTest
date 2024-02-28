@@ -1,8 +1,7 @@
 using Godot;
 using System.Collections.Generic;
-using scripts.server;
 using Newtonsoft.Json.Linq;
-using Backend.StatBlock;
+using MMOTest.Backend;
 
 public partial class ActorManager : Node
 {
@@ -36,7 +35,7 @@ public partial class ActorManager : Node
 		actor.PuppetModelReference = puppet;
 		actor.ActorMultiplayerAuthority = PeerID;
 		actor.stats = new StatBlock();
-		//define generic stat block better
+		//TODO: define generic stat block better
 		actor.stats.SetStat(StatType.HEALTH, 100);
         actor.stats.SetStat(StatType.MANA, 100);
         actors.Add(PeerID, actor);
