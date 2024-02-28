@@ -16,7 +16,6 @@ public partial class MainLevel : Node3D
     public bool headless = false;
     string PuppetNodePath = "PuppetModels";
     string ClientNodePath = "ClientModels";
-    
 
     ENetMultiplayerPeer EnetPeer;
     PackedScene PuppetPlayer = GD.Load<PackedScene>("res://scenes/actorScenes/Models/DefaultModel.tscn");
@@ -90,37 +89,23 @@ public partial class MainLevel : Node3D
         EstablishActor(Multiplayer.GetUniqueId());
     }
 
-    public void AddPlayer(long PeerId)
+
+    //get info from database 
+    /*
+    string connectionString = "Data Source=your_database_file_path.db";
+    using (SqliteConnection connection = new SqliteConnection(connectionString))
     {
-        
-
-        RpcId(PeerId, "SpawnClientModel", PeerId);
-        SpawnClientModel(PeerId);
-        DefaultModel puppet = PuppetPlayer.Instantiate<DefaultModel>();
-        //puppet.Name = PeerId.ToString();
-        puppet.TrackingPeerId = PeerId;
-        puppet.SetMultiplayerAuthority(1);
-        
-        this.GetNode<Node>(PuppetNodePath).AddChild(puppet, forceReadableName:true);
-        //puppet.GetNode<MultiplayerSynchronizer>("MultiplayerSynchronizer").SetVisibilityFor(0, true);
-        //puppet.GetNode<MultiplayerSynchronizer>("MultiplayerSynchronizer").SetVisibilityFor((int)PeerId, false);
-
-        //get info from database 
-        /*
-        string connectionString = "Data Source=your_database_file_path.db";
-        using (SqliteConnection connection = new SqliteConnection(connectionString))
+        connection.Open();
+        using (SqliteCommand command = connection.CreateCommand())
         {
-            connection.Open();
-            using (SqliteCommand command = connection.CreateCommand())
-            {
-               //figure out connection stuff
-                command.CommandText = connectionString;
-                command.ExecuteReader();
-            }
-            connection.Close();
+           //figure out connection stuff
+            command.CommandText = connectionString;
+            command.ExecuteReader();
         }
-        */
+        connection.Close();
     }
+    */
+
 
     public void EstablishActor(long PeerId)
     {
@@ -145,27 +130,6 @@ public partial class MainLevel : Node3D
         a.PuppetModelReference.QueueFree();
         GD.Print("Actor Left: " + PeerId);
     }
-
-
-    public void RemovePlayer(long PeerId) {
-        AbstractModel player = (AbstractModel)this.GetNode<AbstractModel>(ClientNodePath).GetNodeOrNull(PeerId.ToString());
-        AbstractModel Puppet = null;
-        foreach (AbstractModel p in this.GetNode<Node>(PuppetNodePath).GetChildren())
-        {
-            if (p.GetTrackingPeerId() == PeerId)
-            {
-                Puppet = p;
-            }
-        }
-
-        player.QueueFree();
-        if (Puppet != null)
-        {
-            Puppet.QueueFree();
-        }
-        GD.Print("Peer left " +  PeerId);
-    }
-
 
     public void Join()
     {
