@@ -135,6 +135,7 @@ public partial class MainLevel : Node3D
     public void RemoveActor(long PeerId)
     {
         Actor a = ActorManager.GetInstance().GetActor(PeerId);
+        ActorManager.GetInstance().RemoveActor(PeerId);
         a.ClientModelReference.QueueFree();
         a.PuppetModelReference.QueueFree();
         GD.Print("Actor Left: " + PeerId);
