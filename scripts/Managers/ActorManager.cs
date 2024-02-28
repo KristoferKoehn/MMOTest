@@ -15,7 +15,7 @@ public partial class ActorManager : Node
 	}
 
 	private void AttachSingleton() {
-        GetTree().Root.GetNode<MainLevel>("GameLoop/MainLevel").AddChild(instance);
+        GameLoop.Root.GetNode<MainLevel>("GameLoop/MainLevel").AddChild(instance);
     }
 
 	public static ActorManager GetInstance()

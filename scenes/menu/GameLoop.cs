@@ -5,11 +5,18 @@ using System.Diagnostics;
 
 public partial class GameLoop : Node
 {
+    public static Node Root = null;
     public Stack<Node> sceneStack = new Stack<Node>();
     int PORT = 9999;
 
+    public override void _EnterTree()
+    {
+        Root = GetTree().Root;
+    }
+
     public override void _Ready()
     {
+        
         if (OS.HasFeature("dedicated_server"))
         {
             string ip = UpnpSetup();
