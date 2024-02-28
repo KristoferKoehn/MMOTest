@@ -6,7 +6,7 @@ using System.Diagnostics;
 public partial class GameLoop : Node
 {
     public Stack<Node> sceneStack = new Stack<Node>();
-    int PORT = 9998;
+    int PORT = 9999;
 
     public override void _Ready()
     {
@@ -57,11 +57,10 @@ public partial class GameLoop : Node
 
         Debug.Assert(upnp.GetGateway() != null && upnp.GetGateway().IsValidGateway(), "ESTABLISH GATEWAY FAILED");
 
-        int MapResult = upnp.AddPortMapping(PORT);
+        int MapResult = upnp.AddPortMapping(9002);
         Debug.Assert(MapResult == 0, "INVALID PORT MAPPING");
 
         GD.Print($"SUCCESSFUL UPNP SETUP? map result: {MapResult} - valid gateway: {upnp.GetGateway().IsValidGateway()}");
         return upnp.QueryExternalAddress();
-
     }
 }

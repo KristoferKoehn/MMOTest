@@ -16,7 +16,7 @@ public partial class ServerMenu : Node2D
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
 	{
-		connector = new UniversalConnector(IPAddress, 9998);
+		connector = new UniversalConnector(IPAddress, 9999);
 		tree = this.GetNode<Tree>("Control/Panel/Tree");
         serverName = this.GetNode<LineEdit>("Control/Panel/ServerName");
         tree.CreateItem();
