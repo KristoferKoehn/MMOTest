@@ -8,7 +8,7 @@ namespace scripts.server
     {
         public AbstractModel ClientModelReference;
         public AbstractModel PuppetModelReference;
-        public int ActorMultiplayerAuthority;
+        public long ActorMultiplayerAuthority;
         public StatBlock stats;
     }
 }

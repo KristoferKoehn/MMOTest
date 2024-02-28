@@ -2,6 +2,7 @@ using Godot;
 using Microsoft.Data.Sqlite;
 using MMOTest.scripts.Managers;
 using Newtonsoft.Json.Linq;
+using scripts.server;
 using System;
 using System.Runtime.CompilerServices;
 
@@ -23,7 +24,7 @@ public partial class MainLevel : Node3D
     PackedScene PlayerController = GD.Load<PackedScene>("res://scenes/actorScenes/player.tscn");
     public override void _EnterTree()
     {
-        messageQueueManager = new MessageQueueManager(this.GetTree().Root);
+        messageQueueManager = new MessageQueueManager();
     }
 
     public override void _Ready()
@@ -83,7 +84,6 @@ public partial class MainLevel : Node3D
         this.AddChild(t);
         t.Start(5);
         t.Timeout += Connector.HostRefresh;
-
     }
 
     public void PeerHost()
@@ -95,11 +95,9 @@ public partial class MainLevel : Node3D
         AddPlayer(Multiplayer.GetUniqueId());
     }
 
-
-
     public void AddPlayer(long PeerId)
     {
-        //get info from database 
+        
 
         RpcId(PeerId, "SpawnClientModel", PeerId);
         SpawnClientModel(PeerId);
@@ -112,28 +110,35 @@ public partial class MainLevel : Node3D
         //puppet.GetNode<MultiplayerSynchronizer>("MultiplayerSynchronizer").SetVisibilityFor(0, true);
         //puppet.GetNode<MultiplayerSynchronizer>("MultiplayerSynchronizer").SetVisibilityFor((int)PeerId, false);
 
+        //get info from database 
         /*
         string connectionString = "Data Source=your_database_file_path.db";
-
         using (SqliteConnection connection = new SqliteConnection(connectionString))
         {
             connection.Open();
-
             using (SqliteCommand command = connection.CreateCommand())
             {
-
                //figure out connection stuff
-
                 command.CommandText = connectionString;
                 command.ExecuteReader();
-
-
             }
-
             connection.Close();
-
         }
         */
+    }
+
+    public void EstablishPlayer(long PeerId)
+    {
+        GD.Print("Establishing Actor for connecting client: " + PeerId);
+
+        RpcId(PeerId, "SpawnClientModel", PeerId);
+        AbstractModel client = SpawnClientModel(PeerId);
+        DefaultModel puppet = PuppetPlayer.Instantiate<DefaultModel>();
+        puppet.TrackingPeerId = PeerId;
+        puppet.SetMultiplayerAuthority(1);
+        this.GetNode<Node>(PuppetNodePath).AddChild(puppet, forceReadableName: true);
+
+        ActorManager.GetInstance().CreateActor(client, puppet, PeerId);
     }
 
     public void RemovePlayer(long PeerId) {
@@ -163,7 +168,7 @@ public partial class MainLevel : Node3D
     }
 
     [Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
-    public void SpawnClientModel(long PeerId)
+    public AbstractModel SpawnClientModel(long PeerId)
     {
         
         GD.Print("Spawning Client Model");
@@ -180,7 +185,7 @@ public partial class MainLevel : Node3D
             //attach controller ????
             GetNode<PlayerController>("PlayerController").AttachModel(PlayerModel);
         }
-
+        return PlayerModel;
     }
 
 

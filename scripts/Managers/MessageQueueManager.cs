@@ -8,16 +8,14 @@ using System.Threading.Tasks;
 
 namespace MMOTest.scripts.Managers
 {
-    public class MessageQueueManager
+    public partial class MessageQueueManager : Node
     {
-        Node SceneTreeRoot { get; set; }
-
-        public MessageQueueManager(Node SceneTreeRoot) {
-            this.SceneTreeRoot = SceneTreeRoot;
+        public MessageQueueManager() { 
+            
         }
 
+
         //get thing from queue
-        //if spell, call spellcastmanager?
         public void ProcessMessages()
         {
             MessageQueue mq = MessageQueue.GetInstance();
@@ -30,8 +28,13 @@ namespace MMOTest.scripts.Managers
                     AbstractAbility ability = GD.Load<PackedScene>($"res://scenes/abilities/{m.Property("spell").Value}.tscn").Instantiate<AbstractAbility>();
                     ability.SetMultiplayerAuthority(1); //this will change to be pulled from json
                     ability.Initialize(m);
-                    SceneTreeRoot.GetNode<Node>("GameLoop/MainLevel/AbilityModels").AddChild(ability, forceReadableName: true);
+                    GetTree().Root.GetNode<Node>("GameLoop/MainLevel/AbilityModels").AddChild(ability, forceReadableName: true);
                 }
+                //if type == statchange do that
+                //if type == pickup
+                //if type == equip
+                //if type == interact
+                //if type == ???
                 //do something here
             }
         }

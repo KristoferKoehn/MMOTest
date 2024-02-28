@@ -11,7 +11,7 @@ using Newtonsoft.Json.Linq;
 
 namespace MMOTest.scripts.Managers
 {
-    public class MessageQueue
+    public partial class MessageQueue : Node
     {
 
         private static MessageQueue instance = new MessageQueue();
@@ -20,7 +20,7 @@ namespace MMOTest.scripts.Managers
         private MessageQueue()
         {
             queue = new Queue<JObject>();
-            
+            GetTree().Root.GetNode<MainLevel>("GameLoop/MainLevel").AddChild(this);
         }
 
         public static MessageQueue GetInstance()

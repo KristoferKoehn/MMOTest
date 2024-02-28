@@ -7,14 +7,14 @@ public partial class ActorManager : Node
 {
 	private bool host;
 
-	List<Actor> actors = new List<Actor>();
+	Dictionary<long, Actor> actors = new Dictionary<long, Actor>();
 	static ActorManager instance = new ActorManager();
 
 	private ActorManager() {
-
+		GetTree().Root.GetNode<MainLevel>("GameLoop/MainLevel").AddChild(this);
 	}
 
-	public ActorManager GetInstance()
+	public static ActorManager GetInstance()
 	{
 		return instance;
 	}
@@ -25,22 +25,26 @@ public partial class ActorManager : Node
 	}
 
 	//what makes an actor
-	public void CreateActor(AbstractModel player, AbstractModel puppet, int ClientID) 
+	public void CreateActor(AbstractModel player, AbstractModel puppet, long PeerID) 
 	{
 		Actor actor = new Actor();
 		actor.ClientModelReference = player;
 		actor.PuppetModelReference = puppet;
-		actor.ActorMultiplayerAuthority = ClientID;
-		actors.Add(actor);
+		actor.ActorMultiplayerAuthority = PeerID;
+		actors.Add(PeerID, actor);
 	}
 
-	public void RemoveActor(Actor actor)
+	public void RemoveActor(long PeerID)
 	{
-		actors.Remove(actor);
+		actors.Remove(PeerID);
 	}
 
-	public void GetActor(long PeerID)
+	public Actor GetActor(long PeerID)
 	{
-
+		if (actors.TryGetValue(PeerID, out Actor actor))
+		{
+			return actor;
+		}
+		return null;
 	}
 }
