@@ -23,14 +23,9 @@ namespace MMOTest.scripts.Managers
             if (instance == null)
             {
                 instance = new MessageQueueManager();
-                instance.AttachSingleton();
+                GameLoop.Root.GetNode<MainLevel>("GameLoop/MainLevel").AddChild(instance);
             }
             return instance;
-        }
-
-        private void AttachSingleton()
-        {
-            GameLoop.Root.GetNode<MainLevel>("GameLoop/MainLevel").AddChild(instance);
         }
 
         //get thing from queue

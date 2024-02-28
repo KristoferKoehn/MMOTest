@@ -47,4 +47,8 @@ public partial class DefaultModel : AbstractModel
         return this.GetNode<MultiplayerSynchronizer>("MultiplayerSynchronizer");
     }
 
+    public override AnimationPlayer GetAnimationPlayer()
+    {
+        return this.GetNode<AnimationPlayer>("AnimationPlayer");
+    }
 }

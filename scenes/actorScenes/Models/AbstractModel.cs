@@ -8,4 +8,5 @@ public abstract partial class AbstractModel : CharacterBody3D
 
 	public abstract long GetTrackingPeerId();
 	public abstract MultiplayerSynchronizer GetMultiplayerSynchronizer();
+	public abstract AnimationPlayer GetAnimationPlayer();
 }

@@ -27,14 +27,9 @@ namespace MMOTest.scripts.Managers
             if (instance == null)
             {
                 instance = new MessageQueue();
-                instance.AttachSingleton();
+                GameLoop.Root.GetNode<MainLevel>("GameLoop/MainLevel").AddChild(instance);
             }
             return instance;
-        }
-
-        private void AttachSingleton()
-        {
-            GameLoop.Root.GetNode<MainLevel>("GameLoop/MainLevel").AddChild(instance);
         }
 
         [Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]

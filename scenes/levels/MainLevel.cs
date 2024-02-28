@@ -55,20 +55,7 @@ public partial class MainLevel : Node3D
             return;
         }
 
-        foreach (AbstractModel p in GetNode<Node>("PuppetModels").GetChildren())
-        {
-            Node3D clientModel = GetNode<Node>("ClientModels").GetNode<Node3D>(p.GetTrackingPeerId().ToString());
-            p.GlobalPosition = clientModel.GlobalPosition;
-            p.Rotation = clientModel.Rotation;
-            AnimationPlayer puppetAnim = p.GetNode<AnimationPlayer>("AnimationPlayer");
-            AnimationPlayer clientAnim = clientModel.GetNode<AnimationPlayer>("AnimationPlayer");
-            if (puppetAnim.CurrentAnimation != clientAnim.CurrentAnimation)
-            {
-                puppetAnim.Play(clientAnim.CurrentAnimation);
-            }
-            
-        }
-
+        //this is effectively the server tick. All the events more or less  are processed in MessageQueueManager
         MessageQueueManager.GetInstance().ProcessMessages();
 
     }
@@ -77,16 +64,21 @@ public partial class MainLevel : Node3D
     {
         EnetPeer.CreateServer(PORT);
         Multiplayer.MultiplayerPeer = EnetPeer;
-        Multiplayer.PeerConnected += AddPlayer;
-        Multiplayer.PeerDisconnected += RemovePlayer;
+        Multiplayer.PeerConnected += EstablishActor;
+        Multiplayer.PeerDisconnected += RemoveActor;
+        //Multiplayer.PeerConnected += AddPlayer;
+        //Multiplayer.PeerDisconnected += RemovePlayer;
         Timer t = new Timer();
         this.AddChild(t);
         t.Start(5);
         t.Timeout += Connector.HostRefresh;
     }
+    
 
+    //this will break
     public void PeerHost()
     {
+        GD.Print("Peerhost functionality effectively deprecated");
         EnetPeer.CreateServer(PORT);
         Multiplayer.MultiplayerPeer = EnetPeer;
         Multiplayer.PeerConnected += AddPlayer;
@@ -126,7 +118,7 @@ public partial class MainLevel : Node3D
         */
     }
 
-    public void EstablishPlayer(long PeerId)
+    public void EstablishActor(long PeerId)
     {
         GD.Print("Establishing Actor for connecting client: " + PeerId);
 
@@ -139,6 +131,15 @@ public partial class MainLevel : Node3D
 
         ActorManager.GetInstance().CreateActor(client, puppet, PeerId);
     }
+
+    public void RemoveActor(long PeerId)
+    {
+        Actor a = ActorManager.GetInstance().GetActor(PeerId);
+        a.ClientModelReference.QueueFree();
+        a.PuppetModelReference.QueueFree();
+        GD.Print("Actor Left: " + PeerId);
+    }
+
 
     public void RemovePlayer(long PeerId) {
         AbstractModel player = (AbstractModel)this.GetNode<AbstractModel>(ClientNodePath).GetNodeOrNull(PeerId.ToString());

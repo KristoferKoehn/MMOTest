@@ -2,6 +2,7 @@ using Godot;
 using System.Collections.Generic;
 using scripts.server;
 using Newtonsoft.Json.Linq;
+using Backend.StatBlock;
 
 public partial class ActorManager : Node
 {
@@ -14,15 +15,11 @@ public partial class ActorManager : Node
 		
 	}
 
-	private void AttachSingleton() {
-        GameLoop.Root.GetNode<MainLevel>("GameLoop/MainLevel").AddChild(instance);
-    }
-
 	public static ActorManager GetInstance()
 	{
 		if (instance == null) {
 			instance = new ActorManager();
-			instance.AttachSingleton();
+            GameLoop.Root.GetNode<MainLevel>("GameLoop/MainLevel").AddChild(instance);
         }
 		return instance;
 	}
@@ -32,14 +29,17 @@ public partial class ActorManager : Node
 		this.host = host;
 	}
 
-	//what makes an actor
 	public void CreateActor(AbstractModel player, AbstractModel puppet, long PeerID) 
 	{
 		Actor actor = new Actor();
 		actor.ClientModelReference = player;
 		actor.PuppetModelReference = puppet;
 		actor.ActorMultiplayerAuthority = PeerID;
-		actors.Add(PeerID, actor);
+		actor.stats = new StatBlock();
+		//define generic stat block better
+		actor.stats.SetStat(StatType.HEALTH, 100);
+        actor.stats.SetStat(StatType.MANA, 100);
+        actors.Add(PeerID, actor);
 	}
 
 	public void RemoveActor(long PeerID)
@@ -55,4 +55,19 @@ public partial class ActorManager : Node
 		}
 		return null;
 	}
+
+    public override void _Process(double delta)
+    {
+        foreach (Actor actor in actors.Values)
+		{
+
+			//makes all the stuff line up. Assign all synced variables from client to puppet
+			actor.PuppetModelReference.GlobalPosition = actor.ClientModelReference.GlobalPosition;
+            actor.PuppetModelReference.GlobalRotation = actor.ClientModelReference.GlobalRotation;
+            if (actor.PuppetModelReference.GetAnimationPlayer().CurrentAnimation != actor.ClientModelReference.GetAnimationPlayer().CurrentAnimation)
+			{
+				actor.PuppetModelReference.GetAnimationPlayer().CurrentAnimation = actor.ClientModelReference.GetAnimationPlayer().CurrentAnimation;
+            }
+        }
+    }
 }
