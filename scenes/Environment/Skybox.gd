@@ -78,6 +78,8 @@ const DAYS_IN_YEAR : int = 365
 @onready var moon : DirectionalLight3D = $Moon
 
 func _ready() -> void :
+	if OS.has_feature("dedicated_server") :
+		return
 	if is_instance_valid( sun ) :
 		sun.position = Vector3( 0.0, 0.0, 0.0 )
 		sun.rotation = Vector3( 0.0, 0.0, 0.0 )
@@ -97,6 +99,8 @@ func _process( delta: float ) -> void :
 		day_time += delta * time_scale
 
 func _update() -> void :
+	if OS.has_feature("dedicated_server") :
+		return
 	_update_sun()
 	_update_moon()
 	_update_clouds()
