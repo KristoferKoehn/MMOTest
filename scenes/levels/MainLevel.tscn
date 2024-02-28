@@ -1,6 +1,6 @@
 [gd_scene load_steps=18 format=3 uid="uid://cj5kbymecdp11"]
 
-[ext_resource type="Script" path="res://scenes/levels/TestLevel.cs" id="1_i7bbw"]
+[ext_resource type="Script" path="res://scenes/levels/MainLevel.cs" id="1_i7bbw"]
 [ext_resource type="PackedScene" uid="uid://bmk783fseep4a" path="res://scenes/actorScenes/Controllers/PlayerController.tscn" id="2_5xjtm"]
 [ext_resource type="PackedScene" uid="uid://b0dfc5akx67ol" path="res://assets/models/Environment/SM_Rock_Cluster_Large_01.fbx" id="3_lwi4g"]
 [ext_resource type="PackedScene" uid="uid://bb6j28poobc3w" path="res://assets/models/Environment/SM_Tree_04.fbx" id="4_0xnyj"]
