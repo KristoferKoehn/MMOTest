@@ -112,6 +112,7 @@ public partial class MainLevel : Node3D
         //puppet.GetNode<MultiplayerSynchronizer>("MultiplayerSynchronizer").SetVisibilityFor(0, true);
         //puppet.GetNode<MultiplayerSynchronizer>("MultiplayerSynchronizer").SetVisibilityFor((int)PeerId, false);
 
+        /*
         string connectionString = "Data Source=your_database_file_path.db";
 
         using (SqliteConnection connection = new SqliteConnection(connectionString))
@@ -132,7 +133,7 @@ public partial class MainLevel : Node3D
             connection.Close();
 
         }
-
+        */
     }
 
     public void RemovePlayer(long PeerId) {
