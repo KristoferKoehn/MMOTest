@@ -28,7 +28,6 @@ namespace MMOTest.scripts.Managers
             return instance;
         }
 
-        //get thing from queue
         public void ProcessMessages()
         {
             MessageQueue mq = MessageQueue.GetInstance();

@@ -3,8 +3,8 @@ using System;
 
 public partial class DefaultModel : AbstractModel
 {
-    [Export]
-    public long TrackingPeerId { get; set; } = -1;
+    [Export] public long TrackingPeerId { get; set; } = -1;
+    [Export] public int ActorID { get; set; } = -1;
     public long SimulationPeerId { get; set; } = -2;
     AbstractController playerController { get; set; }
 

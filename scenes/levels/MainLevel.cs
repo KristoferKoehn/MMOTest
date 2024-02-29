@@ -1,10 +1,9 @@
 using Godot;
-using Microsoft.Data.Sqlite;
+using Godot.Collections;
 using MMOTest.Backend;
 using MMOTest.scripts.Managers;
 using Newtonsoft.Json.Linq;
-using System;
-using System.Runtime.CompilerServices;
+using System.Collections.Generic;
 
 public partial class MainLevel : Node3D
 {
@@ -27,8 +26,6 @@ public partial class MainLevel : Node3D
         MessageQueue.GetInstance();
         StatManager.GetInstance();
         MessageQueueManager.GetInstance();
-
-
     }
 
 
@@ -72,7 +69,6 @@ public partial class MainLevel : Node3D
 
         //this is effectively the server tick. All the events more or less  are processed in MessageQueueManager
         MessageQueueManager.GetInstance().ProcessMessages();
-
     }
 
     public void HeadlessHost()
@@ -81,8 +77,6 @@ public partial class MainLevel : Node3D
         Multiplayer.MultiplayerPeer = EnetPeer;
         Multiplayer.PeerConnected += EstablishActor;
         Multiplayer.PeerDisconnected += RemoveActor;
-        //Multiplayer.PeerConnected += AddPlayer;
-        //Multiplayer.PeerDisconnected += RemovePlayer;
         Timer t = new Timer();
         this.AddChild(t);
         t.Start(5);
@@ -102,53 +96,46 @@ public partial class MainLevel : Node3D
         EstablishActor(Multiplayer.GetUniqueId());
     }
 
-
-    //get info from database 
-    /*
-    string connectionString = "Data Source=your_database_file_path.db";
-    using (SqliteConnection connection = new SqliteConnection(connectionString))
-    {
-        connection.Open();
-        using (SqliteCommand command = connection.CreateCommand())
-        {
-           //figure out connection stuff
-            command.CommandText = connectionString;
-            command.ExecuteReader();
-        }
-        connection.Close();
-    }
-    */
-
-
     public void EstablishActor(long PeerId)
     {
         GD.Print("Establishing Actor for connecting client: " + PeerId);
 
+        RandomNumberGenerator rng = new RandomNumberGenerator();
+        int ActorID = (int)rng.Randi();
+        while (ActorManager.GetInstance().GetActor(ActorID) != null)
+        {
+            ActorID = (int)rng.Randi();
+        }
+
+
+
         RpcId(PeerId, "SpawnClientModel", PeerId);
         AbstractModel client = SpawnClientModel(PeerId);
         DefaultModel puppet = PuppetPlayer.Instantiate<DefaultModel>();
-        puppet.TrackingPeerId = PeerId;
+        puppet.SetTrackingPeerId(PeerId);
         client.SetTrackingPeerId(PeerId);
         puppet.SetMultiplayerAuthority(1);
         this.GetNode<Node>(PuppetNodePath).AddChild(puppet, forceReadableName: true);
-
-        ActorManager.GetInstance().CreateActor(client, puppet, PeerId);
+        ActorManager.GetInstance().CreateActor(client, puppet, PeerId, ActorID);
     }
 
     public void RemoveActor(long PeerId)
     {
-        Actor a = ActorManager.GetInstance().GetActor(PeerId);
-        ActorManager.GetInstance().RemoveActor(PeerId);
-        a.ClientModelReference.QueueFree();
-        a.PuppetModelReference.QueueFree();
-        GD.Print("Actor Left: " + PeerId);
+        List<Actor> actors = ActorManager.GetInstance().GetActorsFromPeerID(PeerId);
+
+        foreach (Actor actor in actors)
+        {
+            ActorManager.GetInstance().RemoveActor(actor.ActorID);
+            actor.ClientModelReference.QueueFree();
+            actor.PuppetModelReference.QueueFree();
+            GD.Print("Actor Left: " + actor.ActorID);
+        }
     }
 
     public void Join()
     {
         EnetPeer.CreateClient(ServerAddress, PORT);
         Multiplayer.MultiplayerPeer = EnetPeer;
-
     }
 
     [Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
@@ -199,5 +186,22 @@ public partial class MainLevel : Node3D
         AbstractAbility t = (AbstractAbility)node;
         t.ApplyHost(host);
     }
+
+    
+    //get info from database 
+    /*
+    string connectionString = "Data Source=your_database_file_path.db";
+    using (SqliteConnection connection = new SqliteConnection(connectionString))
+    {
+        connection.Open();
+        using (SqliteCommand command = connection.CreateCommand())
+        {
+           //figure out connection stuff
+            command.CommandText = connectionString;
+            command.ExecuteReader();
+        }
+        connection.Close();
+    }
+    */
 
 }

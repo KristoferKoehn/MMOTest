@@ -91,14 +91,24 @@ use_collision = true
 size = Vector3(1000, 1, 1000)
 
 [node name="Main" parent="." instance=ExtResource("16_l618w")]
-day_time = 9.5534
+day_time = 8.9985
 latitude = 23.13
 clouds_cutoff = 0.47
 time_scale = 0.119
 sun_base_enegry = 0.9
 moon_base_enegry = 0.2
 
+[node name="Sun" parent="Main" index="1"]
+transform = Transform3D(0.757458, -0.277874, -0.5908, 0.600914, 0.650522, 0.464461, 0.255267, -0.706829, 0.659721, 0, 0, 0)
+light_energy = 0.9
+
+[node name="Moon" parent="Main" index="2"]
+transform = Transform3D(0.963282, 0.238322, 0.123644, 0.240005, -0.557929, -0.794426, -0.120345, 0.794932, -0.594642, 0, 0, 0)
+light_energy = 0.0
+
 [connection signal="child_entered_tree" from="PuppetModels" to="." method="_on_puppet_models_child_entered_tree"]
 [connection signal="child_entered_tree" from="ClientModels" to="." method="_on_client_models_child_entered_tree"]
 [connection signal="child_entered_tree" from="AbilityModels" to="." method="_on_ability_models_child_entered_tree"]
 [connection signal="despawned" from="AbilitySpawner" to="." method="_on_ability_spawner_despawned"]
+
+[editable path="Main"]

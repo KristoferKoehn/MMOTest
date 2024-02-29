@@ -11,7 +11,8 @@ public partial class ActorManager : Node
 	Dictionary<long, Actor> actors = new Dictionary<long, Actor>();
 	static ActorManager instance = null;
 
-	private ActorManager() {
+	private ActorManager() 
+	{
 		
 	}
 
@@ -29,12 +30,13 @@ public partial class ActorManager : Node
 		this.host = host;
 	}
 
-	public void CreateActor(AbstractModel player, AbstractModel puppet, long PeerID)
+	public void CreateActor(AbstractModel player, AbstractModel puppet, long PeerID, int ActorID)
 	{
 		Actor actor = new Actor();
 		actor.ClientModelReference = player;
 		actor.PuppetModelReference = puppet;
 		actor.ActorMultiplayerAuthority = PeerID;
+		actor.ActorID = ActorID;
         // generic stat block
         JObject stat = new JObject()
 		{
@@ -50,25 +52,48 @@ public partial class ActorManager : Node
 		statBlock.SetStatBlock(stat);
 		actor.stats = statBlock;
 
-        actors.Add(PeerID, actor);
+        actors.Add(ActorID, actor);
 	}
 
-	public void RemoveActor(long PeerID)
+	public void RemoveActor(int ActorID)
 	{
-		actors.Remove(PeerID);
+		actors.Remove(ActorID);
 	}
 
-	public Actor GetActor(long PeerID)
+	public Actor GetActor(int ActorID)
 	{
-		if (actors.TryGetValue(PeerID, out Actor actor))
+		if (actors.TryGetValue(ActorID, out Actor actor))
 		{
 			return actor;
 		}
 		return null;
 	}
 
+    public List<Actor> GetActorsFromPeerID(long PeerID)
+    {
+		List<Actor> actorsList = new List<Actor>();
+
+        foreach (Actor actor in this.actors.Values)
+		{
+			if (actor.ActorMultiplayerAuthority == PeerID)
+			{
+				actorsList.Add(actor);
+			}
+		}
+
+		return actorsList;
+    }
+
+
     public override void _Process(double delta)
     {
+		if (Multiplayer.GetUniqueId() != 1)
+		{
+			//do client-only stuff here
+			return;
+		}
+
+
         foreach (Actor actor in actors.Values)
 		{
 			//makes all the stuff line up. Assign all synced variables from client to puppet
