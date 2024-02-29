@@ -56,4 +56,9 @@ public partial class DefaultModel : AbstractModel
     {
         this.TrackingPeerId = peerId;
     }
+
+    public override void SetActorID(int actorId)
+    {
+        ActorID = actorId;
+    }
 }

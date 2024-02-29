@@ -96,6 +96,7 @@ public partial class MainLevel : Node3D
         EstablishActor(Multiplayer.GetUniqueId());
     }
 
+
     public void EstablishActor(long PeerId)
     {
         GD.Print("Establishing Actor for connecting client: " + PeerId);
@@ -107,13 +108,13 @@ public partial class MainLevel : Node3D
             ActorID = (int)rng.Randi();
         }
 
-
-
         RpcId(PeerId, "SpawnClientModel", PeerId);
         AbstractModel client = SpawnClientModel(PeerId);
-        DefaultModel puppet = PuppetPlayer.Instantiate<DefaultModel>();
+        AbstractModel puppet = PuppetPlayer.Instantiate<DefaultModel>();
         puppet.SetTrackingPeerId(PeerId);
+        puppet.SetActorID(ActorID);
         client.SetTrackingPeerId(PeerId);
+        client.SetActorID(ActorID);
         puppet.SetMultiplayerAuthority(1);
         this.GetNode<Node>(PuppetNodePath).AddChild(puppet, forceReadableName: true);
         ActorManager.GetInstance().CreateActor(client, puppet, PeerId, ActorID);
@@ -143,7 +144,6 @@ public partial class MainLevel : Node3D
     {
         
         GD.Print("Spawning Client Model");
-
         DefaultModel PlayerModel = GD.Load<PackedScene>("res://scenes/actorScenes/Models/DefaultModel.tscn").Instantiate<DefaultModel>();
         PlayerModel.GetMultiplayerSynchronizer().SetVisibilityFor(0, false);
         PlayerModel.GetMultiplayerSynchronizer().SetVisibilityFor(1, true);

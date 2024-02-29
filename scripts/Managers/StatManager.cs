@@ -58,7 +58,11 @@ public partial class StatManager : Node
     [Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
     public void AssignStatBlock(string jstr, int ActorID)
     {
+
         //if this actor doesn't exist on client
+        //    make actor on client, leave out clientmodel or something
+        //    client makes decisions based on some metric to subscribe or unsubscribe to "stat updates" for a given actor
+        //    gotta do all that somewhere else
 
     }
 
