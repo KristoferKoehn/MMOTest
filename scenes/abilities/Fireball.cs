@@ -50,6 +50,13 @@ public partial class Fireball : AbstractAbility
         };
         MessageQueue.GetInstance().AddMessage(m);
         this.QueueFree();
+
+        //if model/actor whatever
+        //do damage
+
+        // get actor ID from model
+        // 
+
     }
 
 }

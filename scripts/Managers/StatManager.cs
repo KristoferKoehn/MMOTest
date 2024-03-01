@@ -58,12 +58,40 @@ public partial class StatManager : Node
     [Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
     public void AssignStatBlock(string jstr, int ActorID)
     {
+        if (ActorManager.GetInstance().GetActor(ActorID) == null)
+        {
+            ActorManager.GetInstance().CreateActor(null, null, 0, ActorID);
+        }
 
+        ActorManager.GetInstance().GetActor(ActorID).stats.SetStatBlock(jstr);
         //if this actor doesn't exist on client
         //    make actor on client, leave out clientmodel or something
         //    client makes decisions based on some metric to subscribe or unsubscribe to "stat updates" for a given actor
         //    gotta do all that somewhere else
 
+    }
+
+    [Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
+    public void UpdateClientStatChange(string jstatchange)
+    {
+        /*
+
+        ActorID1 : {
+            health: 30,
+            mana: 23
+        },
+
+        ActorID2 : {
+            health: 99,
+        }
+
+        */
+
+        JObject changes = new JObject(jstatchange);
+        foreach (JProperty actorchange in changes.Properties())
+        {
+            ActorManager.GetInstance().GetActor(int.Parse(actorchange.Name)).stats.SetStatFromChangeList(actorchange.Value.ToString());
+        }
     }
 
 }

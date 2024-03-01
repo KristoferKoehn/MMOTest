@@ -43,6 +43,12 @@ namespace MMOTest.scripts.Managers
                     GetTree().Root.GetNode<Node>("GameLoop/MainLevel/AbilityModels").AddChild(ability, forceReadableName: true);
                 }
                 //if type == statchange do that
+                if (m.Property("type").Value.ToString() == "schange")
+                {
+                    //we change stats
+
+
+                }
                 //if type == pickup
                 //if type == equip
                 //if type == interact

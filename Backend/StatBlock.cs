@@ -49,6 +49,22 @@ namespace MMOTest.Backend
             statblock = Job;
         }
 
+        public void SetStatFromChangeList(string jstatchange)
+        {
+            JObject jchange = new JObject(jstatchange);
+            foreach (JProperty ch in jchange.Properties())
+            {
+                if (statblock.ContainsKey(ch.Name)) 
+                {
+                    statblock[ch] = ch.Value;
+                }
+                else
+                {
+                    statblock.Add(ch.Name, ch.Value);
+                }
+            }
+        }
+
         public string GetStatBlockString()
         {
             return statblock.ToString();
