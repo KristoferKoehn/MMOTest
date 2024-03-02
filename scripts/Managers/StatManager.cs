@@ -75,7 +75,6 @@ public partial class StatManager : Node
     public void UpdateClientStatChange(string jstatchange)
     {
         /*
-
         ActorID1 : {
             health: 30,
             mana: 23
@@ -84,7 +83,6 @@ public partial class StatManager : Node
         ActorID2 : {
             health: 99,
         }
-
         */
 
         JObject changes = new JObject(jstatchange);
