@@ -36,7 +36,7 @@ shader_parameter/stars_speed = 1.0
 shader_parameter/stars_scale = 1.0
 shader_parameter/stars_opacity = 1.0
 shader_parameter/stars_texture = ExtResource("3_mjyi7")
-shader_parameter/overwritten_time = 36899.8
+shader_parameter/overwritten_time = 36941.5
 
 [sub_resource type="Sky" id="Sky_q13r3"]
 sky_material = SubResource("ShaderMaterial_msgkm")
@@ -45,7 +45,8 @@ sky_material = SubResource("ShaderMaterial_msgkm")
 background_mode = 2
 sky = SubResource("Sky_q13r3")
 ambient_light_source = 3
-ambient_light_sky_contribution = 0.7
+ambient_light_sky_contribution = 0.3
+sdfgi_enabled = true
 fog_enabled = true
 fog_light_color = Color(0.192157, 0.552941, 0.776471, 1)
 fog_light_energy = 0.2
