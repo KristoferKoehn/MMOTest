@@ -54,6 +54,17 @@ public partial class Fireball : AbstractAbility
         //if model/actor whatever
         //do damage
 
+        if(node is AbstractModel)
+        {
+            //collide
+
+            //get caster stat block
+            //get target stat block
+
+
+
+        }
+
         // get actor ID from model
         // 
 

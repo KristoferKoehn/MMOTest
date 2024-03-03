@@ -33,7 +33,7 @@ namespace MMOTest.scripts.Managers
             MessageQueue mq = MessageQueue.GetInstance();
 
             JObject StatChangeDictionary = new JObject();
-
+                    
 
             while (mq.Count() > 0)
             {
@@ -49,6 +49,7 @@ namespace MMOTest.scripts.Managers
                 //if type == statchange do that
                 if (m.Property("type").Value.ToString() == "schange")
                 {
+
                     // we change stats
 
                     // we gotta put ActorID and PeerID in the thing, as well as the stat that is changing.
@@ -56,6 +57,9 @@ namespace MMOTest.scripts.Managers
                     // here, we strip the PeerID, use that as a key to a list of ActorID, which is a key to a list of stat changes. 
 
                 }
+
+
+
                 //if type == pickup
                 //if type == equip
                 //if type == interact
