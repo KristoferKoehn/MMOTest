@@ -46,7 +46,6 @@ background_mode = 2
 sky = SubResource("Sky_q13r3")
 ambient_light_source = 3
 ambient_light_sky_contribution = 0.3
-sdfgi_enabled = true
 fog_enabled = true
 fog_light_color = Color(0.192157, 0.552941, 0.776471, 1)
 fog_light_energy = 0.2

@@ -91,7 +91,6 @@ namespace MMOTest.scripts.Managers
                 GD.Print(StatChanges);
                 foreach (int actorID in StatChanges.Keys)
                 {
-
                     foreach(StatType t in StatChanges[actorID].Keys)
                     {
                         GD.Print(t + ": " + StatChanges[actorID][t].ToString() + "\n");
