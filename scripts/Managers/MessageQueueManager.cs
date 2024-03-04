@@ -85,7 +85,7 @@ namespace MMOTest.scripts.Managers
                         StatChangeDictionary[m["TargetID"].ToString()] = m["stats"];
                     }
 
-                    GD.Print(StatChangeDictionary.ToString());
+                    
                     // we change stats
 
                     // we gotta put ActorID as well as the stat that is changing.
@@ -95,7 +95,7 @@ namespace MMOTest.scripts.Managers
                 }
 
 
-
+                GD.Print(StatChangeDictionary.ToString());
                 //if type == pickup
                 //if type == equip
                 //if type == interact

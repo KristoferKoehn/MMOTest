@@ -61,8 +61,32 @@ public partial class Fireball : AbstractAbility
                     }
                 }
             };
+        JObject c = new JObject
+            {
+                { "type", "statchange" },
+                { "TargetID", 1001 },
+                { "SourceID", SourceActorID },
+                { "stats", new JObject
+                    {
+                    { "MANA", -209 }
+                    }
+                }
+            };
+        JObject d = new JObject
+            {
+                { "type", "statchange" },
+                { "TargetID", 1000 },
+                { "SourceID", SourceActorID },
+                { "stats", new JObject
+                    {
+                    { "STRENGTH", -22 }
+                    }
+                }
+            };
         //GD.Print(b.ToString());
         MessageQueue.GetInstance().AddMessage(b);
+        MessageQueue.GetInstance().AddMessage(c);
+        MessageQueue.GetInstance().AddMessage(d);
         //testing only!!!
 
         AbstractModel target = node as AbstractModel;
