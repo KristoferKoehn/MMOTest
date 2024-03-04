@@ -63,12 +63,33 @@ namespace MMOTest.scripts.Managers
                     
 
 
+                    /*
+                    {
+                      "type": "statchange",
+                      "TargetID": 1000,
+                      "SourceID": -1,
+                      "stats": {
+                        "HEALTH": -209
+                      }
+                    }
+                    */
+
+                    if(StatChangeDictionary.ContainsKey(m.Property("TargetID").ToString()))
+                    {
+
+                        StatChangeDictionary[m["TargetID"]].AddAfterSelf(m["stats"]);
+
+                    } else
+                    {
+
+                        StatChangeDictionary[m["TargetID"]] = m["stats"];
+                    }
 
                     // we change stats
 
                     // we gotta put ActorID as well as the stat that is changing.
 
-                    
+
 
                 }
 

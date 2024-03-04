@@ -49,6 +49,7 @@ public partial class Fireball : AbstractAbility
 
         //if model/actor whatever
 
+        //testing only!!
         JObject b = new JObject
             {
                 { "type", "statchange" },
@@ -60,7 +61,9 @@ public partial class Fireball : AbstractAbility
                     }
                 }
             };
-        GD.Print(b.ToString());
+        //GD.Print(b.ToString());
+        MessageQueue.GetInstance().AddMessage(b);
+        //testing only!!!
 
         AbstractModel target = node as AbstractModel;
         if(target != null)
@@ -78,8 +81,11 @@ public partial class Fireball : AbstractAbility
                 { "type", "statchange" },
                 { "TargetID", target.GetActorID() },
                 { "SourceID", SourceActorID },
-                new JObject()
-                    { "HEALTH", delta }
+                { "stats", new JObject
+                    {
+                        { "HEALTH", delta }
+                    }
+                }
             };
             GD.Print(s.ToString());
             MessageQueue.GetInstance().AddMessage(s);
