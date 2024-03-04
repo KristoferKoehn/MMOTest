@@ -1,3 +1,4 @@
+using Godot;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
@@ -83,6 +84,7 @@ namespace MMOTest.Backend
         {
             foreach (StatType statType in statblock.Keys)
             {
+                GD.Print(statType.ToString());
                 statblock[statType] = GetStat(statType) + sb[statType];
             }
         }
