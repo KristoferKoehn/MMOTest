@@ -30,6 +30,10 @@ namespace MMOTest.Backend
         public float Value { get; }
         public string StatName { get; }
 
+        public StatProperty()
+        {
+
+        }
 
         public StatProperty(StatType statType, float statValue)
         {
