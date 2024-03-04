@@ -43,7 +43,7 @@ namespace MMOTest.scripts.Managers
         [Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
         public void AddMessage(string message)
         {
-            queue.Enqueue(new JObject { message });
+            queue.Enqueue(new JObject(message));
         }
 
 
