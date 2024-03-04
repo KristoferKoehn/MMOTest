@@ -77,9 +77,9 @@ namespace MMOTest.scripts.Managers
                     }
                     */
 
-                    
 
-              
+
+
                     // we change stats
 
                     // we gotta put ActorID as well as the stat that is changing.
@@ -88,7 +88,7 @@ namespace MMOTest.scripts.Managers
 
                 }
 
-                GD.Print(StatChanges);
+                GD.Print("Length " + StatChanges.Count);
                 foreach (int actorID in StatChanges.Keys)
                 {
                     foreach(StatType t in StatChanges[actorID].Keys)
