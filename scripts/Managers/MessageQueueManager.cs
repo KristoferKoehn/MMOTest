@@ -99,8 +99,10 @@ namespace MMOTest.scripts.Managers
                 //do something here
 
                 //rectify all stat changes in dictionary
-                StatManager.GetInstance().ApplyAllStatChanges(StatChanges);
-                
+                if (StatChanges != null)
+                {
+                    StatManager.GetInstance().ApplyAllStatChanges(StatChanges);
+                }
             }
         }
     }
