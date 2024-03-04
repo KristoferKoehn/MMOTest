@@ -77,12 +77,12 @@ namespace MMOTest.scripts.Managers
                     if(StatChangeDictionary.ContainsKey(m.Property("TargetID").ToString()))
                     {
 
-                        StatChangeDictionary[m["TargetID"]].AddAfterSelf(m["stats"]);
+                        StatChangeDictionary[m["TargetID"].ToString()].AddAfterSelf(m["stats"]);
 
                     } else
                     {
 
-                        StatChangeDictionary[m["TargetID"]] = m["stats"];
+                        StatChangeDictionary[m["TargetID"].ToString()] = m["stats"];
                     }
 
                     GD.Print(StatChangeDictionary.ToString());
