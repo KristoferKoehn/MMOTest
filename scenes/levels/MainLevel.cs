@@ -158,7 +158,7 @@ public partial class MainLevel : Node3D
         {
             GetNode<PlayerController>("PlayerController").AttachModel(PlayerModel);
             ActorManager.GetInstance().CreateActor(PlayerModel, null, PeerId, ActorID);
-            RpcId(1, "RequestStatBlock", ActorID);
+            StatManager.GetInstance().RpcId(1, "RequestStatBlock", ActorID);
         }
         return PlayerModel;
     }
