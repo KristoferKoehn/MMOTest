@@ -85,6 +85,7 @@ namespace MMOTest.scripts.Managers
                         StatChangeDictionary[m["TargetID"]] = m["stats"];
                     }
 
+                    GD.Print(StatChangeDictionary.ToString());
                     // we change stats
 
                     // we gotta put ActorID as well as the stat that is changing.
