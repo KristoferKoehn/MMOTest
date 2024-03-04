@@ -54,7 +54,7 @@ public partial class Fireball : AbstractAbility
                 { "type", "statchange" },
                 { "TargetID", 1000 },
                 { "SourceID", SourceActorID },
-                new JObject()
+                new JObject
                     { "HEALTH", -209 }
             };
         GD.Print(b.ToString());
