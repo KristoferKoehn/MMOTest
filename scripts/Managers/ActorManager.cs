@@ -39,7 +39,6 @@ public partial class ActorManager : Node
 		actor.ActorID = ActorID;
         // generic stat block
 		StatBlock statBlock = new StatBlock();
-
         Dictionary<StatType, float> statsDict = new()
         {
             [StatType.HEALTH] = 100,
@@ -56,6 +55,7 @@ public partial class ActorManager : Node
 
         actors.Add(ActorID, actor);
 		StatManager.GetInstance().SubscribePeerToActor(PeerID, ActorID);
+
 	}
 
 	public void RemoveActor(int ActorID)
