@@ -101,6 +101,7 @@ namespace MMOTest.scripts.Managers
                 //rectify all stat changes in dictionary
                 if (StatChanges != null)
                 {
+                    GD.Print("we get here?");
                     StatManager.GetInstance().ApplyAllStatChanges(StatChanges);
                 }
             }
