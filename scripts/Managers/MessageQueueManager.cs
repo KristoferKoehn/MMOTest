@@ -101,14 +101,20 @@ namespace MMOTest.scripts.Managers
 
                 }
 
-                GD.Print("Length " + StatChanges.Count);
-                foreach (int actorID in StatChanges.Keys)
+
+                if (StatChanges != null)
                 {
-                    foreach(StatType t in StatChanges[actorID].Keys)
+                    GD.Print("Length " + StatChanges.Count);
+                    foreach (int actorID in StatChanges.Keys)
                     {
-                        GD.Print(t + ": " + StatChanges[actorID][t].ToString() + "\n");
+                        foreach(StatType t in StatChanges[actorID].Keys)
+                        {
+                            GD.Print(t + ": " + StatChanges[actorID][t].ToString() + "\n");
+                        }
                     }
                 }
+
+                
                 
                 //if type == pickup
                 //if type == equip
