@@ -58,8 +58,13 @@ namespace MMOTest.scripts.Managers
 
                     List<StatProperty> mstats = JsonConvert.DeserializeObject<List<StatProperty>>(m["stats"].ToString());
                     GD.Print("deserialized list size: " + mstats.Count);
-
                     int targetID = (int)m["TargetID"];
+                    GD.Print("target ID " + targetID);
+                    foreach(StatProperty sp in mstats)
+                    {
+                        GD.Print(sp.StatType.ToString() + " : " + sp.Value);
+                    }
+
                     GD.Print(m.ToString());
                     if (StatChanges.ContainsKey(targetID))
                     {
@@ -75,10 +80,11 @@ namespace MMOTest.scripts.Managers
                         }
                     } else
                     {
-                        GD.Print("we  get to the make stats");
+                        GD.Print("we  get to the make stats : ");
                         Dictionary<StatType, float> statDeltas = new Dictionary<StatType, float>();
                         foreach (StatProperty stat in mstats)
                         {
+                            GD.Print(stat.StatType + " : " + stat.Value);
                             statDeltas[stat.StatType] = stat.Value;
                         }
                     }
