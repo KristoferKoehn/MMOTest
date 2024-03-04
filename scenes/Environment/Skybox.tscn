@@ -1,4 +1,4 @@
-[gd_scene load_steps=7 format=3 uid="uid://bjjceeyq3csc3"]
+[gd_scene load_steps=8 format=3 uid="uid://bjjceeyq3csc3"]
 
 [ext_resource type="Script" path="res://scenes/Environment/Skybox.gd" id="1_g4j45"]
 [ext_resource type="Shader" path="res://scenes/Environment/sky.gdshader" id="2_ec0em"]
@@ -51,6 +51,17 @@ fog_light_color = Color(0.192157, 0.552941, 0.776471, 1)
 fog_light_energy = 0.2
 fog_density = 0.005
 
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_rp6mj"]
+properties/0/path = NodePath(".:day_time")
+properties/0/spawn = true
+properties/0/replication_mode = 1
+properties/1/path = NodePath(".:day_of_year")
+properties/1/spawn = true
+properties/1/replication_mode = 1
+properties/2/path = NodePath(".:time_scale")
+properties/2/spawn = true
+properties/2/replication_mode = 1
+
 [node name="Main" type="Node3D"]
 script = ExtResource("1_g4j45")
 day_time = 10.9756
@@ -80,3 +91,6 @@ shadow_enabled = true
 shadow_opacity = 0.25
 shadow_blur = 5.0
 directional_shadow_fade_start = 0.1
+
+[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
+replication_config = SubResource("SceneReplicationConfig_rp6mj")

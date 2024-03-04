@@ -122,12 +122,9 @@ public partial class StatManager : Node
     {
         foreach (int ActorID in statchanges.Keys)
         {
-
             StatBlock sb = GetStatBlock(ActorID);
             sb.ApplyAllChanges(statchanges[ActorID]);
         }
-
-        NotifyStatChanges(statchanges);
     }
 
 }
