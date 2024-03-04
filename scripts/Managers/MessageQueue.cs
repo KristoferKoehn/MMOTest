@@ -33,12 +33,20 @@ namespace MMOTest.scripts.Managers
             return instance;
         }
 
-        [Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
+        
         public void AddMessage(JObject message)
         {
             //GD.Print("ADDED " +  message.ToString());
             queue.Enqueue(message);
         }
+
+        [Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
+        public void AddMessage(string message)
+        {
+            queue.Enqueue(new JObject { message });
+        }
+
+
 
         public JObject PopMessage()
         {
