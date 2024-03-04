@@ -87,6 +87,8 @@ namespace MMOTest.scripts.Managers
                             GD.Print(stat.StatType + " : " + stat.Value);
                             statDeltas[stat.StatType] = stat.Value;
                         }
+                        StatChanges[targetID] = statDeltas;
+
                     }
                     /*
                     {
