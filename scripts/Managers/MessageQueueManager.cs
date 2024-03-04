@@ -73,6 +73,7 @@ namespace MMOTest.scripts.Managers
                         }
                     } else
                     {
+                        GD.Print("we  get to the make stats");
                         Dictionary<StatType, float> statDeltas = new Dictionary<StatType, float>();
                         foreach (StatProperty stat in mstats)
                         {
