@@ -31,10 +31,11 @@ public partial class PlayerController : AbstractController
     [Export] private float mass = 80f; // kilograms. Default for all characters.
     [Export] private float realMass = 100f; // Total mass with armor, TODO: set this from stats or something somehow
     [Export] private float modelProjectedArea = 0.7f; // Used for air resistance, https://www.ntnu.no/documents/11601816/b830b9bd-d256-42c4-9dfc-5726c0ae3596
+    [Export] private float modelVolume = 0.075f; // cubic meters, surprisingly.
 
     // These are about the desired behavior of the character
     [Export] private float jumpHeight = 3.0f;
-    [Export] private float runningForce = 100f;
+    [Export] private float runningForce = 1000f; // This seems way higher than it should be? should be 1.25 * 80. Or something like that.
     [Export] private float fluidPropulsionForce = 1500f; // Should be changed by class or some "air maneuverability" stat. 1500 might be really high. 
 
     // These are derived from the exported values and are actually used in calculations
@@ -56,6 +57,7 @@ public partial class PlayerController : AbstractController
     private Vector3 frictionForceVector = new Vector3(); // Dampens movement of objects sliding on the ground.
     private float normalForce; // Used to calculate friction
     private Vector3 movementResistanceForceVector = new Vector3(); // Represents forces from the environment that slow the character down. Friction and drag.
+    private Vector3 buoyantForceVector = new Vector3(); // Used to float in fluids (or sink)
 
     // Total
     private Vector3 totalForceVector = new Vector3(); // Accumulates all forces and applies it to the model.
@@ -147,7 +149,7 @@ public partial class PlayerController : AbstractController
             dragForceVector = -Model.Velocity.Normalized() * (0.5f * fluidDensity * Model.Velocity.Length() * Model.Velocity.Length() * dragCoefficient * modelProjectedArea);
             movementResistanceForceVector = dragForceVector;
         }
-        
+
         // Jump
         if (Input.IsActionJustPressed("jump_dodge") & Model.IsOnFloor())
         {
@@ -160,6 +162,9 @@ public partial class PlayerController : AbstractController
             internalForceVector += Vector3.Up * jetPackForce;
             // Do fuel and stuff
         }
+
+        buoyantForceVector = Vector3.Up * (-1 * fluidDensity * gravity.Y * modelVolume);
+        externalForceVector += buoyantForceVector;
 
         // Sum up all forces. Internal, external, and friction
         totalForceVector += internalForceVector;
