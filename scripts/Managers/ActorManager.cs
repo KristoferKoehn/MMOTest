@@ -21,7 +21,7 @@ public partial class ActorManager : Node
 		if (instance == null) {
 			instance = new ActorManager();
             GameLoop.Root.GetNode<MainLevel>("GameLoop/MainLevel").AddChild(instance);
-            instance.Name = "StatManager";
+            instance.Name = "ActorManager";
         }
 		return instance;
 	}

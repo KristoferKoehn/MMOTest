@@ -26,7 +26,7 @@ namespace MMOTest.scripts.Managers
             {
                 instance = new MessageQueueManager();
                 GameLoop.Root.GetNode<MainLevel>("GameLoop/MainLevel").AddChild(instance);
-                instance.Name = "StatManager";
+                instance.Name = "MessageQueueManager";
             }
             return instance;
         }
