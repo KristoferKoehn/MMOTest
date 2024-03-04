@@ -34,7 +34,7 @@ namespace MMOTest.scripts.Managers
         {
             MessageQueue mq = MessageQueue.GetInstance();
 
-            Dictionary<int, Dictionary<StatType, float>> StatChanges = new Dictionary<int, Dictionary<StatType, float>>();
+            Dictionary<int, Dictionary<StatType, float>> StatChanges = null;
             
             while (mq.Count() > 0)
             {
@@ -50,6 +50,12 @@ namespace MMOTest.scripts.Managers
                 //if type == statchange do that
                 if (m.Property("type").Value.ToString() == "statchange")
                 {
+                    if (StatChanges == null)
+                    {
+                        StatChanges = new Dictionary<int, Dictionary<StatType, float>>();
+                    }
+
+
                     List<StatProperty> mstats = JsonConvert.DeserializeObject<List<StatProperty>>(m["stats"].ToString());
                     int targetID = (int)m["TargetID"];
                     GD.Print(m.ToString());
@@ -64,6 +70,13 @@ namespace MMOTest.scripts.Managers
                             {
                                 StatChanges[targetID][stat.StatType] = stat.Value;
                             }
+                        }
+                    } else
+                    {
+                        Dictionary<StatType, float> statDeltas = new Dictionary<StatType, float>();
+                        foreach (StatProperty stat in mstats)
+                        {
+                            statDeltas[stat.StatType] = stat.Value;
                         }
                     }
                     /*
