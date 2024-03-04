@@ -97,9 +97,10 @@ public partial class PlayerController : AbstractController
                 { "posz", Model.Position.Z },
                 { "velx", point.X},
                 { "vely", point.Y},
-                { "velz", point.Z}
+                { "velz", point.Z},
+                { "SourceID", Model.GetActorID()}
             };
-            this.GetParent<TestLevel>().RpcId(1,"SendMessage", job.ToString());
+            this.GetParent<MainLevel>().RpcId(1,"SendMessage", job.ToString());
         }
 
         Vector2 inputDirection = Input.GetVector("left", "right", "forward", "backward");

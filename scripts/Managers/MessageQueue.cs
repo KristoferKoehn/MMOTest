@@ -11,20 +11,24 @@ using Newtonsoft.Json.Linq;
 
 namespace MMOTest.scripts.Managers
 {
-    public class MessageQueue
+    public partial class MessageQueue : Node
     {
 
-        private static MessageQueue instance = new MessageQueue();
+        private static MessageQueue instance = null;
         private Queue<JObject> queue;
 
         private MessageQueue()
         {
             queue = new Queue<JObject>();
-            
         }
 
         public static MessageQueue GetInstance()
         {
+            if (instance == null)
+            {
+                instance = new MessageQueue();
+                GameLoop.Root.GetNode<MainLevel>("GameLoop/MainLevel").AddChild(instance);
+            }
             return instance;
         }
 

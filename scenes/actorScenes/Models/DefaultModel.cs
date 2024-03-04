@@ -3,8 +3,8 @@ using System;
 
 public partial class DefaultModel : AbstractModel
 {
-    [Export]
-    public long TrackingPeerId { get; set; } = -1;
+    [Export] public long TrackingPeerId { get; set; } = -1;
+    [Export] public int ActorID { get; set; } = -1;
     public long SimulationPeerId { get; set; } = -2;
     AbstractController playerController { get; set; }
 
@@ -47,4 +47,23 @@ public partial class DefaultModel : AbstractModel
         return this.GetNode<MultiplayerSynchronizer>("MultiplayerSynchronizer");
     }
 
+    public override AnimationPlayer GetAnimationPlayer()
+    {
+        return this.GetNode<AnimationPlayer>("AnimationPlayer");
+    }
+
+    public override void SetTrackingPeerId(long peerId)
+    {
+        this.TrackingPeerId = peerId;
+    }
+
+    public override void SetActorID(int actorId)
+    {
+        ActorID = actorId;
+    }
+
+    public override int GetActorID()
+    {
+        return this.ActorID;
+    }
 }

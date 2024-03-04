@@ -1,26 +1,41 @@
 ﻿using Godot;
+using MMOTest.Backend;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace MMOTest.scripts.Managers
 {
-    public class MessageQueueManager
+    public partial class MessageQueueManager : Node
     {
-        Node SceneTreeRoot { get; set; }
 
-        public MessageQueueManager(Node SceneTreeRoot) {
-            this.SceneTreeRoot = SceneTreeRoot;
+        static MessageQueueManager instance = null;
+
+        private MessageQueueManager() { 
+            
         }
 
-        //get thing from queue
-        //if spell, call spellcastmanager?
+        public static MessageQueueManager GetInstance()
+        {
+            if (instance == null)
+            {
+                instance = new MessageQueueManager();
+                GameLoop.Root.GetNode<MainLevel>("GameLoop/MainLevel").AddChild(instance);
+            }
+            return instance;
+        }
+
         public void ProcessMessages()
         {
             MessageQueue mq = MessageQueue.GetInstance();
+
+            Dictionary<int, Dictionary<StatType, float>> StatChanges = null;
+            
             while (mq.Count() > 0)
             {
                 JObject m = mq.PopMessage();
@@ -30,8 +45,92 @@ namespace MMOTest.scripts.Managers
                     AbstractAbility ability = GD.Load<PackedScene>($"res://scenes/abilities/{m.Property("spell").Value}.tscn").Instantiate<AbstractAbility>();
                     ability.SetMultiplayerAuthority(1); //this will change to be pulled from json
                     ability.Initialize(m);
-                    SceneTreeRoot.GetNode<Node>("GameLoop/TestLevel/AbilityModels").AddChild(ability, forceReadableName: true);
+                    GetTree().Root.GetNode<Node>("GameLoop/MainLevel/AbilityModels").AddChild(ability, forceReadableName: true);
                 }
+                //if type == statchange do that
+                if (m.Property("type").Value.ToString() == "statchange")
+                {
+                    if (StatChanges == null)
+                    {
+                        StatChanges = new Dictionary<int, Dictionary<StatType, float>>();
+                    }
+
+
+                    List<StatProperty> mstats = JsonConvert.DeserializeObject<List<StatProperty>>(m["stats"].ToString());
+                    GD.Print("deserialized list size: " + mstats.Count);
+                    int targetID = (int)m["TargetID"];
+                    GD.Print("target ID " + targetID);
+                    foreach(StatProperty sp in mstats)
+                    {
+                        GD.Print(sp.StatType.ToString() + " : " + sp.Value);
+                    }
+
+                    GD.Print(m.ToString());
+                    if (StatChanges.ContainsKey(targetID))
+                    {
+                        foreach(StatProperty stat in mstats)
+                        {
+                            if (StatChanges[targetID].ContainsKey(stat.StatType))
+                            {
+                                StatChanges[targetID][stat.StatType] += stat.Value;
+                            } else
+                            {
+                                StatChanges[targetID][stat.StatType] = stat.Value;
+                            }
+                        }
+                    } else
+                    {
+                        GD.Print("we  get to the make stats : ");
+                        Dictionary<StatType, float> statDeltas = new Dictionary<StatType, float>();
+                        foreach (StatProperty stat in mstats)
+                        {
+                            GD.Print(stat.StatType + " : " + stat.Value);
+                            statDeltas[stat.StatType] = stat.Value;
+                        }
+                        StatChanges[targetID] = statDeltas;
+
+                    }
+                    /*
+                    {
+                      "type": "statchange",
+                      "TargetID": 1000,
+                      "SourceID": -1,
+                      "stats": {
+                        "HEALTH": -209
+                      }
+                    }
+                    */
+
+
+
+
+                    // we change stats
+
+                    // we gotta put ActorID as well as the stat that is changing.
+
+
+
+                }
+
+
+                if (StatChanges != null)
+                {
+                    GD.Print("Length " + StatChanges.Count);
+                    foreach (int actorID in StatChanges.Keys)
+                    {
+                        foreach(StatType t in StatChanges[actorID].Keys)
+                        {
+                            GD.Print(t + ": " + StatChanges[actorID][t].ToString() + "\n");
+                        }
+                    }
+                }
+
+                
+                
+                //if type == pickup
+                //if type == equip
+                //if type == interact
+                //if type == ???
                 //do something here
             }
         }

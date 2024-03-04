@@ -5,17 +5,24 @@ using System.Diagnostics;
 
 public partial class GameLoop : Node
 {
+    public static Node Root = null;
     public Stack<Node> sceneStack = new Stack<Node>();
     int PORT = 9999;
 
+    public override void _EnterTree()
+    {
+        Root = GetTree().Root;
+    }
+
     public override void _Ready()
     {
+        
         if (OS.HasFeature("dedicated_server"))
         {
             string ip = UpnpSetup();
             UniversalConnector connector = new UniversalConnector("50.47.173.115", PORT);
-            connector.Host("DEDICATED SERVER", ip);
-            TestLevel tL = GD.Load<PackedScene>("res://scenes/levels/TestLevel.tscn").Instantiate<TestLevel>();
+            connector.Host("ActorImplementation", ip);
+            MainLevel tL = GD.Load<PackedScene>("res://scenes/levels/MainLevel.tscn").Instantiate<MainLevel>();
             tL.Connector = connector;
             tL.host = true;
             this.PushScene(tL);
@@ -57,11 +64,10 @@ public partial class GameLoop : Node
 
         Debug.Assert(upnp.GetGateway() != null && upnp.GetGateway().IsValidGateway(), "ESTABLISH GATEWAY FAILED");
 
-        int MapResult = upnp.AddPortMapping(PORT);
+        int MapResult = upnp.AddPortMapping(9001);
         Debug.Assert(MapResult == 0, "INVALID PORT MAPPING");
 
         GD.Print($"SUCCESSFUL UPNP SETUP? map result: {MapResult} - valid gateway: {upnp.GetGateway().IsValidGateway()}");
         return upnp.QueryExternalAddress();
-
     }
 }
