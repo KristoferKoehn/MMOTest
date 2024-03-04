@@ -62,8 +62,8 @@ public partial class Fireball : AbstractAbility
             JObject b = new JObject
             {
                 { "type", "statchange" },
-                { "TargetID", 1000 },
-                { "SourceID", TargetID },
+                { "TargetID", TargetID },
+                { "SourceID", SourceActorID },
             };
 
             List<StatProperty> values = new List<StatProperty>
