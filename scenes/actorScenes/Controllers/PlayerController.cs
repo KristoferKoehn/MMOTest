@@ -120,7 +120,8 @@ public partial class PlayerController : AbstractController
                 { "velz", point.Z},
                 { "SourceID", Model.GetActorID()}
             };
-            this.GetParent<MainLevel>().RpcId(1,"SendMessage", job.ToString());
+            MessageQueue.GetInstance().RpcId(1, "AddMessage", job.ToString());
+            //this.GetParent<MainLevel>().RpcId(1,"SendMessage", job.ToString());
         }
 
         inputDirection = Input.GetVector("left", "right", "forward", "backward");
