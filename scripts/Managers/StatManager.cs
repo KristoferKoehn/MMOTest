@@ -1,11 +1,13 @@
 using Godot;
 using MMOTest.Backend;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using System;
+using System.Collections.Generic;
 
 public partial class StatManager : Node
 {
     public static StatManager instance;
+    public Dictionary<long, List<int>> StatSubscription = new Dictionary<long, List<int>>();
 
     private StatManager() { }
 
@@ -17,6 +19,31 @@ public partial class StatManager : Node
             GameLoop.Root.GetNode<MainLevel>("GameLoop/MainLevel").AddChild(instance);
         }
         return instance; 
+    }
+
+    public void SubscribePeerToActor(long PeerID, int ActorID)
+    {
+        if (StatSubscription.ContainsKey(PeerID))
+        {
+            if (!StatSubscription[PeerID].Contains(ActorID))
+            {
+                StatSubscription[PeerID].Add(ActorID);
+            }
+        } else
+        {
+            StatSubscription[PeerID] = new List<int>
+            {
+                ActorID
+            };
+        }
+    }
+
+    public void UnsubscribePeerToActor(int PeerID, int ActorID)
+    {
+        if (StatSubscription.ContainsKey(PeerID))
+        {
+            StatSubscription[PeerID].Remove(ActorID);
+        }
     }
 
     public StatBlock GetStatBlock(int ActorID)
@@ -31,12 +58,6 @@ public partial class StatManager : Node
         // and so on
     }
 
-    public void NotifyStatChange(JObject set)
-    {
-
-    }
-
-
     /// <summary>
     /// this is called from the client and executed on the server. 
     /// This function calls AssignStatBlock as an RPC from the server to the client with the stat json and the peer that's associated with it.
@@ -47,13 +68,14 @@ public partial class StatManager : Node
     {
         long peerID = ActorManager.GetInstance().GetActor(ActorID).ActorMultiplayerAuthority;
         //call next RPC that sends the stat block to the user
-        RpcId(peerID, "AssignStatBlock", GetStatBlock(ActorID).GetStatBlockString(), ActorID);
+        RpcId(peerID, "AssignStatBlock", GetStatBlock(ActorID).SerializeStatBlock(), ActorID);
     }
 
     /// <summary>
     /// Assigns a statblock to a client-side actor. This can be the client-player or another actor in a client's simulation.
+    /// json must be a serialized Dictionary<StatType, float>
     /// </summary>
-    /// <param name="jstr">stat block json string (sourced from server)</param>
+    /// <param name="jstr">must be a serialized Dictionary<StatType, float></param>
     /// <param name="peerID">PeerID of the requested actor.</param>
     [Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
     public void AssignStatBlock(string jstr, int ActorID)
@@ -63,33 +85,49 @@ public partial class StatManager : Node
             ActorManager.GetInstance().CreateActor(null, null, 0, ActorID);
         }
 
-        ActorManager.GetInstance().GetActor(ActorID).stats.SetStatBlock(jstr);
-        //if this actor doesn't exist on client
-        //    make actor on client, leave out clientmodel or something
-        //    client makes decisions based on some metric to subscribe or unsubscribe to "stat updates" for a given actor
-        //    gotta do all that somewhere else
+        Dictionary<StatType, float> sb = JsonConvert.DeserializeObject< Dictionary<StatType, float>>(jstr);
+        ActorManager.GetInstance().GetActor(ActorID).stats.SetStatBlock(sb);
 
     }
 
+    /// <summary>
+    /// This takes in a jstring of a list of StatProperties describing stat changes
+    /// </summary>
+    /// <param name="jstatchange">serialized Dictionary<int, Dictionary<StatType, float>>, describing an ActorID and a Dictionary<StatType, float> of stat changes</param>
     [Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
     public void UpdateClientStatChange(string jstatchange)
     {
-        /*
-        ActorID1 : {
-            health: 30,
-            mana: 23
-        },
+        Dictionary<int, Dictionary<StatType, float>> StatChanges = JsonConvert.DeserializeObject<Dictionary<int, Dictionary<StatType, float>>>(jstatchange);
+        ApplyAllStatChanges(StatChanges);
+    }
 
-        ActorID2 : {
-            health: 99,
-        }
-        */
-
-        JObject changes = new JObject(jstatchange);
-        foreach (JProperty actorchange in changes.Properties())
+    public void NotifyStatChanges(Dictionary<int, Dictionary<StatType, float>> statchanges)
+    {
+        foreach (long peerID in StatSubscription.Keys)
         {
-            ActorManager.GetInstance().GetActor(int.Parse(actorchange.Name)).stats.SetStatFromChangeList(actorchange.Value.ToString());
+            Dictionary<int, Dictionary<StatType, float>> changes = new();
+            foreach (int ActorID in StatSubscription[peerID])
+            {
+                if (statchanges.ContainsKey(ActorID))
+                {
+                    changes[ActorID] = statchanges[ActorID];
+                }
+            }
+            RpcId(peerID, "UpdateClientStatChange", JsonConvert.SerializeObject(changes));
         }
+    }
+
+
+    public void ApplyAllStatChanges(Dictionary<int, Dictionary<StatType, float>> statchanges)
+    {
+        foreach (int ActorID in statchanges.Keys)
+        {
+
+            StatBlock sb = GetStatBlock(ActorID);
+            sb.ApplyAllChanges(statchanges[ActorID]);
+        }
+
+        NotifyStatChanges(statchanges);
     }
 
 }

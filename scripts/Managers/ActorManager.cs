@@ -38,18 +38,20 @@ public partial class ActorManager : Node
 		actor.ActorMultiplayerAuthority = PeerID;
 		actor.ActorID = ActorID;
         // generic stat block
-        JObject stat = new JObject()
-		{
-			{ Enum.GetName(typeof(StatType), StatType.HEALTH) , 100 },
-            { Enum.GetName(typeof(StatType), StatType.MANA) , 100 },
-			{ Enum.GetName(typeof(StatType), StatType.MAGIC_RESIST), 13},
-			{ Enum.GetName(typeof(StatType), StatType.ARMOR), 11},
-			{ Enum.GetName(typeof(StatType), StatType.ABILITY_POINTS), 14},
-			{ Enum.GetName(typeof(StatType), StatType.CASTING_SPEED), 12},
-			{ Enum.GetName(typeof(StatType), StatType.PHYSICAL_DAMAGE), 16},
-        };
 		StatBlock statBlock = new StatBlock();
-		statBlock.SetStatBlock(stat);
+
+        Dictionary<StatType, float> stats = new()
+        {
+            [StatType.HEALTH] = 100,
+            [StatType.MANA] = 100,
+            [StatType.MAGIC_RESIST] = 13,
+            [StatType.ARMOR] = 11,
+            [StatType.ABILITY_POINTS] = 14,
+            [StatType.CASTING_SPEED] = 12,
+            [StatType.PHYSICAL_DAMAGE] = 15
+        };
+
+        statBlock.SetStatBlock(stats);
 		actor.stats = statBlock;
 
         actors.Add(ActorID, actor);

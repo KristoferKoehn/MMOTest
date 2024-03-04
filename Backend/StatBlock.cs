@@ -1,3 +1,4 @@
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
@@ -14,7 +15,6 @@ public enum StatType
     MANA,
     ATTACK_SPEED,
     CASTING_SPEED,
-
 }
 
 
@@ -58,50 +58,46 @@ namespace MMOTest.Backend
     public class StatBlock
     {
 
-        //private Dictionary<StatType, float> statblock = new Dictionary<StatType, float>();
-        private JObject statblock = new JObject();
+        private Dictionary<StatType, float> statblock = new Dictionary<StatType, float>();
+        //private JObject statblock = new JObject();
         public StatBlock() { }
 
         public void SetStat(StatType statType, float value)
         {
-            //statblock[statType] = value;
-            statblock.Add(Enum.GetName(typeof(StatType), statType), value);
+            statblock[statType] = value;
         }
 
         public float GetStat(StatType statType)
         {
-            return statblock.ContainsKey(Enum.GetName(typeof(StatType), statType)) ? (float)statblock.Property(Enum.GetName(typeof(StatType), statType)) : 0;
+            return statblock.ContainsKey(statType) ? statblock[statType] : 0f;
         }
 
         public void SetStatBlock(string JString)
         {
-            statblock = new JObject(JString);
+            statblock = JsonConvert.DeserializeObject<Dictionary<StatType,float>>(JString);
         }
 
-        public void SetStatBlock(JObject Job)
+        public void SetStatBlock(Dictionary<StatType, float> sb)
         {
-            statblock = Job;
+            statblock = sb;
         }
 
-        public void SetStatFromChangeList(string jstatchange)
+        public string SerializeStatBlock()
         {
-            JObject jchange = new JObject(jstatchange);
-            foreach (JProperty ch in jchange.Properties())
+            return JsonConvert.SerializeObject(statblock);
+        }
+
+        public void ApplyChange(StatType statType, float value)
+        {
+            SetStat(statType, GetStat(statType) + value);
+        }
+
+        public void ApplyAllChanges(Dictionary<StatType, float> sb)
+        {
+            foreach (StatType statType in statblock.Keys)
             {
-                if (statblock.ContainsKey(ch.Name)) 
-                {
-                    statblock[ch] = ch.Value;
-                }
-                else
-                {
-                    statblock.Add(ch.Name, ch.Value);
-                }
+                statblock[statType] = GetStat(statType) + sb[statType];
             }
-        }
-
-        public string GetStatBlockString()
-        {
-            return statblock.ToString();
         }
     }
 }

@@ -100,13 +100,8 @@ namespace MMOTest.scripts.Managers
                 //do something here
 
                 //rectify all stat changes in dictionary
-                foreach (int ActorID in StatChanges.Keys)
-                {
-                    StatBlock sb = StatManager.GetInstance().GetStatBlock(ActorID);
-
-
-
-                }
+                StatManager.GetInstance().ApplyAllStatChanges(StatChanges);
+                
             }
         }
     }
