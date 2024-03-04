@@ -92,7 +92,7 @@ public partial class StatManager : Node
     {
         if (ActorManager.GetInstance().GetActor(ActorID) == null)
         {
-            ActorManager.GetInstance().CreateActor(null, null, 0, ActorID);
+            ActorManager.GetInstance().CreateActor(null, null, Multiplayer.GetUniqueId(), ActorID);
         }
 
         Dictionary<StatType, float> sb = JsonConvert.DeserializeObject< Dictionary<StatType, float>>(jstr);
@@ -108,7 +108,7 @@ public partial class StatManager : Node
     {
         Dictionary<int, Dictionary<StatType, float>> StatChanges = JsonConvert.DeserializeObject<Dictionary<int, Dictionary<StatType, float>>>(jstatchange);
         ApplyAllStatChanges(StatChanges);
-        GD.Print("Receive stat change");
+        
     }
 
     public void NotifyStatChanges(Dictionary<int, Dictionary<StatType, float>> statchanges)
