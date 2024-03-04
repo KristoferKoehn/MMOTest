@@ -57,6 +57,8 @@ namespace MMOTest.scripts.Managers
 
 
                     List<StatProperty> mstats = JsonConvert.DeserializeObject<List<StatProperty>>(m["stats"].ToString());
+                    GD.Print("deserialized list size: " + mstats.Count);
+
                     int targetID = (int)m["TargetID"];
                     GD.Print(m.ToString());
                     if (StatChanges.ContainsKey(targetID))
