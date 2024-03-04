@@ -82,7 +82,7 @@ namespace MMOTest.Backend
 
         public void ApplyAllChanges(Dictionary<StatType, float> sb)
         {
-            foreach (StatType statType in statblock.Keys)
+            foreach (StatType statType in sb.Keys)
             {
                 GD.Print(statType.ToString());
                 statblock[statType] = GetStat(statType) + sb[statType];

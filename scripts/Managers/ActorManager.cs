@@ -40,7 +40,7 @@ public partial class ActorManager : Node
         // generic stat block
 		StatBlock statBlock = new StatBlock();
 
-        Dictionary<StatType, float> stats = new()
+        Dictionary<StatType, float> statsDict = new()
         {
             [StatType.HEALTH] = 100,
             [StatType.MANA] = 100,
@@ -51,7 +51,7 @@ public partial class ActorManager : Node
             [StatType.PHYSICAL_DAMAGE] = 15
         };
 
-        statBlock.SetStatBlock(stats);
+        statBlock.SetStatBlock(statsDict);
 		actor.stats = statBlock;
 
         actors.Add(ActorID, actor);
