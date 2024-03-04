@@ -120,6 +120,7 @@ public partial class PlayerController : AbstractController
                 { "velz", point.Z},
                 { "SourceID", Model.GetActorID()}
             };
+            GD.Print(Model.GetActorID());
             //MessageQueue.GetInstance().RpcId(1, "AddMessage", job.ToString());
             this.GetParent<MainLevel>().RpcId(1,"SendMessage", job.ToString());
         }
