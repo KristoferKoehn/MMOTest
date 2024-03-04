@@ -121,7 +121,7 @@ public partial class PlayerController : AbstractController
                 { "SourceID", Model.GetActorID()}
             };
             GD.Print(Model.GetActorID());
-            MessageQueue.GetInstance().RpcId(1, "SendMessage", job.ToString());
+            MessageQueue.GetInstance().RpcId(1, "AddMessage", job.ToString());
             //this.GetParent<MainLevel>().RpcId(1,"SendMessage", job.ToString());
         }
 
