@@ -41,7 +41,6 @@ namespace MMOTest.scripts.Managers
                 JObject m = mq.PopMessage();
                 if (m.Property("type").Value.ToString() == "cast")
                 {
-                    GD.Print(m.Property("spell").Value);
                     AbstractAbility ability = GD.Load<PackedScene>($"res://scenes/abilities/{m.Property("spell").Value}.tscn").Instantiate<AbstractAbility>();
                     ability.SetMultiplayerAuthority(1); //this will change to be pulled from json
                     ability.Initialize(m);
@@ -58,13 +57,7 @@ namespace MMOTest.scripts.Managers
 
                     List<StatProperty> mstats = JsonConvert.DeserializeObject<List<StatProperty>>(m["stats"].ToString());
                     int targetID = (int)m["TargetID"];
-                    GD.Print("target ID " + targetID);
-                    foreach(StatProperty sp in mstats)
-                    {
-                        GD.Print(sp.StatType.ToString() + " : " + sp.Value);
-                    }
-
-                    GD.Print(m.ToString());
+                    //GD.Print(m.ToString());
                     if (StatChanges.ContainsKey(targetID))
                     {
                         foreach(StatProperty stat in mstats)
@@ -101,7 +94,6 @@ namespace MMOTest.scripts.Managers
                 //rectify all stat changes in dictionary
                 if (StatChanges != null)
                 {
-                    GD.Print("we get here?");
                     StatManager.GetInstance().ApplyAllStatChanges(StatChanges);
                 }
             }

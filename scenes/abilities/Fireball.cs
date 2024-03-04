@@ -72,8 +72,6 @@ public partial class Fireball : AbstractAbility
             };
 
             b["stats"] = JsonConvert.SerializeObject(values);
-
-            GD.Print(b.ToString());
             MessageQueue.GetInstance().AddMessage(b);
         }
 

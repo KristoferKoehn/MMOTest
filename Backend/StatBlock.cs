@@ -89,6 +89,8 @@ namespace MMOTest.Backend
                 GD.Print(statType.ToString() + " set to " + statblock[statType]);
 
             }
+
+
         }
     }
 }
