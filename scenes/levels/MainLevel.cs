@@ -153,7 +153,7 @@ public partial class MainLevel : Node3D
         PlayerModel.SetMultiplayerAuthority((int)PeerId);
         this.GetNode<Node>(ClientNodePath).AddChild(PlayerModel);
         PlayerModel.Name = PeerId.ToString();
-
+        PlayerModel.ActorID = ActorID;
         if (!host)
         {
             GetNode<PlayerController>("PlayerController").AttachModel(PlayerModel);
