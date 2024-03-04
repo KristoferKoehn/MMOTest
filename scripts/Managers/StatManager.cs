@@ -3,6 +3,7 @@ using MMOTest.Backend;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 
 public partial class StatManager : Node
 {
@@ -17,6 +18,7 @@ public partial class StatManager : Node
         {
             instance = new StatManager();
             GameLoop.Root.GetNode<MainLevel>("GameLoop/MainLevel").AddChild(instance);
+            instance.Name = "StatManager";
         }
         return instance; 
     }
