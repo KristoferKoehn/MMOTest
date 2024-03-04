@@ -116,7 +116,7 @@ public partial class MainLevel : Node3D
         client.SetTrackingPeerId(PeerId);
         client.SetActorID(ActorID);
         puppet.SetMultiplayerAuthority(1);
-        RpcId(PeerId, "SpawnClientModel", PeerId);
+        RpcId(PeerId, "SpawnClientModel", PeerId, ActorID);
         this.GetNode<Node>(PuppetNodePath).AddChild(puppet, forceReadableName: true);
         ActorManager.GetInstance().CreateActor(client, puppet, PeerId, ActorID);
     }
