@@ -45,7 +45,7 @@ namespace MMOTest.scripts.Managers
         public void AddMessage(string message)
         {
             JObject job = JsonConvert.DeserializeObject<JObject>(message);
-            queue.Enqueue(new JObject(message));
+            queue.Enqueue(job);
         }
 
 
