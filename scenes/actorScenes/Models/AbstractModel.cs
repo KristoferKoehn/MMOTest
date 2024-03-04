@@ -8,6 +8,7 @@ public abstract partial class AbstractModel : CharacterBody3D
 	public abstract void AttachController(AbstractController controller);
 	public abstract void SetTrackingPeerId(long peerId);
 	public abstract void SetActorID(int actorId);
+	public abstract int GetActorID();
 	public abstract long GetTrackingPeerId();
 	public abstract MultiplayerSynchronizer GetMultiplayerSynchronizer();
 	public abstract AnimationPlayer GetAnimationPlayer();

@@ -120,6 +120,7 @@ public partial class MainLevel : Node3D
         ActorManager.GetInstance().CreateActor(client, puppet, PeerId, ActorID);
     }
 
+
     public void RemoveActor(long PeerId)
     {
         List<Actor> actors = ActorManager.GetInstance().GetActorsFromPeerID(PeerId);
@@ -133,11 +134,13 @@ public partial class MainLevel : Node3D
         }
     }
 
+
     public void Join()
     {
         EnetPeer.CreateClient(ServerAddress, PORT);
         Multiplayer.MultiplayerPeer = EnetPeer;
     }
+
 
     [Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
     public AbstractModel SpawnClientModel(long PeerId)

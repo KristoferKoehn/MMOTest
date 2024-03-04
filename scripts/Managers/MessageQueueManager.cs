@@ -33,8 +33,19 @@ namespace MMOTest.scripts.Managers
             MessageQueue mq = MessageQueue.GetInstance();
 
             JObject StatChangeDictionary = new JObject();
-                    
+            /*
+            {
+                {
+                    "ActorID" : 0000,
+                    {
+                        "HEALTH" : -10,
+                    }
+                } 
 
+            }
+
+
+            */
             while (mq.Count() > 0)
             {
                 JObject m = mq.PopMessage();
@@ -47,14 +58,17 @@ namespace MMOTest.scripts.Managers
                     GetTree().Root.GetNode<Node>("GameLoop/MainLevel/AbilityModels").AddChild(ability, forceReadableName: true);
                 }
                 //if type == statchange do that
-                if (m.Property("type").Value.ToString() == "schange")
+                if (m.Property("type").Value.ToString() == "statchange")
                 {
+                    
+
+
 
                     // we change stats
 
-                    // we gotta put ActorID and PeerID in the thing, as well as the stat that is changing.
+                    // we gotta put ActorID as well as the stat that is changing.
 
-                    // here, we strip the PeerID, use that as a key to a list of ActorID, which is a key to a list of stat changes. 
+                    
 
                 }
 

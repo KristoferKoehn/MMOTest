@@ -61,4 +61,9 @@ public partial class DefaultModel : AbstractModel
     {
         ActorID = actorId;
     }
+
+    public override int GetActorID()
+    {
+        return this.ActorID;
+    }
 }
