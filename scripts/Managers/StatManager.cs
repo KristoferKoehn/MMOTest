@@ -46,6 +46,14 @@ public partial class StatManager : Node
         }
     }
 
+    public void UnsubscribeActorFromAllPeers(int ActorID)
+    {
+        foreach(List<int> lists in StatSubscription.Values)
+        {
+            lists.Remove(ActorID);
+        }
+    }
+
     public StatBlock GetStatBlock(int ActorID)
     {
         return ActorManager.GetInstance().GetActor(ActorID).stats;
@@ -99,6 +107,7 @@ public partial class StatManager : Node
     {
         Dictionary<int, Dictionary<StatType, float>> StatChanges = JsonConvert.DeserializeObject<Dictionary<int, Dictionary<StatType, float>>>(jstatchange);
         ApplyAllStatChanges(StatChanges);
+        GD.Print("Receive stat change");
     }
 
     public void NotifyStatChanges(Dictionary<int, Dictionary<StatType, float>> statchanges)

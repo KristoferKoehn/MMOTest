@@ -55,11 +55,14 @@ public partial class ActorManager : Node
 		actor.stats = statBlock;
 
         actors.Add(ActorID, actor);
+		StatManager.GetInstance().SubscribePeerToActor(PeerID, ActorID);
 	}
 
 	public void RemoveActor(int ActorID)
 	{
 		actors.Remove(ActorID);
+		StatManager.GetInstance().UnsubscribeActorFromAllPeers(ActorID);
+
 	}
 
 	public Actor GetActor(int ActorID)

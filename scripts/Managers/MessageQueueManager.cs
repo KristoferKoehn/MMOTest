@@ -95,6 +95,7 @@ namespace MMOTest.scripts.Managers
                 if (StatChanges != null)
                 {
                     StatManager.GetInstance().ApplyAllStatChanges(StatChanges);
+                    StatManager.GetInstance().NotifyStatChanges(StatChanges);
                 }
             }
         }
