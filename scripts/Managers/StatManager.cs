@@ -72,7 +72,7 @@ public partial class StatManager : Node
     /// See AssignStatBlock
     /// </summary>
     [Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
-    public void RequestStatblock(int ActorID) 
+    public void RequestStatBlock(int ActorID) 
     {
         long peerID = ActorManager.GetInstance().GetActor(ActorID).ActorMultiplayerAuthority;
         //call next RPC that sends the stat block to the user
