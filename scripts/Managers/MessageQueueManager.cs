@@ -52,7 +52,7 @@ namespace MMOTest.scripts.Managers
                 {
                     List<StatProperty> mstats = JsonConvert.DeserializeObject<List<StatProperty>>(m["stats"].ToString());
                     int targetID = (int)m["TargetID"];
-
+                    GD.Print(m.ToString());
                     if (StatChanges.ContainsKey(targetID))
                     {
                         foreach(StatProperty stat in mstats)
