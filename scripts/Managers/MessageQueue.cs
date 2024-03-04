@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Godot;
 using Microsoft.Data.Sqlite;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
 
@@ -43,6 +44,7 @@ namespace MMOTest.scripts.Managers
         [Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
         public void AddMessage(string message)
         {
+            JObject job = JsonConvert.DeserializeObject<JObject>(message);
             queue.Enqueue(new JObject(message));
         }
 

@@ -1,5 +1,6 @@
 using Godot;
 using MMOTest.scripts.Managers;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
 
@@ -121,7 +122,7 @@ public partial class PlayerController : AbstractController
                 { "SourceID", Model.GetActorID()}
             };
             GD.Print(Model.GetActorID());
-            MessageQueue.GetInstance().RpcId(1, "AddMessage", job.ToString());
+            MessageQueue.GetInstance().RpcId(1, "AddMessage", JsonConvert.SerializeObject(job));
             //this.GetParent<MainLevel>().RpcId(1,"SendMessage", job.ToString());
         }
 
