@@ -1,4 +1,6 @@
 ﻿using Godot;
+using MMOTest.Backend;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
@@ -32,20 +34,8 @@ namespace MMOTest.scripts.Managers
         {
             MessageQueue mq = MessageQueue.GetInstance();
 
-            JObject StatChangeDictionary = new JObject();
-            /*
-            {
-                {
-                    "ActorID" : 0000,
-                    {
-                        "HEALTH" : -10,
-                    }
-                } 
-
-            }
-
-
-            */
+            Dictionary<int, Dictionary<StatType, float>> StatChanges = new Dictionary<int, Dictionary<StatType, float>>();
+            
             while (mq.Count() > 0)
             {
                 JObject m = mq.PopMessage();
@@ -60,9 +50,22 @@ namespace MMOTest.scripts.Managers
                 //if type == statchange do that
                 if (m.Property("type").Value.ToString() == "statchange")
                 {
-                    
+                    List<StatProperty> mstats = JsonConvert.DeserializeObject<List<StatProperty>>(m["stats"].ToString());
+                    int targetID = (int)m["TargetID"];
 
-
+                    if (StatChanges.ContainsKey(targetID))
+                    {
+                        foreach(StatProperty stat in mstats)
+                        {
+                            if (StatChanges[targetID].ContainsKey(stat.StatType))
+                            {
+                                StatChanges[targetID][stat.StatType] += stat.Value;
+                            } else
+                            {
+                                StatChanges[targetID][stat.StatType] = stat.Value;
+                            }
+                        }
+                    }
                     /*
                     {
                       "type": "statchange",
@@ -74,18 +77,9 @@ namespace MMOTest.scripts.Managers
                     }
                     */
 
-                    if(StatChangeDictionary.ContainsKey(m.Property("TargetID").ToString()))
-                    {
-
-                        StatChangeDictionary[m["TargetID"].ToString()].AddAfterSelf(m["stats"]);
-
-                    } else
-                    {
-
-                        StatChangeDictionary[m["TargetID"].ToString()] = m["stats"];
-                    }
-
                     
+
+              
                     // we change stats
 
                     // we gotta put ActorID as well as the stat that is changing.
@@ -94,8 +88,8 @@ namespace MMOTest.scripts.Managers
 
                 }
 
-
-                GD.Print(StatChangeDictionary.ToString());
+                GD.Print(StatChanges);
+                
                 //if type == pickup
                 //if type == equip
                 //if type == interact

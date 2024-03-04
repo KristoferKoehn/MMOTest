@@ -1,8 +1,11 @@
 using Godot;
 using MMOTest.Backend;
 using MMOTest.scripts.Managers;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
+using System.Collections.Generic;
+using System.Windows.Markup;
 
 public partial class Fireball : AbstractAbility
 {
@@ -55,38 +58,18 @@ public partial class Fireball : AbstractAbility
                 { "type", "statchange" },
                 { "TargetID", 1000 },
                 { "SourceID", SourceActorID },
-                { "stats", new JObject 
-                    {
-                    { "HEALTH", -209 }
-                    }
-                }
             };
-        JObject c = new JObject
-            {
-                { "type", "statchange" },
-                { "TargetID", 1001 },
-                { "SourceID", SourceActorID },
-                { "stats", new JObject
-                    {
-                    { "MANA", -209 }
-                    }
-                }
-            };
-        JObject d = new JObject
-            {
-                { "type", "statchange" },
-                { "TargetID", 1000 },
-                { "SourceID", SourceActorID },
-                { "stats", new JObject
-                    {
-                    { "STRENGTH", -22 }
-                    }
-                }
-            };
+
+        List<StatProperty> values = new List<StatProperty>
+        {
+            new StatProperty(StatType.HEALTH, 20)
+        };
+
+        b["stats"] = JsonConvert.SerializeObject(values);
+
         //GD.Print(b.ToString());
         MessageQueue.GetInstance().AddMessage(b);
-        MessageQueue.GetInstance().AddMessage(c);
-        MessageQueue.GetInstance().AddMessage(d);
+
         //testing only!!!
 
         AbstractModel target = node as AbstractModel;

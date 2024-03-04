@@ -1,6 +1,7 @@
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
+using System.Dynamic;
 
 public enum StatType
 {
@@ -18,8 +19,37 @@ public enum StatType
 
 
 
+
 namespace MMOTest.Backend
 {
+
+    public class StatProperty
+    {
+
+        public StatType StatType { get; }
+        public float Value { get; }
+        public string StatName { get; }
+
+
+        public StatProperty(StatType statType, float statValue)
+        {
+            this.StatType = statType;
+            this.Value = statValue;
+            this.StatName = statType.ToString();
+        }
+
+        public StatProperty(string StatName, float statValue)
+        {
+            this.StatName = StatName;
+            this.Value = statValue;
+            object stype;
+            if (Enum.TryParse(typeof(StatType), StatName, true, out stype))
+            {
+                this.StatType = (StatType)stype;
+            }
+        } 
+    }
+
 
     public class StatBlock
     {
