@@ -66,6 +66,5 @@ public partial class FireballExplosion : AbstractAbility
                 ((DefaultModel)node).ApplyImpulse((node.Position + new Vector3(0, 1.0f, 0) - this.Position).Normalized() * 60000);
             }
         }
-        
     }
 }
