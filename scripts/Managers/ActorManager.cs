@@ -61,8 +61,9 @@ public partial class ActorManager : Node
 
 	public void RemoveActor(int ActorID)
 	{
+		long peerID = GetActor(ActorID).ActorMultiplayerAuthority;
 		actors.Remove(ActorID);
-		StatManager.GetInstance().UnsubscribeActorFromAllPeers(ActorID);
+		StatManager.GetInstance().PeerLogoutSubscriptionDisconnect(peerID, ActorID);
 
 	}
 

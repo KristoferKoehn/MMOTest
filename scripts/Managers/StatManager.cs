@@ -56,6 +56,12 @@ public partial class StatManager : Node
         }
     }
 
+    public void PeerLogoutSubscriptionDisconnect(long PeerID, int ActorID)
+    {
+        StatSubscription.Remove(PeerID);
+        UnsubscribeActorFromAllPeers(ActorID);
+    }
+
     public StatBlock GetStatBlock(int ActorID)
     {
         return ActorManager.GetInstance().GetActor(ActorID).stats;

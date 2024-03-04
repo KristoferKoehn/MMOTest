@@ -99,6 +99,9 @@ public partial class PlayerController : AbstractController
         this.Model = model;
         this.ModelAnimation = model.GetNode<AnimationPlayer>("AnimationPlayer");
         Model.AttachController(this);
+        PlayerUI p = GD.Load<PackedScene>("res://scenes/PlayerUI/PlayerUI.tscn").Instantiate<PlayerUI>();
+        p.initialize(model.GetActorID());
+        this.AddChild(p);
     }
 
     public override void _PhysicsProcess(double delta)
