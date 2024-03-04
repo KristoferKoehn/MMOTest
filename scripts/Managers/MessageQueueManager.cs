@@ -80,51 +80,17 @@ namespace MMOTest.scripts.Managers
                         }
                     } else
                     {
-                        GD.Print("we  get to the make stats : ");
+
                         Dictionary<StatType, float> statDeltas = new Dictionary<StatType, float>();
-                        foreach (StatProperty stat in mstats)
-                        {
-                            GD.Print(stat.StatType + " : " + stat.Value);
-                            statDeltas[stat.StatType] = stat.Value;
-                        }
                         StatChanges[targetID] = statDeltas;
 
                     }
-                    /*
-                    {
-                      "type": "statchange",
-                      "TargetID": 1000,
-                      "SourceID": -1,
-                      "stats": {
-                        "HEALTH": -209
-                      }
-                    }
-                    */
-
-
-
 
                     // we change stats
 
                     // we gotta put ActorID as well as the stat that is changing.
 
-
-
                 }
-
-
-                if (StatChanges != null)
-                {
-                    GD.Print("Length " + StatChanges.Count);
-                    foreach (int actorID in StatChanges.Keys)
-                    {
-                        foreach(StatType t in StatChanges[actorID].Keys)
-                        {
-                            GD.Print(t + ": " + StatChanges[actorID][t].ToString() + "\n");
-                        }
-                    }
-                }
-
                 
                 
                 //if type == pickup
@@ -132,6 +98,15 @@ namespace MMOTest.scripts.Managers
                 //if type == interact
                 //if type == ???
                 //do something here
+
+                //rectify all stat changes in dictionary
+                foreach (int ActorID in StatChanges.Keys)
+                {
+                    StatBlock sb = StatManager.GetInstance().GetStatBlock(ActorID);
+
+
+
+                }
             }
         }
     }
