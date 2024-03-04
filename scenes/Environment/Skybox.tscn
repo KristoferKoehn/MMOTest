@@ -54,13 +54,13 @@ fog_density = 0.005
 [sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_rp6mj"]
 properties/0/path = NodePath(".:day_time")
 properties/0/spawn = true
-properties/0/replication_mode = 0
+properties/0/replication_mode = 1
 properties/1/path = NodePath(".:day_of_year")
 properties/1/spawn = true
-properties/1/replication_mode = 0
+properties/1/replication_mode = 2
 properties/2/path = NodePath(".:time_scale")
 properties/2/spawn = true
-properties/2/replication_mode = 0
+properties/2/replication_mode = 2
 
 [node name="Main" type="Node3D"]
 script = ExtResource("1_g4j45")
