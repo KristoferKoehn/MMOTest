@@ -28,7 +28,6 @@ namespace MMOTest.Backend
 
         public StatType StatType { get; set; }
         public float Value { get; set; }
-        public string StatName { get; set; }
 
         public StatProperty()
         {
@@ -39,19 +38,7 @@ namespace MMOTest.Backend
         {
             this.StatType = statType;
             this.Value = statValue;
-            this.StatName = statType.ToString();
         }
-
-        public StatProperty(string StatName, float statValue)
-        {
-            this.StatName = StatName;
-            this.Value = statValue;
-            object stype;
-            if (Enum.TryParse(typeof(StatType), StatName, true, out stype))
-            {
-                this.StatType = (StatType)stype;
-            }
-        } 
     }
 
 
