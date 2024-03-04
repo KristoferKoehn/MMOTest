@@ -63,7 +63,7 @@ public partial class FireballExplosion : AbstractAbility
             }
             else
             {
-                ((DefaultModel)node).ApplyImpulse((node.Position + new Vector3(0, 1.0f, 0) - this.Position).Normalized() * 20);//+ new Vector3(0, 0.1f, 0)).Normalized() * 20;
+                ((DefaultModel)node).ApplyImpulse((node.Position + new Vector3(0, 1.0f, 0) - this.Position).Normalized() * 60000);
             }
         }
         
