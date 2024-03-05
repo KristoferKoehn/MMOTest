@@ -3,9 +3,7 @@ using MMOTest.Backend;
 using MMOTest.scripts.Managers;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using System;
 using System.Collections.Generic;
-using System.Windows.Markup;
 
 public partial class Fireball : AbstractAbility
 {
@@ -15,10 +13,7 @@ public partial class Fireball : AbstractAbility
     {
         Vector3 position = new Vector3((float)obj.Property("posx"), (float)obj.Property("posy"), (float)obj.Property("posz"));
         Vector3 velocity = new Vector3((float)obj.Property("velx"), (float)obj.Property("vely"), (float)obj.Property("velz"));
-        if (obj.ContainsKey("SourceID"))
-        {
-            SourceActorID = (int)obj.Property("SourceID");
-        }
+        SourceActorID = (int)obj.Property("SourceID");
         this.Position = position + velocity * 2;
         this.LinearVelocity = velocity * 30;
     }
@@ -50,52 +45,32 @@ public partial class Fireball : AbstractAbility
         };
         MessageQueue.GetInstance().AddMessage(m);
 
-        //if model/actor whatever
-
-        //testing only!!
-        JObject b = new JObject
-            {
-                { "type", "statchange" },
-                { "TargetID", 1000 },
-                { "SourceID", SourceActorID },
-            };
-
-        List<StatProperty> values = new List<StatProperty>
-        {
-            new StatProperty(StatType.HEALTH, 20)
-        };
-
-        b["stats"] = JsonConvert.SerializeObject(values);
-
-        //GD.Print(b.ToString());
-        MessageQueue.GetInstance().AddMessage(b);
-
-        //testing only!!!
-
+       
         AbstractModel target = node as AbstractModel;
         if(target != null)
         {
             StatBlock sourceBlock = StatManager.GetInstance().GetStatBlock(SourceActorID);
             StatBlock targetBlock = StatManager.GetInstance().GetStatBlock(target.GetActorID());
-
+            int TargetID = target.GetActorID();
             //has base damage, and scales off intelligence
             //going to calculate the message here, ONLY SEND DELTA DATA
 
             float nextHealth = targetBlock.GetStat(StatType.HEALTH) - sourceBlock.GetStat(StatType.ABILITY_POINTS) - 5;
             float delta = nextHealth - targetBlock.GetStat(StatType.HEALTH);
-            JObject s = new JObject
+            JObject b = new JObject
             {
                 { "type", "statchange" },
-                { "TargetID", target.GetActorID() },
+                { "TargetID", TargetID },
                 { "SourceID", SourceActorID },
-                { "stats", new JObject
-                    {
-                        { "HEALTH", delta }
-                    }
-                }
             };
-            GD.Print(s.ToString());
-            MessageQueue.GetInstance().AddMessage(s);
+
+            List<StatProperty> values = new List<StatProperty>
+            {
+                new StatProperty(StatType.HEALTH, delta)
+            };
+
+            b["stats"] = JsonConvert.SerializeObject(values);
+            MessageQueue.GetInstance().AddMessage(b);
         }
 
         // get actor ID from model

@@ -1,5 +1,6 @@
 using Godot;
 using MMOTest.scripts.Managers;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
 
@@ -22,9 +23,11 @@ public partial class PlayerController : AbstractController
 
     // Physics "constants"
     Vector3 gravity = (Vector3)ProjectSettings.GetSetting("physics/3d/default_gravity_vector") * (float)ProjectSettings.GetSetting("physics/3d/default_gravity");
+
     private float airDensity = 1.293f; // Should probably come from project settings
     private float waterDensity = 998f; // Should probably come from project settings
     private float fluidDensity; // 1.293 for air, 998 for water.
+
     private float dragCoefficient = 1.15f; // Ranges between 1.0 and 1.3 for a person. https://en.wikipedia.org/wiki/Drag_coefficient
     private float frictionCoefficient = 0.7f; // best guess. Leather on wood, with the grain is 0.61. So a leather shoe on stone or dirt? idk. a bit higher. // Needs a setter and surface detection of some kind? so we can switch to an ice coefficient? Also, kinetic friction at some point? https://www.engineeringtoolbox.com/friction-coefficients-d_778.html 
 
@@ -110,6 +113,9 @@ public partial class PlayerController : AbstractController
         this.Model = model;
         this.ModelAnimation = model.GetNode<AnimationPlayer>("AnimationPlayer");
         Model.AttachController(this);
+        PlayerUI p = GD.Load<PackedScene>("res://scenes/PlayerUI/PlayerUI.tscn").Instantiate<PlayerUI>();
+        p.initialize(model.GetActorID());
+        this.AddChild(p);
     }
 
     public override void _PhysicsProcess(double delta)
@@ -132,7 +138,8 @@ public partial class PlayerController : AbstractController
                 { "velz", point.Z},
                 { "SourceID", Model.GetActorID()}
             };
-            this.GetParent<MainLevel>().RpcId(1,"SendMessage", job.ToString());
+            MessageQueue.GetInstance().RpcId(1, "AddMessage", JsonConvert.SerializeObject(job));
+            //this.GetParent<MainLevel>().RpcId(1,"SendMessage", job.ToString());
         }
 
         inputDirection = Input.GetVector("left", "right", "forward", "backward");

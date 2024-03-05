@@ -1,19 +1,27 @@
-using Newtonsoft.Json.Linq;
-using System;
+using Godot;
+using Newtonsoft.Json;
 using System.Collections.Generic;
-using System.Dynamic;
 
 public enum StatType
 {
     HEALTH,
+    MAX_HEALTH,
+    HEALTH_REGEN,
+
+    STRENGTH,
     PHYSICAL_DAMAGE,
-    ABILITY_POINTS,
     ARMOR,
-    MAGIC_RESIST,
-    MOVE_SPEED,
-    MANA,
+
+    DEXTERITY,
     ATTACK_SPEED,
+    MOVE_SPEED,
+
+    INTELLIGENCE,
+    ABILITY_POINTS,
+    MAGIC_RESIST,
+    MANA,
     CASTING_SPEED,
+
 
 }
 
@@ -25,10 +33,8 @@ namespace MMOTest.Backend
 
     public class StatProperty
     {
-
         public StatType StatType { get; set; }
         public float Value { get; set; }
-        public string StatName { get; set; }
 
         public StatProperty()
         {
@@ -39,69 +45,46 @@ namespace MMOTest.Backend
         {
             this.StatType = statType;
             this.Value = statValue;
-            this.StatName = statType.ToString();
         }
-
-        public StatProperty(string StatName, float statValue)
-        {
-            this.StatName = StatName;
-            this.Value = statValue;
-            object stype;
-            if (Enum.TryParse(typeof(StatType), StatName, true, out stype))
-            {
-                this.StatType = (StatType)stype;
-            }
-        } 
     }
 
 
     public class StatBlock
     {
 
-        //private Dictionary<StatType, float> statblock = new Dictionary<StatType, float>();
-        private JObject statblock = new JObject();
+        private Dictionary<StatType, float> statblock = new Dictionary<StatType, float>();
+        //private JObject statblock = new JObject();
         public StatBlock() { }
 
         public void SetStat(StatType statType, float value)
         {
-            //statblock[statType] = value;
-            statblock.Add(Enum.GetName(typeof(StatType), statType), value);
+            statblock[statType] = value;
         }
 
         public float GetStat(StatType statType)
         {
-            return statblock.ContainsKey(Enum.GetName(typeof(StatType), statType)) ? (float)statblock.Property(Enum.GetName(typeof(StatType), statType)) : 0;
+            return statblock.ContainsKey(statType) ? statblock[statType] : 0f;
         }
 
-        public void SetStatBlock(string JString)
+        public void SetStatBlock(Dictionary<StatType, float> sb)
         {
-            statblock = new JObject(JString);
+            statblock = sb;
         }
 
-        public void SetStatBlock(JObject Job)
+        public string SerializeStatBlock()
         {
-            statblock = Job;
+            return JsonConvert.SerializeObject(statblock);
         }
 
-        public void SetStatFromChangeList(string jstatchange)
+        public void ApplyAllChanges(Dictionary<StatType, float> sb)
         {
-            JObject jchange = new JObject(jstatchange);
-            foreach (JProperty ch in jchange.Properties())
+            foreach (StatType statType in sb.Keys)
             {
-                if (statblock.ContainsKey(ch.Name)) 
-                {
-                    statblock[ch] = ch.Value;
-                }
-                else
-                {
-                    statblock.Add(ch.Name, ch.Value);
-                }
-            }
-        }
+                
+                statblock[statType] = GetStat(statType) + sb[statType];
+                GD.Print(statType.ToString() + " set to " + statblock[statType]);
 
-        public string GetStatBlockString()
-        {
-            return statblock.ToString();
+            }
         }
     }
 }
