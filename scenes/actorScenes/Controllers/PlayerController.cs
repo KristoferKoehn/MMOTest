@@ -23,8 +23,11 @@ public partial class PlayerController : AbstractController
 
     // Physics "constants"
     Vector3 gravity = (Vector3)ProjectSettings.GetSetting("physics/3d/default_gravity_vector") * (float)ProjectSettings.GetSetting("physics/3d/default_gravity");
-    private float fluidDensity = 998f; // 1.293 for air, 998 for water. TODO: needs a setter, and a way to detect what material we are in.
-    //private float fluidDensity = 1.293f; // 1.293 for air, 998 for water. TODO: needs a setter, and a way to detect what material we are in.
+
+    private float airDensity = 1.293f; // Should probably come from project settings
+    private float waterDensity = 998f; // Should probably come from project settings
+    private float fluidDensity; // 1.293 for air, 998 for water.
+
     private float dragCoefficient = 1.15f; // Ranges between 1.0 and 1.3 for a person. https://en.wikipedia.org/wiki/Drag_coefficient
     private float frictionCoefficient = 0.7f; // best guess. Leather on wood, with the grain is 0.61. So a leather shoe on stone or dirt? idk. a bit higher. // Needs a setter and surface detection of some kind? so we can switch to an ice coefficient? Also, kinetic friction at some point? https://www.engineeringtoolbox.com/friction-coefficients-d_778.html 
 
@@ -36,13 +39,18 @@ public partial class PlayerController : AbstractController
     [Export] private float modelVolume = 0.075f; // cubic meters, surprisingly.
 
     // These are about the desired behavior of the character
-    [Export] private float jumpHeight = 3.0f;
-    [Export] private float runningForce = 1000f; // This seems way higher than it should be? should be 1.25 * 80. Or something like that.
-    [Export] private float fluidPropulsionForce = 1500f; // Should be changed by class or some "air maneuverability" stat. 1500 might be really high. 
+    [Export] private float jumpHeight = 3f;
+    [Export] private float maxFlySpeed = 1f; // Should be changed by class or stat. 
+    [Export] private float maxSprintSpeed = 10f; // 10 meters a second. Ballpark of olympic athletes in 200m races
+    [Export] private float maxSwimSpeed = 2.2f; // Meters per second. https://www.wired.com/2012/08/olympics-physics-swimming/
+    [Export] private float runningForce = 1000f; // TODO: this isnt right. // This seems way higher than it should be? should be 1.25 * 80. Or something like that.
 
     // These are derived from the exported values and are actually used in calculations
     private float jumpVelocity;
     private float jumpForce;
+    private float airThrustForce;
+    private float swimThrustForce;
+    private float thrustForce; // Equal to either air or swim thrust depending on medium
 
     // Forces
     // Internal Force
@@ -66,14 +74,14 @@ public partial class PlayerController : AbstractController
     
     
     // Jetpack stuff, mage only
-    [Export] float JetpackMaxFuel = 10f;
-    float JetPackFuel = 10f;
-    [Export] float JetpackFuelConsumptionRate = 0.1f;
-    [Export] float JetpackFuelRefillRate = 0.5f;
-    [Export] private float jetPackForce = 1500f; // Arbitrary. Might turn into a calculation later. Give it a better handle 
+    [Export] private float JetpackMaxFuel = 10f;
+    private float JetPackFuel = 10f;
+    [Export] private float JetpackFuelConsumptionRate = 0.1f;
+    [Export] private float JetpackFuelRefillRate = 0.5f;
+    [Export] private float jetPackForce = 1500f; // Arbitrary. Might turn into a calculation later. Give it a better handle
+    [Export] private float propulsionThrustForce = 1500f;
 
     
-
     public override void _EnterTree()
     {
         CameraVerticalRotationPoint = GetNode<Node3D>("CameraVerticalRotationPoint");
@@ -84,9 +92,14 @@ public partial class PlayerController : AbstractController
     // Called when the node enters the scene tree for the first time.
     public override void _Ready()
     {
+        fluidDensity = airDensity; // Air by default. Should probably make a check here
+        thrustForce = airThrustForce;
+
         // So this whole bit feels a little backwards. The forces are ultimately what moves the model, we are inferring what those forces should be from exported variables that are more intuitive to set.
         jumpVelocity = (float)Math.Sqrt(jumpHeight * 2 * -gravity.Y); // This one is a little bit of a doozy. Has to do with velocity averages and calculating time to max height
         jumpForce = jumpVelocity * mass * 60; // 60 for 60fps. This will be multiplied by delta later, so the 60 is here to cancel it out.
+        airThrustForce = 0.5f * airDensity * maxFlySpeed * maxFlySpeed * dragCoefficient * modelProjectedArea; // Needs to be equal to drag at max speed.
+        swimThrustForce = 0.5f * waterDensity * maxSwimSpeed * maxSwimSpeed * dragCoefficient * modelProjectedArea; // Needs to be equal to drag at max speed.
     }
 
     // Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -147,8 +160,8 @@ public partial class PlayerController : AbstractController
         }
         else
         {
-            // Because we aren't considering pressure, this works the same in air and water. The difference in movement will be with drag. Will need to be reworked to couple with a swim speed of some kind later. 
-            thrustForceVector = internalForceVector * fluidPropulsionForce; // This could be simplified to update the internal force vector directly. We arent really using the thrust vector. its just, nice to have it named correctly?
+            // Because we aren't considering pressure, this works the same in air and water. 
+            thrustForceVector = internalForceVector * (thrustForce + propulsionThrustForce); // This could be simplified to update the internal force vector directly. We arent really using the thrust vector. its just, nice to have it named correctly?
             internalForceVector = thrustForceVector;
 
             // Drag equation
@@ -159,7 +172,7 @@ public partial class PlayerController : AbstractController
         // Jump
         if (Input.IsActionJustPressed("jump_dodge") & Model.IsOnFloor())
         {
-            internalForceVector += Vector3.Up * jumpForce; // Should work. needs to be tested. Might need additional force from ground normal.
+            internalForceVector += Vector3.Up * jumpForce;
         }
 
         if (Input.IsActionPressed("movementAbility"))
@@ -178,7 +191,7 @@ public partial class PlayerController : AbstractController
         externalForceVector = Vector3.Zero; // Reset to begin accumulation again.
         totalForceVector += movementResistanceForceVector;
         
-        // Update Model velocity. V_next = v_current + (time * acceleration). Acceleration = force / mace. Gravity is an acceleration value, so it is added to acceleration.
+        // Update Model velocity. V_next = v_current + (time * acceleration). Acceleration = force / mass. Gravity is an acceleration value, so it is added to acceleration.
         Model.Velocity = Model.Velocity + ((float)delta * ((totalForceVector / realMass) + gravity));
         totalForceVector = Vector3.Zero; // Reset force to recalculate next frame.
         
@@ -212,7 +225,6 @@ public partial class PlayerController : AbstractController
     }
 
 
-
     public override void _Input(InputEvent @event)
     {
         InputEventMouseMotion motion = @event as InputEventMouseMotion;
@@ -234,5 +246,19 @@ public partial class PlayerController : AbstractController
     public override void ApplyImpulse(Vector3 vec)
     {
         externalForceVector += vec;
+    }
+
+    public void SetWaterFlag(bool flag)
+    {
+        if (flag)
+        {
+            fluidDensity = waterDensity;
+            thrustForce = swimThrustForce;
+        }
+        else
+        {
+            fluidDensity = airDensity;
+            thrustForce = airThrustForce;
+        }
     }
 }
