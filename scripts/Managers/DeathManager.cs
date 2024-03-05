@@ -9,10 +9,7 @@ namespace MMOTest.scripts.Managers
         private static DeathManager instance = null;
         Dictionary<int, Actor> DeadActors = new Dictionary<int, Actor>();
 
-        private DeathManager()
-        {
-
-        }
+        private DeathManager() { }
 
         public static DeathManager GetInstance()
         {
@@ -24,8 +21,6 @@ namespace MMOTest.scripts.Managers
             }
             return instance;
         }
-
-        //tells things they are dead
 
         /// <summary>
         /// this kills the actor

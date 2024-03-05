@@ -1,21 +1,28 @@
 using Godot;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
-using System;
 using System.Collections.Generic;
-using System.Dynamic;
 
 public enum StatType
 {
     HEALTH,
+    MAX_HEALTH,
+    HEALTH_REGEN,
+
+    STRENGTH,
     PHYSICAL_DAMAGE,
-    ABILITY_POINTS,
     ARMOR,
-    MAGIC_RESIST,
-    MOVE_SPEED,
-    MANA,
+
+    DEXTERITY,
     ATTACK_SPEED,
+    MOVE_SPEED,
+
+    INTELLIGENCE,
+    ABILITY_POINTS,
+    MAGIC_RESIST,
+    MANA,
     CASTING_SPEED,
+
+
 }
 
 
@@ -59,11 +66,6 @@ namespace MMOTest.Backend
             return statblock.ContainsKey(statType) ? statblock[statType] : 0f;
         }
 
-        public void SetStatBlock(string JString)
-        {
-            statblock = JsonConvert.DeserializeObject<Dictionary<StatType,float>>(JString);
-        }
-
         public void SetStatBlock(Dictionary<StatType, float> sb)
         {
             statblock = sb;
@@ -72,11 +74,6 @@ namespace MMOTest.Backend
         public string SerializeStatBlock()
         {
             return JsonConvert.SerializeObject(statblock);
-        }
-
-        public void ApplyChange(StatType statType, float value)
-        {
-            SetStat(statType, GetStat(statType) + value);
         }
 
         public void ApplyAllChanges(Dictionary<StatType, float> sb)

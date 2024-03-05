@@ -16,9 +16,7 @@ namespace MMOTest.scripts.Managers
 
         static MessageQueueManager instance = null;
 
-        private MessageQueueManager() { 
-            
-        }
+        private MessageQueueManager() { }
 
         public static MessageQueueManager GetInstance()
         {
@@ -35,7 +33,6 @@ namespace MMOTest.scripts.Managers
         {
             MessageQueue mq = MessageQueue.GetInstance();
 
-            Dictionary<int, Dictionary<StatType, float>> StatChanges = null;
             //check time
             while (mq.Count() > 0)
             {
@@ -43,7 +40,6 @@ namespace MMOTest.scripts.Managers
                 string MessageType = m["type"].ToString();
                 if (MessageType == "cast")
                 {
-                    //check mana, check if valid target?
                     AbstractAbility ability = GD.Load<PackedScene>($"res://scenes/abilities/{m.Property("spell").Value}.tscn").Instantiate<AbstractAbility>();
                     ability.SetMultiplayerAuthority(1); //this will change to be pulled from json
                     ability.Initialize(m);
