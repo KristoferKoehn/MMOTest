@@ -46,17 +46,19 @@ public partial class StatManager : Node
         StatBlock sb = GetStatBlock(targetID);
         if (sb.GetStat(StatType.HEALTH) <= 0f)
         {
-            //create message for death manager
-            JObject job = new JObject
+            if (!DeathManager.GetInstance().IsActorDead(targetID))
             {
-                { "type", "death"},
-                { "target", targetID},
-                { "source", ""}
-            };
+                JObject job = new JObject
+                {
+                    { "type", "death"},
+                    { "target", targetID},
+                    { "source", ""}
+                };
 
-            MessageQueue.GetInstance().AddMessageToFront(job);
+                MessageQueue.GetInstance().AddMessageToFront(job);
+            }
+            //we can't do anything for him.
         }
-        //
 
         //caching stats
         if (!StatChanges.ContainsKey(targetID))

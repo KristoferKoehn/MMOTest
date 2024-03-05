@@ -45,5 +45,14 @@ namespace MMOTest.scripts.Managers
             DeadActors.Remove(ActorID);
             //bring back the boy.
         }
+
+        public bool IsActorDead(int ActorID)
+        {
+            if (!DeadActors.ContainsKey(ActorID))
+            {
+                return false;
+            }
+            return true;
+        }
     }
 }
