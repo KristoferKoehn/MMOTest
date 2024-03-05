@@ -26,7 +26,6 @@ namespace MMOTest.Backend
 
     public class StatProperty
     {
-
         public StatType StatType { get; set; }
         public float Value { get; set; }
 

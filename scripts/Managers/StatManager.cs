@@ -9,7 +9,7 @@ public partial class StatManager : Node
 {
     public static StatManager instance;
     public Dictionary<long, List<int>> StatSubscription = new Dictionary<long, List<int>>();
-
+    private Dictionary<int, Dictionary<StatType, float>> StatChanges = new Dictionary<int, Dictionary<StatType, float>>();
     private StatManager() { }
 
     public static StatManager GetInstance() 
@@ -21,6 +21,27 @@ public partial class StatManager : Node
             instance.Name = "StatManager";
         }
         return instance; 
+    }
+
+    public void CacheStatChange(List<StatProperty> deltas, int targetID)
+    {
+        if (!StatChanges.ContainsKey(targetID))
+        {
+            Dictionary<StatType, float> statDeltas = new Dictionary<StatType, float>();
+            StatChanges[targetID] = statDeltas;
+        }
+
+        foreach (StatProperty stat in deltas)
+        {
+            if (StatChanges[targetID].ContainsKey(stat.StatType))
+            {
+                StatChanges[targetID][stat.StatType] += stat.Value;
+            }
+            else
+            {
+                StatChanges[targetID][stat.StatType] = stat.Value;
+            }
+        }
     }
 
     public void SubscribePeerToActor(long PeerID, int ActorID)
@@ -142,5 +163,14 @@ public partial class StatManager : Node
             sb.ApplyAllChanges(statchanges[ActorID]);
         }
     }
+
+    public void ApplyCachedStatChanges()
+    {
+        ApplyAllStatChanges(StatChanges);
+        NotifyStatChanges(StatChanges);
+        StatChanges = new Dictionary<int, Dictionary<StatType, float>>();
+
+    }
+
 
 }

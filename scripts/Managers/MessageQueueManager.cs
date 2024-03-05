@@ -50,39 +50,9 @@ namespace MMOTest.scripts.Managers
                 //if type == statchange do that
                 if (m.Property("type").Value.ToString() == "statchange")
                 {
-                    if (StatChanges == null)
-                    {
-                        StatChanges = new Dictionary<int, Dictionary<StatType, float>>();
-                    }
-
-
                     List<StatProperty> mstats = JsonConvert.DeserializeObject<List<StatProperty>>(m["stats"].ToString());
                     int targetID = (int)m["TargetID"];
-                    //GD.Print(m.ToString());
-                    if (StatChanges.ContainsKey(targetID))
-                    {
-                        foreach(StatProperty stat in mstats)
-                        {
-                            if (StatChanges[targetID].ContainsKey(stat.StatType))
-                            {
-                                StatChanges[targetID][stat.StatType] += stat.Value;
-                            } else
-                            {
-                                StatChanges[targetID][stat.StatType] = stat.Value;
-                            }
-                        }
-                    } else
-                    {
-
-                        Dictionary<StatType, float> statDeltas = new Dictionary<StatType, float>();
-                        StatChanges[targetID] = statDeltas;
-
-                    }
-
-                    // we change stats
-
-                    // we gotta put ActorID as well as the stat that is changing.
-
+                    StatManager.GetInstance().CacheStatChange(mstats, targetID);
                 }
                 
                 
@@ -93,12 +63,9 @@ namespace MMOTest.scripts.Managers
                 //do something here
 
                 //rectify all stat changes in dictionary
-                if (StatChanges != null)
-                {
-                    StatManager.GetInstance().ApplyAllStatChanges(StatChanges);
-                    StatManager.GetInstance().NotifyStatChanges(StatChanges);
-                }
-            }
+            } //end of while loop
+
+            StatManager.GetInstance().ApplyCachedStatChanges();
         }
     }
 }
