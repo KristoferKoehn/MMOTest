@@ -34,11 +34,23 @@ namespace MMOTest.scripts.Managers
             return instance;
         }
 
+        public void AddMessageToFront(JObject message)
+        {
+            Queue<JObject> tempQueue = new Queue<JObject>();
+            tempQueue.Enqueue(message);
+            while(queue.Count > 0)
+            {
+                tempQueue.Enqueue(queue.Dequeue());
+            }
+            queue = tempQueue;
+
+        }
         
         public void AddMessage(JObject message)
         {
             //GD.Print("ADDED " +  message.ToString());
             queue.Enqueue(message);
+            //queue.
         }
 
         [Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
@@ -47,6 +59,7 @@ namespace MMOTest.scripts.Managers
             JObject job = JsonConvert.DeserializeObject<JObject>(message);
             queue.Enqueue(job);
         }
+
 
 
 

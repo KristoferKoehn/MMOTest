@@ -30,8 +30,6 @@ public partial class GameLoop : Node
         {
             PushScene(ResourceLoader.Load<PackedScene>("res://scenes/menu/MainMenu.tscn").Instantiate());
         }
-
-        
         // put settings here
     }
 

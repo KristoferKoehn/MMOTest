@@ -36,12 +36,13 @@ namespace MMOTest.scripts.Managers
             MessageQueue mq = MessageQueue.GetInstance();
 
             Dictionary<int, Dictionary<StatType, float>> StatChanges = null;
-            
+            //check time
             while (mq.Count() > 0)
             {
                 JObject m = mq.PopMessage();
                 if (m.Property("type").Value.ToString() == "cast")
                 {
+                    //check mana, check if valid target?
                     AbstractAbility ability = GD.Load<PackedScene>($"res://scenes/abilities/{m.Property("spell").Value}.tscn").Instantiate<AbstractAbility>();
                     ability.SetMultiplayerAuthority(1); //this will change to be pulled from json
                     ability.Initialize(m);
@@ -52,7 +53,7 @@ namespace MMOTest.scripts.Managers
                 {
                     List<StatProperty> mstats = JsonConvert.DeserializeObject<List<StatProperty>>(m["stats"].ToString());
                     int targetID = (int)m["TargetID"];
-                    StatManager.GetInstance().CacheStatChange(mstats, targetID);
+                    StatManager.GetInstance().ApplyStatChange(mstats, targetID);
                 }
                 
                 
@@ -65,7 +66,7 @@ namespace MMOTest.scripts.Managers
                 //rectify all stat changes in dictionary
             } //end of while loop
 
-            StatManager.GetInstance().ApplyCachedStatChanges();
+            StatManager.GetInstance().SendCachedStatData();
         }
     }
 }
