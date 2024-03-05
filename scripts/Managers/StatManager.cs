@@ -1,5 +1,6 @@
 using Godot;
 using MMOTest.Backend;
+using MMOTest.scripts.Managers;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System.Collections.Generic;
@@ -46,6 +47,14 @@ public partial class StatManager : Node
         if (sb.GetStat(StatType.HEALTH) <= 0f)
         {
             //create message for death manager
+            JObject job = new JObject
+            {
+                { "type", "death"},
+                { "target", targetID},
+                { "source", ""}
+            };
+
+            MessageQueue.GetInstance().AddMessageToFront(job);
         }
         //
 
@@ -113,7 +122,6 @@ public partial class StatManager : Node
     {
         return ActorManager.GetInstance().GetActor(ActorID).stats;
     }
-
 
     /// <summary>
     /// this is called from the client and executed on the server. 

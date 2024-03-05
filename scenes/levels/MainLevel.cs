@@ -26,6 +26,7 @@ public partial class MainLevel : Node3D
         MessageQueue.GetInstance();
         StatManager.GetInstance();
         MessageQueueManager.GetInstance();
+        DeathManager.GetInstance();
     }
 
 

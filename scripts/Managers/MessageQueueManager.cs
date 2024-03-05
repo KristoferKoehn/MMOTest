@@ -40,7 +40,8 @@ namespace MMOTest.scripts.Managers
             while (mq.Count() > 0)
             {
                 JObject m = mq.PopMessage();
-                if (m.Property("type").Value.ToString() == "cast")
+                string MessageType = m["Type"].ToString();
+                if (MessageType == "cast")
                 {
                     //check mana, check if valid target?
                     AbstractAbility ability = GD.Load<PackedScene>($"res://scenes/abilities/{m.Property("spell").Value}.tscn").Instantiate<AbstractAbility>();
@@ -49,11 +50,16 @@ namespace MMOTest.scripts.Managers
                     GetTree().Root.GetNode<Node>("GameLoop/MainLevel/AbilityModels").AddChild(ability, forceReadableName: true);
                 }
                 //if type == statchange do that
-                if (m.Property("type").Value.ToString() == "statchange")
+                if (MessageType == "statchange")
                 {
                     List<StatProperty> mstats = JsonConvert.DeserializeObject<List<StatProperty>>(m["stats"].ToString());
                     int targetID = (int)m["TargetID"];
                     StatManager.GetInstance().ApplyStatChange(mstats, targetID);
+                }
+                if(MessageType == "death")
+                {
+                    //do the death stuff
+
                 }
                 
                 
