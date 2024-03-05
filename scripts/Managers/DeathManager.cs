@@ -33,6 +33,8 @@ namespace MMOTest.scripts.Managers
         /// <param name="actor"></param>
         public void AddActor(Actor actor)
         {
+            //kill the actor here
+            //set dead = true or something. Lock up the controls. dig a grave
             DeadActors.Add(actor.ActorID, actor);
             ActorTimer at = GD.Load<PackedScene>("res://scenes/utility/ActorTimer.tscn").Instantiate<ActorTimer>();
             at.ActorID = actor.ActorID;
@@ -45,6 +47,8 @@ namespace MMOTest.scripts.Managers
         public void RespawnActor(int ActorID)
         {
             GD.Print("respawning actor " + ActorID);
+            DeadActors.Remove(ActorID);
+            //bring back the boy.
         }
     }
 }
