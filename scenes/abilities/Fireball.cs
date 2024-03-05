@@ -3,9 +3,7 @@ using MMOTest.Backend;
 using MMOTest.scripts.Managers;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using System;
 using System.Collections.Generic;
-using System.Windows.Markup;
 
 public partial class Fireball : AbstractAbility
 {

@@ -58,8 +58,8 @@ namespace MMOTest.scripts.Managers
                 }
                 if(MessageType == "death")
                 {
-                    //do the death stuff
-
+                    DeathManager.GetInstance().AddActor(ActorManager.GetInstance().GetActor((int)m["target"]));
+                    //use the source data from the message here somehow
                 }
                 
                 
@@ -69,9 +69,11 @@ namespace MMOTest.scripts.Managers
                 //if type == ???
                 //do something here
 
-                //rectify all stat changes in dictionary
+                
             } //end of while loop
 
+            //sends all the stat changes processed during the frame to the clients.
+            //these are cached so we don't call more than one RPC per peer per frame.
             StatManager.GetInstance().SendCachedStatData();
         }
     }
