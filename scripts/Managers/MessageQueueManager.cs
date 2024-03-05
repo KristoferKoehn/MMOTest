@@ -40,7 +40,7 @@ namespace MMOTest.scripts.Managers
             while (mq.Count() > 0)
             {
                 JObject m = mq.PopMessage();
-                string MessageType = m["Type"].ToString();
+                string MessageType = m["type"].ToString();
                 if (MessageType == "cast")
                 {
                     //check mana, check if valid target?
