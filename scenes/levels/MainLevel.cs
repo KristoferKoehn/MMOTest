@@ -26,6 +26,7 @@ public partial class MainLevel : Node3D
         MessageQueue.GetInstance();
         StatManager.GetInstance();
         MessageQueueManager.GetInstance();
+        DeathManager.GetInstance();
     }
 
 
@@ -64,6 +65,7 @@ public partial class MainLevel : Node3D
     {
         if (Multiplayer.GetUniqueId() != 1)
         {
+            
             return;
         }
 
@@ -108,14 +110,14 @@ public partial class MainLevel : Node3D
             ActorID = (int)rng.Randi();
         }
 
-        RpcId(PeerId, "SpawnClientModel", PeerId);
-        AbstractModel client = SpawnClientModel(PeerId);
+        AbstractModel client = SpawnClientModel(PeerId, ActorID);
         AbstractModel puppet = PuppetPlayer.Instantiate<DefaultModel>();
         puppet.SetTrackingPeerId(PeerId);
         puppet.SetActorID(ActorID);
         client.SetTrackingPeerId(PeerId);
         client.SetActorID(ActorID);
         puppet.SetMultiplayerAuthority(1);
+        RpcId(PeerId, "SpawnClientModel", PeerId, ActorID);
         this.GetNode<Node>(PuppetNodePath).AddChild(puppet, forceReadableName: true);
         ActorManager.GetInstance().CreateActor(client, puppet, PeerId, ActorID);
     }
@@ -143,21 +145,21 @@ public partial class MainLevel : Node3D
 
 
     [Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
-    public AbstractModel SpawnClientModel(long PeerId)
+    public AbstractModel SpawnClientModel(long PeerId, int ActorID)
     {
         
-        GD.Print("Spawning Client Model");
         DefaultModel PlayerModel = GD.Load<PackedScene>("res://scenes/actorScenes/Models/DefaultModel.tscn").Instantiate<DefaultModel>();
         PlayerModel.GetMultiplayerSynchronizer().SetVisibilityFor(0, false);
         PlayerModel.GetMultiplayerSynchronizer().SetVisibilityFor(1, true);
         PlayerModel.SetMultiplayerAuthority((int)PeerId);
         this.GetNode<Node>(ClientNodePath).AddChild(PlayerModel);
         PlayerModel.Name = PeerId.ToString();
-
+        PlayerModel.ActorID = ActorID;
         if (!host)
         {
-            //attach controller ????
             GetNode<PlayerController>("PlayerController").AttachModel(PlayerModel);
+            ActorManager.GetInstance().CreateActor(PlayerModel, null, PeerId, ActorID);
+            StatManager.GetInstance().RpcId(1, "RequestStatBlock", ActorID);
         }
         return PlayerModel;
     }

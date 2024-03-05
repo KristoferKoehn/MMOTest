@@ -21,6 +21,7 @@ public partial class ActorManager : Node
 		if (instance == null) {
 			instance = new ActorManager();
             GameLoop.Root.GetNode<MainLevel>("GameLoop/MainLevel").AddChild(instance);
+            instance.Name = "ActorManager";
         }
 		return instance;
 	}
@@ -38,26 +39,32 @@ public partial class ActorManager : Node
 		actor.ActorMultiplayerAuthority = PeerID;
 		actor.ActorID = ActorID;
         // generic stat block
-        JObject stat = new JObject()
-		{
-			{ Enum.GetName(typeof(StatType), StatType.HEALTH) , 100 },
-            { Enum.GetName(typeof(StatType), StatType.MANA) , 100 },
-			{ Enum.GetName(typeof(StatType), StatType.MAGIC_RESIST), 13},
-			{ Enum.GetName(typeof(StatType), StatType.ARMOR), 11},
-			{ Enum.GetName(typeof(StatType), StatType.ABILITY_POINTS), 14},
-			{ Enum.GetName(typeof(StatType), StatType.CASTING_SPEED), 12},
-			{ Enum.GetName(typeof(StatType), StatType.PHYSICAL_DAMAGE), 16},
-        };
 		StatBlock statBlock = new StatBlock();
-		statBlock.SetStatBlock(stat);
+        Dictionary<StatType, float> statsDict = new()
+        {
+            [StatType.HEALTH] = 100,
+            [StatType.MANA] = 100,
+            [StatType.MAGIC_RESIST] = 13,
+            [StatType.ARMOR] = 11,
+            [StatType.ABILITY_POINTS] = 14,
+            [StatType.CASTING_SPEED] = 12,
+            [StatType.PHYSICAL_DAMAGE] = 15
+        };
+
+        statBlock.SetStatBlock(statsDict);
 		actor.stats = statBlock;
 
         actors.Add(ActorID, actor);
+		StatManager.GetInstance().SubscribePeerToActor(PeerID, ActorID);
+
 	}
 
 	public void RemoveActor(int ActorID)
 	{
+		long peerID = GetActor(ActorID).ActorMultiplayerAuthority;
 		actors.Remove(ActorID);
+		StatManager.GetInstance().PeerLogoutSubscriptionDisconnect(peerID, ActorID);
+
 	}
 
 	public Actor GetActor(int ActorID)

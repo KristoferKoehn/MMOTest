@@ -16,9 +16,7 @@ namespace MMOTest.scripts.Managers
 
         static MessageQueueManager instance = null;
 
-        private MessageQueueManager() { 
-            
-        }
+        private MessageQueueManager() { }
 
         public static MessageQueueManager GetInstance()
         {
@@ -26,6 +24,7 @@ namespace MMOTest.scripts.Managers
             {
                 instance = new MessageQueueManager();
                 GameLoop.Root.GetNode<MainLevel>("GameLoop/MainLevel").AddChild(instance);
+                instance.Name = "MessageQueueManager";
             }
             return instance;
         }
@@ -34,62 +33,29 @@ namespace MMOTest.scripts.Managers
         {
             MessageQueue mq = MessageQueue.GetInstance();
 
-            Dictionary<int, Dictionary<StatType, float>> StatChanges = null;
-            
+            //check time
             while (mq.Count() > 0)
             {
                 JObject m = mq.PopMessage();
-                if (m.Property("type").Value.ToString() == "cast")
+                string MessageType = m["type"].ToString();
+                if (MessageType == "cast")
                 {
-                    GD.Print(m.Property("spell").Value);
                     AbstractAbility ability = GD.Load<PackedScene>($"res://scenes/abilities/{m.Property("spell").Value}.tscn").Instantiate<AbstractAbility>();
                     ability.SetMultiplayerAuthority(1); //this will change to be pulled from json
                     ability.Initialize(m);
                     GetTree().Root.GetNode<Node>("GameLoop/MainLevel/AbilityModels").AddChild(ability, forceReadableName: true);
                 }
                 //if type == statchange do that
-                if (m.Property("type").Value.ToString() == "statchange")
+                if (MessageType == "statchange")
                 {
-                    if (StatChanges == null)
-                    {
-                        StatChanges = new Dictionary<int, Dictionary<StatType, float>>();
-                    }
-
-
                     List<StatProperty> mstats = JsonConvert.DeserializeObject<List<StatProperty>>(m["stats"].ToString());
-                    GD.Print("deserialized list size: " + mstats.Count);
                     int targetID = (int)m["TargetID"];
-                    GD.Print("target ID " + targetID);
-                    foreach(StatProperty sp in mstats)
-                    {
-                        GD.Print(sp.StatType.ToString() + " : " + sp.Value);
-                    }
-
-                    GD.Print(m.ToString());
-                    if (StatChanges.ContainsKey(targetID))
-                    {
-                        foreach(StatProperty stat in mstats)
-                        {
-                            if (StatChanges[targetID].ContainsKey(stat.StatType))
-                            {
-                                StatChanges[targetID][stat.StatType] += stat.Value;
-                            } else
-                            {
-                                StatChanges[targetID][stat.StatType] = stat.Value;
-                            }
-                        }
-                    } else
-                    {
-
-                        Dictionary<StatType, float> statDeltas = new Dictionary<StatType, float>();
-                        StatChanges[targetID] = statDeltas;
-
-                    }
-
-                    // we change stats
-
-                    // we gotta put ActorID as well as the stat that is changing.
-
+                    StatManager.GetInstance().ApplyStatChange(mstats, targetID);
+                }
+                if(MessageType == "death")
+                {
+                    DeathManager.GetInstance().AddActor(ActorManager.GetInstance().GetActor((int)m["target"]));
+                    //use the source data from the message here somehow
                 }
                 
                 
@@ -99,15 +65,12 @@ namespace MMOTest.scripts.Managers
                 //if type == ???
                 //do something here
 
-                //rectify all stat changes in dictionary
-                foreach (int ActorID in StatChanges.Keys)
-                {
-                    StatBlock sb = StatManager.GetInstance().GetStatBlock(ActorID);
+                
+            } //end of while loop
 
-
-
-                }
-            }
+            //sends all the stat changes processed during the frame to the clients.
+            //these are cached so we don't call more than one RPC per peer per frame.
+            StatManager.GetInstance().SendCachedStatData();
         }
     }
 }
