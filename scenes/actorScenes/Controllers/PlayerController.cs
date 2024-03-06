@@ -92,6 +92,7 @@ public partial class PlayerController : AbstractController
     // Called when the node enters the scene tree for the first time.
     public override void _Ready()
     {
+        Input.MouseMode = Input.MouseModeEnum.Captured;
         fluidDensity = airDensity; // Air by default. Should probably make a check here
         thrustForce = airThrustForce;
 
@@ -105,6 +106,17 @@ public partial class PlayerController : AbstractController
     // Called every frame. 'delta' is the elapsed time since the previous frame.
     public override void _Process(double delta)
 	{
+        if (Input.IsActionJustPressed("pause"))
+        {
+            if (Input.MouseMode == Input.MouseModeEnum.Captured)
+            {
+                Input.MouseMode = Input.MouseModeEnum.Visible;
+            }
+            else
+            {
+                Input.MouseMode = Input.MouseModeEnum.Captured;
+            }
+        }
         
 	}
 
@@ -234,6 +246,19 @@ public partial class PlayerController : AbstractController
 
     public override void _Input(InputEvent @event)
     {
+
+        if (Input.MouseMode != Input.MouseModeEnum.Captured)
+        {
+            InputEventMouseButton button = @event as InputEventMouseButton;
+            if (button != null)
+            {
+                Input.MouseMode = Input.MouseModeEnum.Captured;
+            } else
+            {
+                return;
+            }
+        }
+
         InputEventMouseMotion motion = @event as InputEventMouseMotion;
 		if (motion != null)
 		{
