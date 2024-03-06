@@ -43,6 +43,7 @@ public partial class ActorManager : Node
         Dictionary<StatType, float> statsDict = new()
         {
             [StatType.HEALTH] = 100,
+			[StatType.MAX_HEALTH] = 100,
             [StatType.MANA] = 100,
             [StatType.MAGIC_RESIST] = 13,
             [StatType.ARMOR] = 11,

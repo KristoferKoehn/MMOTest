@@ -122,6 +122,8 @@ public partial class PlayerController : AbstractController
     {
         if (Model == null) { return; }
 
+        if (Model.IsDead) { return; }
+
         this.GlobalPosition = this.Model.GlobalPosition;
 
         if (Input.IsActionJustPressed("shoot_throw")) {
