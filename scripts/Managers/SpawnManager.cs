@@ -65,7 +65,7 @@ namespace MMOTest.scripts.Managers
             RandomNumberGenerator rng = new RandomNumberGenerator();
             Teams t = (Teams)sb.GetStat(StatType.CTF_TEAM);
             List<SpawnArea> validAreas = spawnAreas.Where(x => x.Team == t).ToList();
-            int index = rng.RandiRange(0, validAreas.Count);
+            int index = rng.RandiRange(0, validAreas.Count - 1);
 
             Vector3 spawnPosition = validAreas[index].GetValidSpawnPoint();
 
