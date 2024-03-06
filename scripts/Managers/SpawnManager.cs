@@ -59,6 +59,7 @@ namespace MMOTest.scripts.Managers
             b["stats"] = JsonConvert.SerializeObject(values);
 
             //reach into client and turn off death
+
             actor.ClientModelReference.RpcId(actor.ActorMultiplayerAuthority, "AssignDeathState", true);
 
             RandomNumberGenerator rng = new RandomNumberGenerator();
