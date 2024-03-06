@@ -39,7 +39,6 @@ namespace MMOTest.scripts.Managers
 
         public void SpawnActor(int ActorID)
         {
-
             Actor actor = ActorManager.GetInstance().GetActor(ActorID);
             StatBlock sb = actor.stats;
             AbstractModel model = actor.PuppetModelReference;
@@ -61,8 +60,6 @@ namespace MMOTest.scripts.Managers
 
             //reach into client and turn off death
             actor.ClientModelReference.RpcId(actor.ActorMultiplayerAuthority, "AssignDeathState", true);
-
-
 
             RandomNumberGenerator rng = new RandomNumberGenerator();
             Teams t = (Teams)sb.GetStat(StatType.CTF_TEAM);
