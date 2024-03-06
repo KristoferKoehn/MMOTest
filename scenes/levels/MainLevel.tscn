@@ -1,4 +1,4 @@
-[gd_scene load_steps=19 format=3 uid="uid://cj5kbymecdp11"]
+[gd_scene load_steps=20 format=3 uid="uid://cj5kbymecdp11"]
 
 [ext_resource type="Script" path="res://scenes/levels/MainLevel.cs" id="1_i7bbw"]
 [ext_resource type="PackedScene" uid="uid://bmk783fseep4a" path="res://scenes/actorScenes/Controllers/PlayerController.tscn" id="2_5xjtm"]
@@ -11,6 +11,7 @@
 [ext_resource type="PackedScene" uid="uid://csd4qe34wtrt" path="res://assets/models/Environment/SM_Tree_Large_01.fbx" id="12_186dn"]
 [ext_resource type="PackedScene" uid="uid://btpdpe6qunryb" path="res://assets/models/Environment/SM_Tree_Willow_Large_01.fbx" id="13_syfwg"]
 [ext_resource type="PackedScene" uid="uid://djwd6kogh3ovm" path="res://assets/models/Environment/SM_Rock_Cluster_Large_02.fbx" id="14_wcegp"]
+[ext_resource type="PackedScene" uid="uid://dle18fc5mg1f0" path="res://assets/models/Environment/SM_Terrain_RiverSide_01.fbx" id="15_hp3ea"]
 [ext_resource type="Texture2D" uid="uid://c8arnlq67qi7" path="res://assets/textures&grids/grids/Dark/texture_05.png" id="15_n384o"]
 [ext_resource type="PackedScene" uid="uid://bjjceeyq3csc3" path="res://scenes/Environment/Skybox.tscn" id="16_l618w"]
 [ext_resource type="PackedScene" uid="uid://cuaikm7d1lbke" path="res://scenes/utility/SpawnArea.tscn" id="17_el60w"]
@@ -22,7 +23,7 @@ uv1_triplanar = true
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_a6bmg"]
 resource_local_to_scene = true
-size = Vector3(8.061, 1, 7.929)
+size = Vector3(9.616, 1, 7.929)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_2okmg"]
 resource_local_to_scene = true
@@ -123,11 +124,19 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.06418, 0.499999, -50.9334)
 [node name="Root Scene14" parent="TerrainModels" instance=ExtResource("13_syfwg")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 17.3958, 0.499999, -48.6763)
 
+[node name="Root Scene16" parent="TerrainModels" instance=ExtResource("15_hp3ea")]
+transform = Transform3D(-0.751172, 0, 0.660106, 0, 1, 0, -0.660106, 0, -0.751172, -10, 2.00813, 13)
+
 [node name="Root Scene15" parent="TerrainModels" instance=ExtResource("13_syfwg")]
 transform = Transform3D(0.965268, 0, -0.261263, 0, 1, 0, 0.261263, 0, 0.965268, 0.530993, 0.5, -39.8014)
 
+[node name="CSGBox3D" type="CSGBox3D" parent="TerrainModels"]
+transform = Transform3D(1, 0, 0, 0, 0.909163, 0.41644, 0, -0.41644, 0.909163, -3.32886, 4.91181, 30.7927)
+use_collision = true
+size = Vector3(7.65771, 1, 23.6912)
+
 [node name="Unaffiliated Spawn" parent="." instance=ExtResource("17_el60w")]
-transform = Transform3D(0.764393, 0, -0.644751, 0, 1, 0, 0.644751, 0, 0.764393, -2.669, 0.857038, 0.623056)
+transform = Transform3D(0.764393, 0, -0.644751, 0, 1, 0, 0.644751, 0, 0.764393, -0.669, 1.85704, 0.623056)
 Shape = SubResource("BoxShape3D_a6bmg")
 
 [node name="Red Team Spawn" parent="." instance=ExtResource("17_el60w")]
