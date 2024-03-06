@@ -1,4 +1,4 @@
-[gd_scene load_steps=17 format=3 uid="uid://cj5kbymecdp11"]
+[gd_scene load_steps=19 format=3 uid="uid://cj5kbymecdp11"]
 
 [ext_resource type="Script" path="res://scenes/levels/MainLevel.cs" id="1_i7bbw"]
 [ext_resource type="PackedScene" uid="uid://bmk783fseep4a" path="res://scenes/actorScenes/Controllers/PlayerController.tscn" id="2_5xjtm"]
@@ -21,6 +21,14 @@ metallic_specular = 0.0
 uv1_triplanar = true
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_a6bmg"]
+resource_local_to_scene = true
+size = Vector3(8.061, 1, 7.929)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_2okmg"]
+resource_local_to_scene = true
+size = Vector3(8.061, 1, 7.929)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_8nmv1"]
 resource_local_to_scene = true
 size = Vector3(8.061, 1, 7.929)
 
@@ -125,12 +133,12 @@ Shape = SubResource("BoxShape3D_a6bmg")
 [node name="Red Team Spawn" parent="." instance=ExtResource("17_el60w")]
 transform = Transform3D(0.402571, 0, -0.915389, 0, 1, 0, 0.915389, 0, 0.402571, 11.4546, 0.857038, 40.6597)
 Team = 1
-Shape = SubResource("BoxShape3D_a6bmg")
+Shape = SubResource("BoxShape3D_2okmg")
 
 [node name="Blue Team Spawn" parent="." instance=ExtResource("17_el60w")]
 transform = Transform3D(-0.0567974, 0, -0.998386, 0, 1, 0, 0.998386, 0, -0.0567974, -8.65889, 0.857038, -49.5979)
 Team = 2
-Shape = SubResource("BoxShape3D_a6bmg")
+Shape = SubResource("BoxShape3D_8nmv1")
 
 [node name="DefaultModel" parent="." instance=ExtResource("6_4u8na")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8.02635, 0.476275, -19.3646)
