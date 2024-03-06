@@ -51,6 +51,7 @@ public partial class SpawnArea : Area3D
         GetNode<CollisionShape3D>("CollisionShape3D").Shape = Shape;
     }
 
+
     public override void _Process(double delta)
     {
         //tool script to allow 
