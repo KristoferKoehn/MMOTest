@@ -76,7 +76,6 @@ public partial class SpawnArea : Area3D
         bool cleared = false;
         while(!cleared)
         {
-
             float x = rng.Randf() % Shape.Size.X;
             x = x - Shape.Size.X / 2f;
             float z = rng.Randf() % Shape.Size.Z;

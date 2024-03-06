@@ -43,7 +43,6 @@ namespace MMOTest.scripts.Managers
             StatBlock sb = actor.stats;
             AbstractModel model = actor.PuppetModelReference;
             float delta = sb.GetStat(StatType.MAX_HEALTH) - sb.GetStat(StatType.HEALTH);
-
             JObject b = new JObject
             {
                 { "type", "statchange" },
@@ -63,6 +62,7 @@ namespace MMOTest.scripts.Managers
             actor.ClientModelReference.RpcId(actor.ActorMultiplayerAuthority, "AssignDeathState", false);
 
             RandomNumberGenerator rng = new RandomNumberGenerator();
+
             Teams t = (Teams)sb.GetStat(StatType.CTF_TEAM);
             List<SpawnArea> validAreas = spawnAreas.Where(x => x.Team == t).ToList();
             int index = rng.RandiRange(0, validAreas.Count - 1);

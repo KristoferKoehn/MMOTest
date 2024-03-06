@@ -47,6 +47,10 @@ _subresources={
 "nodes": {
 "PATH:AnimationPlayer": {
 "import/skip_import": true
+},
+"PATH:RootNode/SM_Tree_Generic_Giant_01": {
+"generate/physics": true,
+"physics/shape_type": 5
 }
 }
 }
