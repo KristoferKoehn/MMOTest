@@ -57,10 +57,10 @@ namespace MMOTest.scripts.Managers
             };
 
             b["stats"] = JsonConvert.SerializeObject(values);
-
+            MessageQueue.GetInstance().AddMessage(b);
             //reach into client and turn off death
 
-            actor.ClientModelReference.RpcId(actor.ActorMultiplayerAuthority, "AssignDeathState", true);
+            actor.ClientModelReference.RpcId(actor.ActorMultiplayerAuthority, "AssignDeathState", false);
 
             RandomNumberGenerator rng = new RandomNumberGenerator();
             Teams t = (Teams)sb.GetStat(StatType.CTF_TEAM);
