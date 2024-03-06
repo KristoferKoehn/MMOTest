@@ -48,6 +48,7 @@ namespace MMOTest.scripts.Managers
 
             //bring back the boy.
             actor.ClientModelReference.RpcId(actor.ActorMultiplayerAuthority, "AssignDeathState", false);
+            SpawnManager.GetInstance().SpawnActor(ActorID);
         }
 
         public bool IsActorDead(int ActorID)
