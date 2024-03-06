@@ -122,7 +122,12 @@ public partial class PlayerController : AbstractController
     {
         if (Model == null) { return; }
 
-        if (Model.IsDead) { return; }
+        if (Model.IsDead) {
+            totalForceVector = Vector3.Zero;
+            externalForceVector = Vector3.Zero;
+            internalForceVector = Vector3.Zero;
+            return;
+        }
 
         this.GlobalPosition = this.Model.GlobalPosition;
 

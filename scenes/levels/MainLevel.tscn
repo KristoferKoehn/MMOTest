@@ -113,6 +113,7 @@ use_collision = true
 size = Vector3(1000, 1, 1000)
 
 [node name="SpawnArea" parent="." instance=ExtResource("17_el60w")]
+transform = Transform3D(0.764393, 0, -0.644751, 0, 1, 0, 0.644751, 0, 0.764393, -5.22125, 0.857038, 31.9028)
 Shape = SubResource("BoxShape3D_a6bmg")
 
 [connection signal="child_entered_tree" from="PuppetModels" to="." method="_on_puppet_models_child_entered_tree"]
