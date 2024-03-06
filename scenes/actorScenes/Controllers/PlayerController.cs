@@ -40,17 +40,19 @@ public partial class PlayerController : AbstractController
 
     // These are about the desired behavior of the character
     [Export] private float jumpHeight = 3f;
-    [Export] private float maxFlySpeed = 1f; // Should be changed by class or stat. 
-    [Export] private float maxSprintSpeed = 10f; // 10 meters a second. Ballpark of olympic athletes in 200m races
+    [Export] private float maxSprintSpeed = 10f; // 10 meters a second. Ballpark of olympic athletes in 200m races TODO: Use this somehow.
     [Export] private float maxSwimSpeed = 2.2f; // Meters per second. https://www.wired.com/2012/08/olympics-physics-swimming/
+    [Export] private float maxFlySpeed = 10f; // People cant fly. Should be zero, but having it at 10 helps a bit.The air thrust force needs to be calculated differently. Drag doesnt make sense.
     [Export] private float runningForce = 1000f; // TODO: this isnt right. // This seems way higher than it should be? should be 1.25 * 80. Or something like that.
+    [Export] private float angleOfAttack = (float)(Math.PI / 2f);// How much you glide while falling;
 
     // These are derived from the exported values and are actually used in calculations
     private float jumpVelocity;
     private float jumpForce;
-    private float airThrustForce;
-    private float swimThrustForce;
-    private float thrustForce; // Equal to either air or swim thrust depending on medium
+    private float angleOfAttackThrustForce; // Derived from angle of attack and drag
+    private float airThrustForce ; // Force generated to fly, like a bird.
+    private float swimThrustForce; // Force generated to swim.
+    private float thrustForce; // total Thrust force
 
     // Forces
     // Internal Force
@@ -79,7 +81,7 @@ public partial class PlayerController : AbstractController
     [Export] private float JetpackFuelConsumptionRate = 0.1f;
     [Export] private float JetpackFuelRefillRate = 0.5f;
     [Export] private float jetPackForce = 1500f; // Arbitrary. Might turn into a calculation later. Give it a better handle
-    [Export] private float propulsionThrustForce = 1500f;
+    [Export] private float propulsionThrustForce = 0f;
 
     
     public override void _EnterTree()
@@ -92,14 +94,14 @@ public partial class PlayerController : AbstractController
     // Called when the node enters the scene tree for the first time.
     public override void _Ready()
     {
-        fluidDensity = airDensity; // Air by default. Should probably make a check here
-        thrustForce = airThrustForce;
-
         // So this whole bit feels a little backwards. The forces are ultimately what moves the model, we are inferring what those forces should be from exported variables that are more intuitive to set.
         jumpVelocity = (float)Math.Sqrt(jumpHeight * 2 * -gravity.Y); // This one is a little bit of a doozy. Has to do with velocity averages and calculating time to max height
         jumpForce = jumpVelocity * mass * 60; // 60 for 60fps. This will be multiplied by delta later, so the 60 is here to cancel it out.
-        airThrustForce = 0.5f * airDensity * maxFlySpeed * maxFlySpeed * dragCoefficient * modelProjectedArea; // Needs to be equal to drag at max speed.
         swimThrustForce = 0.5f * waterDensity * maxSwimSpeed * maxSwimSpeed * dragCoefficient * modelProjectedArea; // Needs to be equal to drag at max speed.
+        airThrustForce = 0.5f * airDensity * maxFlySpeed * maxFlySpeed * dragCoefficient * modelProjectedArea; // Needs to be equal to drag at max speed.
+        
+        fluidDensity = airDensity; // Air by default. Should probably make a check here
+        thrustForce = airThrustForce;
     }
 
     // Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -150,7 +152,7 @@ public partial class PlayerController : AbstractController
         {
             // Logic for running
             // Currently incorrect. Just a copy and paste of the logic for how the character moves in the air for now, but with its own variables.
-            runningForceVector = internalForceVector * runningForce; // This could be simplified to update the internal force vector directly. We arent really using the running vector. its just, nice to have it named correctly?
+            runningForceVector = internalForceVector * runningForce; 
             internalForceVector = runningForceVector;
 
             // Friction equation. Doesnt handle static vs kinetic
@@ -160,13 +162,15 @@ public partial class PlayerController : AbstractController
         }
         else
         {
-            // Because we aren't considering pressure, this works the same in air and water. 
-            thrustForceVector = internalForceVector * (thrustForce + propulsionThrustForce); // This could be simplified to update the internal force vector directly. We arent really using the thrust vector. its just, nice to have it named correctly?
-            internalForceVector = thrustForceVector;
-
             // Drag equation
             dragForceVector = -Model.Velocity.Normalized() * (0.5f * fluidDensity * Model.Velocity.Length() * Model.Velocity.Length() * dragCoefficient * modelProjectedArea);
+            angleOfAttackThrustForce = Math.Abs(dragForceVector.Y) * (float)Math.Cos((double)angleOfAttack);
+            dragForceVector.Y *= (float)Math.Sin(angleOfAttack);
             movementResistanceForceVector = dragForceVector;
+
+            // Because we aren't considering pressure, this works the same in air and water. 
+            thrustForceVector = internalForceVector * (thrustForce + angleOfAttackThrustForce + propulsionThrustForce); 
+            internalForceVector = thrustForceVector;
         }
 
         // Jump

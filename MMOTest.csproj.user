@@ -4,6 +4,6 @@
     <DebuggerFlavor>ProjectDebugger</DebuggerFlavor>
   </PropertyGroup>
   <PropertyGroup>
-    <ActiveDebugProfile>MMO kris desktop</ActiveDebugProfile>
+    <ActiveDebugProfile>Arlo Laptop</ActiveDebugProfile>
   </PropertyGroup>
 </Project>
