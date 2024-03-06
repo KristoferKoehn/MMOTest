@@ -22,6 +22,8 @@ public enum StatType
     MANA,
     CASTING_SPEED,
 
+    
+    CTF_TEAM
 
 }
 

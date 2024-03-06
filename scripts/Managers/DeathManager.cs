@@ -34,6 +34,7 @@ namespace MMOTest.scripts.Managers
             ActorTimer at = GD.Load<PackedScene>("res://scenes/utility/ActorTimer.tscn").Instantiate<ActorTimer>();
             at.ActorID = actor.ActorID;
             AddChild(at);
+            actor.ClientModelReference.RpcId(actor.ActorMultiplayerAuthority, "AssignDeathState", true);
             at.Start(5);
             at.ActorTimerTimeout += RespawnActor;
             at.Timeout += at.QueueFree;
@@ -42,8 +43,12 @@ namespace MMOTest.scripts.Managers
         public void RespawnActor(int ActorID)
         {
             GD.Print("respawning actor " + ActorID);
+            Actor actor = DeadActors[ActorID];
             DeadActors.Remove(ActorID);
+
             //bring back the boy.
+            actor.ClientModelReference.RpcId(actor.ActorMultiplayerAuthority, "AssignDeathState", false);
+            SpawnManager.GetInstance().SpawnActor(ActorID);
         }
 
         public bool IsActorDead(int ActorID)
