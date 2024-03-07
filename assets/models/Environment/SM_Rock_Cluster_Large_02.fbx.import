@@ -42,7 +42,7 @@ _subresources={
 },
 "PATH:RootNode/SM_Rock_Cluster_Large_02": {
 "generate/physics": true,
-"physics/body_type": 1,
+"physics/body_type": 2,
 "physics/shape_type": 1
 }
 }
