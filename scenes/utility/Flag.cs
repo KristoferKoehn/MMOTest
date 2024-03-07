@@ -66,7 +66,7 @@ public partial class Flag : RigidBody3D
 		{
 			carry = null;
 			pickup = false;
-            PBSprite.Visible = false;
+            PBSprite.Visible = true;
         }
 	}
 
