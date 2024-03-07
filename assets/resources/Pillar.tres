@@ -1,0 +1,6 @@
+[gd_resource type="StandardMaterial3D" load_steps=2 format=3 uid="uid://ccbsgt41vwnj7"]
+
+[ext_resource type="Texture2D" uid="uid://c35et1yi2y331" path="res://assets/models/Environment/SM_Terrain_Swamp_Growth_03-2c2c2e969c7f2c9fe66acbaf88103bad_PolygonNature_01.png" id="1_ltibd"]
+
+[resource]
+albedo_texture = ExtResource("1_ltibd")

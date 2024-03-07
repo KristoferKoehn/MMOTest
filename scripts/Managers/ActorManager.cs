@@ -40,16 +40,17 @@ public partial class ActorManager : Node
 		actor.ActorID = ActorID;
         // generic stat block
 		StatBlock statBlock = new StatBlock();
-        Dictionary<StatType, float> statsDict = new()
-        {
-            [StatType.HEALTH] = 100,
+		Dictionary<StatType, float> statsDict = new()
+		{
+			[StatType.HEALTH] = 100,
 			[StatType.MAX_HEALTH] = 100,
-            [StatType.MANA] = 100,
-            [StatType.MAGIC_RESIST] = 13,
-            [StatType.ARMOR] = 11,
-            [StatType.ABILITY_POINTS] = 14,
-            [StatType.CASTING_SPEED] = 12,
-            [StatType.PHYSICAL_DAMAGE] = 15
+			[StatType.MANA] = 100,
+			[StatType.MAGIC_RESIST] = 13,
+			[StatType.ARMOR] = 11,
+			[StatType.ABILITY_POINTS] = 14,
+			[StatType.CASTING_SPEED] = 12,
+			[StatType.PHYSICAL_DAMAGE] = 15,
+			[StatType.CTF_TEAM] = (float)Teams.BLUE_TEAM
         };
 
         statBlock.SetStatBlock(statsDict);

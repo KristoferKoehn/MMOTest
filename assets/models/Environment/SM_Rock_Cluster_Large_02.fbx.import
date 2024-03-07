@@ -39,6 +39,10 @@ _subresources={
 "nodes": {
 "PATH:AnimationPlayer": {
 "import/skip_import": true
+},
+"PATH:RootNode/SM_Rock_Cluster_Large_02": {
+"generate/physics": true,
+"physics/shape_type": 1
 }
 }
 }

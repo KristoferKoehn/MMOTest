@@ -1,20 +1,19 @@
-[gd_scene load_steps=20 format=3 uid="uid://cj5kbymecdp11"]
+[gd_scene load_steps=21 format=3 uid="uid://cj5kbymecdp11"]
 
 [ext_resource type="Script" path="res://scenes/levels/MainLevel.cs" id="1_i7bbw"]
 [ext_resource type="PackedScene" uid="uid://bmk783fseep4a" path="res://scenes/actorScenes/Controllers/PlayerController.tscn" id="2_5xjtm"]
 [ext_resource type="PackedScene" uid="uid://b0dfc5akx67ol" path="res://assets/models/Environment/SM_Rock_Cluster_Large_01.fbx" id="3_lwi4g"]
-[ext_resource type="PackedScene" uid="uid://bb6j28poobc3w" path="res://assets/models/Environment/SM_Tree_04.fbx" id="4_0xnyj"]
-[ext_resource type="PackedScene" uid="uid://bxfw4kgnl5s5t" path="res://assets/models/Environment/SM_Tree_03.fbx" id="5_sfyk0"]
-[ext_resource type="PackedScene" uid="uid://b51inipwhv43k" path="res://assets/models/Environment/SM_Terrain_Swamp_Growth_03.fbx" id="6_3bej5"]
-[ext_resource type="PackedScene" uid="uid://cyemfv8uk672u" path="res://assets/models/Environment/SM_Terrain_Ground_Mound_Small_02.fbx" id="7_4sc1b"]
-[ext_resource type="PackedScene" uid="uid://d08hldfr47k2j" path="res://assets/models/Environment/SM_Terrain_Mountain_01.fbx" id="8_3dg4p"]
-[ext_resource type="PackedScene" uid="uid://h5c35lkj2mbs" path="res://assets/models/Environment/SM_Terrain_Mountain_02.fbx" id="9_etwu2"]
-[ext_resource type="PackedScene" uid="uid://dle18fc5mg1f0" path="res://assets/models/Environment/SM_Terrain_RiverSide_01.fbx" id="10_iux2m"]
+[ext_resource type="PackedScene" uid="uid://dowxpyitffujj" path="res://scenes/actorScenes/Models/DefaultModel.tscn" id="6_4u8na"]
+[ext_resource type="PackedScene" uid="uid://d0aht2a472go2" path="res://assets/models/Environment/SM_Prop_Pillar_Moss_01.fbx" id="10_77aai"]
+[ext_resource type="PackedScene" uid="uid://bxwqb7jn3mudp" path="res://assets/models/Environment/SM_Tree_Swamp_02.fbx" id="10_krodx"]
 [ext_resource type="PackedScene" uid="uid://113d7ed8l3lx" path="res://assets/models/Environment/SM_Tree_Generic_Giant_01.fbx" id="11_mwtu5"]
+[ext_resource type="PackedScene" uid="uid://kjx7cubaoq1a" path="res://assets/models/Environment/SM_Tree_Swamp_01.fbx" id="11_qr35p"]
 [ext_resource type="PackedScene" uid="uid://csd4qe34wtrt" path="res://assets/models/Environment/SM_Tree_Large_01.fbx" id="12_186dn"]
 [ext_resource type="PackedScene" uid="uid://btpdpe6qunryb" path="res://assets/models/Environment/SM_Tree_Willow_Large_01.fbx" id="13_syfwg"]
 [ext_resource type="PackedScene" uid="uid://djwd6kogh3ovm" path="res://assets/models/Environment/SM_Rock_Cluster_Large_02.fbx" id="14_wcegp"]
+[ext_resource type="PackedScene" uid="uid://dle18fc5mg1f0" path="res://assets/models/Environment/SM_Terrain_RiverSide_01.fbx" id="15_hp3ea"]
 [ext_resource type="Texture2D" uid="uid://c8arnlq67qi7" path="res://assets/textures&grids/grids/Dark/texture_05.png" id="15_n384o"]
+[ext_resource type="PackedScene" uid="uid://dku3bda6106pa" path="res://scenes/utility/Flag.tscn" id="16_2ujqw"]
 [ext_resource type="PackedScene" uid="uid://bjjceeyq3csc3" path="res://scenes/Environment/Skybox.tscn" id="16_l618w"]
 [ext_resource type="PackedScene" uid="uid://cuaikm7d1lbke" path="res://scenes/utility/SpawnArea.tscn" id="17_el60w"]
 
@@ -25,7 +24,15 @@ uv1_triplanar = true
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_a6bmg"]
 resource_local_to_scene = true
-size = Vector3(7.191, 1, 3.479)
+size = Vector3(9.616, 1, 7.929)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_2okmg"]
+resource_local_to_scene = true
+size = Vector3(8.061, 1, 7.929)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_8nmv1"]
+resource_local_to_scene = true
+size = Vector3(8.061, 1, 7.929)
 
 [node name="MainLevel" type="Node3D"]
 script = ExtResource("1_i7bbw")
@@ -52,6 +59,8 @@ light_energy = 0.2
 
 [node name="AbilityModels" type="Node" parent="."]
 
+[node name="ObjectiveScenes" type="Node" parent="."]
+
 [node name="PuppetSpawner" type="MultiplayerSpawner" parent="."]
 _spawnable_scenes = PackedStringArray("res://scenes/actorScenes/Models/DefaultModel.tscn")
 spawn_path = NodePath("../PuppetModels")
@@ -65,56 +74,88 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3, 0)
 
 [node name="TerrainModels" type="Node" parent="."]
 
-[node name="Root Scene" parent="TerrainModels" instance=ExtResource("3_lwi4g")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8.3856, 0.499999, 40.8183)
-
-[node name="Root Scene2" parent="TerrainModels" instance=ExtResource("4_0xnyj")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.09306, 0.5, -15.2632)
-
-[node name="Root Scene3" parent="TerrainModels" instance=ExtResource("5_sfyk0")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -9.81453, 0.5, -16.0993)
-
-[node name="Root Scene4" parent="TerrainModels" instance=ExtResource("6_3bej5")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.83641, 0.5, -15.2437)
-
-[node name="Root Scene5" parent="TerrainModels" instance=ExtResource("7_4sc1b")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -20.0438, 0.559857, 2.7141)
-
-[node name="Root Scene8" parent="TerrainModels" instance=ExtResource("8_3dg4p")]
-transform = Transform3D(2.555, 0, 0, 0, 2.555, 0, 0, 0, 2.555, 227.227, 0.5, 48.1861)
-
-[node name="Root Scene6" parent="TerrainModels" instance=ExtResource("9_etwu2")]
-transform = Transform3D(4.31, 0, 0, 0, 4.31, 0, 0, 0, 4.31, 273.767, 0.500001, -61.258)
-
-[node name="Root Scene7" parent="TerrainModels" instance=ExtResource("10_iux2m")]
-transform = Transform3D(0.957082, 0, -0.289817, 0, 1, 0, 0.289817, 0, 0.957082, 9.92484, 2.08238, -17.6016)
-
-[node name="Root Scene10" parent="TerrainModels" instance=ExtResource("10_iux2m")]
-transform = Transform3D(0.87702, 0, -0.480453, 0, 1, 0, 0.480453, 0, 0.87702, 14.4811, 2.08238, -16.2014)
-
-[node name="Root Scene9" parent="TerrainModels" instance=ExtResource("10_iux2m")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.75454, 2.08238, -18.3713)
-
-[node name="Large Tree" parent="TerrainModels" instance=ExtResource("11_mwtu5")]
-transform = Transform3D(0.0359984, 0, 0.999352, 0, 1, 0, -0.999352, 0, 0.0359984, -6.29166, 6.36853, 37.2532)
-
-[node name="Root Scene11" parent="TerrainModels" instance=ExtResource("12_186dn")]
-transform = Transform3D(0.878259, 0, -0.478186, 0, 1, 0, 0.478186, 0, 0.878259, 19.0984, 0.5, 16.6901)
-
-[node name="Root Scene16" parent="TerrainModels" instance=ExtResource("13_syfwg")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -26.3403, 0.714514, 9.27335)
-
-[node name="Root Scene12" parent="TerrainModels" instance=ExtResource("14_wcegp")]
-transform = Transform3D(0.709718, 0, 0.704486, 0, 1, 0, -0.704486, 0, 0.709718, -55.5879, 0.5, -6.16729)
-
 [node name="floor" type="CSGBox3D" parent="TerrainModels"]
 material_override = SubResource("StandardMaterial3D_dvsge")
 use_collision = true
 size = Vector3(1000, 1, 1000)
 
-[node name="SpawnArea" parent="." instance=ExtResource("17_el60w")]
-transform = Transform3D(0.764393, 0, -0.644751, 0, 1, 0, 0.644751, 0, 0.764393, -5.22125, 0.857038, 31.9028)
+[node name="Large Tree" parent="TerrainModels" instance=ExtResource("11_mwtu5")]
+transform = Transform3D(1.215, 0, 0, 0, 1.215, 0, 0, 0, 1.215, 9.57125, 12.7561, -7.8184)
+
+[node name="Root Scene" parent="TerrainModels" instance=ExtResource("14_wcegp")]
+transform = Transform3D(-0.509521, 0.421593, -0.750099, -0.0347982, 0.860934, 0.507525, 0.859754, 0.284697, -0.423993, 15.7992, 1.93172, -2.91834)
+
+[node name="Root Scene2" parent="TerrainModels" instance=ExtResource("3_lwi4g")]
+transform = Transform3D(-0.0191755, 0, -1.43987, 0, 1.44, 0, 1.43987, 0, -0.0191755, -18.0608, 1.64538, -5.46148)
+
+[node name="Root Scene3" parent="TerrainModels" instance=ExtResource("14_wcegp")]
+transform = Transform3D(0.866549, 0, -0.499093, 0, 1, 0, 0.499093, 0, 0.866549, 30.6256, 0.499998, -7.62499)
+
+[node name="Root Scene4" parent="TerrainModels" instance=ExtResource("14_wcegp")]
+transform = Transform3D(0.661338, 0, -0.750088, 0, 1, 0, 0.750088, 0, 0.661338, -35.6627, 0.499996, -0.357344)
+
+[node name="Root Scene5" parent="TerrainModels" instance=ExtResource("10_77aai")]
+transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, 12.9258, 0.499998, -39.6542)
+
+[node name="Root Scene6" parent="TerrainModels" instance=ExtResource("10_77aai")]
+transform = Transform3D(1.94958, -0.446262, 1.95067e-08, 0, -8.74228e-08, -2, 0.446262, 1.94958, -8.52187e-08, 13.5251, 0.896054, -32.6856)
+
+[node name="Root Scene7" parent="TerrainModels" instance=ExtResource("10_77aai")]
+transform = Transform3D(-8.74228e-08, 0, 2, 0, 2, 0, -2, 0, -8.74228e-08, 6.77529, 0.499998, -39.6542)
+
+[node name="Root Scene8" parent="TerrainModels" instance=ExtResource("10_77aai")]
+transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, 12.5998, 0.499998, -48.7674)
+
+[node name="Root Scene9" parent="TerrainModels" instance=ExtResource("10_77aai")]
+transform = Transform3D(-8.74228e-08, 0, 2, 0, 2, 0, -2, 0, -8.74228e-08, 6.71352, 0.499998, -48.7674)
+
+[node name="Root Scene10" parent="TerrainModels" instance=ExtResource("12_186dn")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -31.28, 4.14446, -9.09418)
+
+[node name="Root Scene11" parent="TerrainModels" instance=ExtResource("12_186dn")]
+transform = Transform3D(-0.181944, 0, -0.983309, 0, 1, 0, 0.983309, 0, -0.181944, -46.0108, 4.85527, -0.598425)
+
+[node name="Large Tree2" parent="TerrainModels" instance=ExtResource("11_mwtu5")]
+transform = Transform3D(-0.759941, 0, 0.649992, 0, 1, 0, -0.649992, 0, -0.759941, 22.5863, 5.52236, -0.905432)
+
+[node name="Root Scene12" parent="TerrainModels" instance=ExtResource("10_krodx")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 21.0233, 0.499999, -43.8929)
+
+[node name="Root Scene13" parent="TerrainModels" instance=ExtResource("11_qr35p")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.06418, 0.499999, -50.9334)
+
+[node name="Root Scene14" parent="TerrainModels" instance=ExtResource("13_syfwg")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 17.3958, 0.499999, -48.6763)
+
+[node name="Root Scene16" parent="TerrainModels" instance=ExtResource("15_hp3ea")]
+transform = Transform3D(-0.751172, 0, 0.660106, 0, 1, 0, -0.660106, 0, -0.751172, -10, 2.00813, 13)
+
+[node name="Root Scene15" parent="TerrainModels" instance=ExtResource("13_syfwg")]
+transform = Transform3D(0.965268, 0, -0.261263, 0, 1, 0, 0.261263, 0, 0.965268, 0.530993, 0.5, -39.8014)
+
+[node name="Root Scene17" parent="TerrainModels" instance=ExtResource("14_wcegp")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 22.3552, 1.11976, 24.7272)
+
+[node name="Unaffiliated Spawn" parent="." instance=ExtResource("17_el60w")]
+transform = Transform3D(0.764393, 0, -0.644751, 0, 1, 0, 0.644751, 0, 0.764393, -0.669, 1.85704, 0.623056)
 Shape = SubResource("BoxShape3D_a6bmg")
+
+[node name="Red Team Spawn" parent="." instance=ExtResource("17_el60w")]
+transform = Transform3D(0.402571, 0, -0.915389, 0, 1, 0, 0.915389, 0, 0.402571, 11.4546, 0.857038, 40.6597)
+Team = 1
+Shape = SubResource("BoxShape3D_2okmg")
+
+[node name="Blue Team Spawn" parent="." instance=ExtResource("17_el60w")]
+transform = Transform3D(-0.0567974, 0, -0.998386, 0, 1, 0, 0.998386, 0, -0.0567974, -8.65889, 0.857038, -49.5979)
+Team = 2
+Shape = SubResource("BoxShape3D_8nmv1")
+
+[node name="DefaultModel" parent="." instance=ExtResource("6_4u8na")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8.02635, 0.476275, -19.3646)
+
+[node name="Flag" parent="." instance=ExtResource("16_2ujqw")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.07859, 10.8626, 0)
+team = 1
 
 [connection signal="child_entered_tree" from="PuppetModels" to="." method="_on_puppet_models_child_entered_tree"]
 [connection signal="child_entered_tree" from="ClientModels" to="." method="_on_client_models_child_entered_tree"]
@@ -122,3 +163,4 @@ Shape = SubResource("BoxShape3D_a6bmg")
 [connection signal="despawned" from="AbilitySpawner" to="." method="_on_ability_spawner_despawned"]
 
 [editable path="Main"]
+[editable path="TerrainModels/Root Scene17"]

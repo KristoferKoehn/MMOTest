@@ -120,6 +120,7 @@ public partial class MainLevel : Node3D
         RpcId(PeerId, "SpawnClientModel", PeerId, ActorID);
         this.GetNode<Node>(PuppetNodePath).AddChild(puppet, forceReadableName: true);
         ActorManager.GetInstance().CreateActor(client, puppet, PeerId, ActorID);
+        SpawnManager.GetInstance().SpawnActor(ActorID);
     }
 
 
@@ -175,8 +176,7 @@ public partial class MainLevel : Node3D
     //when a clientmodel enters scene tree
     public void _on_client_models_child_entered_tree(Node node)
     {
-        RandomNumberGenerator rng = new RandomNumberGenerator();
-        ((Node3D)node).Position = new Vector3(rng.RandfRange(-20, -10), 3, rng.RandfRange(10, 20));
+
     }
 
     //when a puppetmodel enters scene tree
