@@ -8,11 +8,16 @@ public partial class Flag : RigidBody3D
 
     [Export]
     public Teams team { get; set; }
+	[Export]
+	public float ReturnTime { get; set; } = 7;
     public List<Actor> ally = new List<Actor>();
 	bool pickup = false;
 	Actor carry = null;
-
 	Timer ReturnTimer = null;
+	ProgressBar ProgressBar = null;
+
+	float TimeRemaining = float.MaxValue;
+
     public override void _EnterTree()
     {
 		this.SetMultiplayerAuthority(1);
@@ -22,15 +27,23 @@ public partial class Flag : RigidBody3D
     public override void _Ready()
 	{
 		ReturnTimer = GetNode<Timer>("ReturnTimer");
+		ProgressBar = GetNode<ProgressBar>("SubViewport/ProgressBar");
+		ReturnTimer.Start(ReturnTime);
+		ReturnTimer.Paused = true;
 	}
 
 	// Called every frame. 'delta' is the elapsed time since the previous frame.
 	public override void _Process(double delta)
 	{
+		ProgressBar.Value = TimeRemaining - ReturnTime;
+
+
         if (Multiplayer.GetUniqueId() != 1)
         {
             return;
         }
+
+		TimeRemaining = (float)ReturnTimer.TimeLeft;
 
         ally.RemoveAll(item => DeathManager.GetInstance().IsActorDead(item));
 
