@@ -33,6 +33,8 @@ public partial class Flag : RigidBody3D
         }
 
         ally.RemoveAll(item => DeathManager.GetInstance().IsActorDead(item));
+
+
 		if(ally.Count < 1 )
 		{
 			ReturnTimer.Paused = true;
@@ -41,7 +43,7 @@ public partial class Flag : RigidBody3D
             ReturnTimer.Paused = false;
         }
 
-        if (carry != null && !DeathManager.GetInstance().IsActorDead(carry)) 
+        if (carry != null && !DeathManager.GetInstance().IsActorDead(carry) && !carry.PuppetModelReference.IsQueuedForDeletion()) 
 		{
 			this.GlobalPosition = carry.PuppetModelReference.GlobalPosition;
 			this.LinearVelocity = carry.ClientModelReference.Velocity;
@@ -83,7 +85,7 @@ public partial class Flag : RigidBody3D
 
 	public void _on_enemy_collide_body_entered(Node3D node)
 	{
-		GD.Print("I SEE YOU");
+
         if (Multiplayer.GetUniqueId() != 1)
         {
             return;
