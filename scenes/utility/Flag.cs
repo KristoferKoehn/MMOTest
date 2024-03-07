@@ -49,7 +49,6 @@ public partial class Flag : RigidBody3D
         }
 
 		TimeRemaining = (float)ReturnTimer.TimeLeft;
-		GD.Print(TimeRemaining);
 
         ally.RemoveAll(item => DeathManager.GetInstance().IsActorDead(item));
 

@@ -58,6 +58,8 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.01205, 0)
 shape = SubResource("CapsuleShape3D_8b3bw")
 
 [node name="ReturnTimer" type="Timer" parent="."]
+one_shot = true
+autostart = true
 
 [node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
 replication_config = SubResource("SceneReplicationConfig_5bg0v")
