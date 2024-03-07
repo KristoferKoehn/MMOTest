@@ -25,7 +25,7 @@ collision_layer = 4
 collision_mask = 3
 gravity_scale = 0.0
 script = ExtResource("1_b4oa3")
-ExplosionSpeed = 0.7
+ExplosionSpeed = 0.4
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="."]
 mesh = SubResource("SphereMesh_0drnr")
