@@ -29,7 +29,8 @@ public partial class PlayerController : AbstractController
     private float fluidDensity; // 1.293 for air, 998 for water.
 
     private float dragCoefficient = 1.15f; // Ranges between 1.0 and 1.3 for a person. https://en.wikipedia.org/wiki/Drag_coefficient
-    private float frictionCoefficient = 0.7f; // best guess. Leather on wood, with the grain is 0.61. So a leather shoe on stone or dirt? idk. a bit higher. // Needs a setter and surface detection of some kind? so we can switch to an ice coefficient? Also, kinetic friction at some point? https://www.engineeringtoolbox.com/friction-coefficients-d_778.html 
+    private float staticFrictionCoefficient = 0.7f; // best guess. Leather on wood, with the grain is 0.61. So a leather shoe on stone or dirt? idk. a bit higher. // Needs a setter and surface detection of some kind? so we can switch to an ice coefficient? Also, kinetic friction at some point? https://www.engineeringtoolbox.com/friction-coefficients-d_778.html 
+    private float kineticFrictionCoefficient = 0.6f; // Also a guess 
 
     // Physics exports
     // These are about the character itself
@@ -39,22 +40,26 @@ public partial class PlayerController : AbstractController
     [Export] private float modelVolume = 0.075f; // cubic meters, surprisingly.
 
     // These are about the desired behavior of the character
-    [Export] private float jumpHeight = 3f;
-    [Export] private float maxFlySpeed = 1f; // Should be changed by class or stat. 
-    [Export] private float maxSprintSpeed = 10f; // 10 meters a second. Ballpark of olympic athletes in 200m races
-    [Export] private float maxSwimSpeed = 2.2f; // Meters per second. https://www.wired.com/2012/08/olympics-physics-swimming/
-    [Export] private float runningForce = 1000f; // TODO: this isnt right. // This seems way higher than it should be? should be 1.25 * 80. Or something like that.
+    [Export] private float jumpHeight = 3f; // 3 meters is way higher than people can jump but 0.3 feels bad because you cant pick up your legs to clear a fence.
+    [Export] private float maxSprintSpeed = 10f;
+    [Export] private float sprintAcceleration = 1.25f; // 10 meters a second. Ballpark of olympic athletes in 200m races TODO: Use this somehow.
+    [Export] private float maxSwimSpeed = 2.2f; // 2.2 Meters per second. https://www.wired.com/2012/08/olympics-physics-swimming/
+    [Export] private float maxFlySpeed = 0f; // People cant fly. Should be zero, but having it at 10 helps a bit.The air thrust force needs to be calculated differently. Drag doesnt make sense.
+    [Export] private float angleOfAttack = (float)(Math.PI / 4f);// How much you glide while falling;
 
     // These are derived from the exported values and are actually used in calculations
     private float jumpVelocity;
     private float jumpForce;
-    private float airThrustForce;
-    private float swimThrustForce;
-    private float thrustForce; // Equal to either air or swim thrust depending on medium
+    private float angleOfAttackThrustForce; // Derived from angle of attack and drag
+    private float airThrustForce ; // Force generated to fly, like a bird.
+    private float swimThrustForce; // Force generated to swim.
+    private float thrustForce; // total Thrust force
 
     // Forces
     // Internal Force
     private Vector2 inputDirection = new Vector2(); // Captures movement key presses
+    private Vector3 currentRunningSpeedVector = new Vector3(); // How the character is running in a given direction
+    private Vector3 runningSpeedAccelerationVector = new Vector3();
     private Vector3 internalForceVector = new Vector3(); // Represents the force the character is exerting inorder to move in a certain direction.
     private Vector3 thrustForceVector = new Vector3(); // Force used to move in a given direction in a fluid (air, water) and not on the ground. Internal force = thrust force when off the ground.
     private Vector3 runningForceVector = new Vector3(); // thrustForce On ground counterpart. Used to move in a given direction on the ground.
@@ -79,7 +84,7 @@ public partial class PlayerController : AbstractController
     [Export] private float JetpackFuelConsumptionRate = 0.1f;
     [Export] private float JetpackFuelRefillRate = 0.5f;
     [Export] private float jetPackForce = 1500f; // Arbitrary. Might turn into a calculation later. Give it a better handle
-    [Export] private float propulsionThrustForce = 1500f;
+    [Export] private float propulsionThrustForce = 0f;
 
     
     public override void _EnterTree()
@@ -93,14 +98,15 @@ public partial class PlayerController : AbstractController
     public override void _Ready()
     {
         Input.MouseMode = Input.MouseModeEnum.Captured;
-        fluidDensity = airDensity; // Air by default. Should probably make a check here
-        thrustForce = airThrustForce;
-
+ 
         // So this whole bit feels a little backwards. The forces are ultimately what moves the model, we are inferring what those forces should be from exported variables that are more intuitive to set.
         jumpVelocity = (float)Math.Sqrt(jumpHeight * 2 * -gravity.Y); // This one is a little bit of a doozy. Has to do with velocity averages and calculating time to max height
         jumpForce = jumpVelocity * mass * 60; // 60 for 60fps. This will be multiplied by delta later, so the 60 is here to cancel it out.
-        airThrustForce = 0.5f * airDensity * maxFlySpeed * maxFlySpeed * dragCoefficient * modelProjectedArea; // Needs to be equal to drag at max speed.
         swimThrustForce = 0.5f * waterDensity * maxSwimSpeed * maxSwimSpeed * dragCoefficient * modelProjectedArea; // Needs to be equal to drag at max speed.
+        //airThrustForce = 0.5f * airDensity * maxFlySpeed * maxFlySpeed * dragCoefficient * modelProjectedArea; // Needs to be equal to drag at max speed.
+        
+        fluidDensity = airDensity; // Air by default. Should probably make a check here
+        thrustForce = airThrustForce;
     }
 
     // Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -168,24 +174,48 @@ public partial class PlayerController : AbstractController
         if (Model.IsOnFloor())
         {
             // Logic for running
-            // Currently incorrect. Just a copy and paste of the logic for how the character moves in the air for now, but with its own variables.
-            runningForceVector = internalForceVector * runningForce; // This could be simplified to update the internal force vector directly. We arent really using the running vector. its just, nice to have it named correctly?
-            internalForceVector = runningForceVector;
 
-            // Friction equation. Doesnt handle static vs kinetic
+            // Spin up "engine"
+            runningSpeedAccelerationVector = internalForceVector * sprintAcceleration;
+            currentRunningSpeedVector += runningSpeedAccelerationVector;
+            if (currentRunningSpeedVector.Length() > maxSprintSpeed)
+            {
+                currentRunningSpeedVector = currentRunningSpeedVector.Normalized() * maxSprintSpeed;
+            }
+
+            currentRunningSpeedVector.Y = Model.Velocity.Y; // Setting equal here means that the y component of the velocity wont be considered when calculating attempted acceleration
+            float attemptedAcceleration = (currentRunningSpeedVector.Length() - Model.Velocity.Length()) / (float)delta;
+            float runningForce = realMass * attemptedAcceleration;
+            
             normalForce = Model.GetFloorNormal().Normalized().Y * (realMass * Math.Abs(gravity.Y));
-            frictionForceVector = -Model.Velocity.Normalized() * (frictionCoefficient * normalForce);
-            movementResistanceForceVector = frictionForceVector;
+            float maxStaticFrictionForce = staticFrictionCoefficient * normalForce;
+            if (runningForce >= maxStaticFrictionForce)
+            {
+                runningForce = kineticFrictionCoefficient * normalForce; // Sliding out
+                
+                // Friction added to sliding
+                frictionForceVector = -Model.Velocity.Normalized() * (kineticFrictionCoefficient * normalForce);
+                movementResistanceForceVector = frictionForceVector;
+            }
+
+            runningForceVector = internalForceVector * runningForce;
+            internalForceVector = runningForceVector;
         }
         else
         {
-            // Because we aren't considering pressure, this works the same in air and water. 
-            thrustForceVector = internalForceVector * (thrustForce + propulsionThrustForce); // This could be simplified to update the internal force vector directly. We arent really using the thrust vector. its just, nice to have it named correctly?
-            internalForceVector = thrustForceVector;
-
             // Drag equation
             dragForceVector = -Model.Velocity.Normalized() * (0.5f * fluidDensity * Model.Velocity.Length() * Model.Velocity.Length() * dragCoefficient * modelProjectedArea);
+            if (inputDirection.Y != 0 || inputDirection.X != 0) // There is input.
+            {
+                angleOfAttackThrustForce = Math.Abs(dragForceVector.Y) * (float)Math.Cos((double)angleOfAttack);
+                dragForceVector.Y *= (float)Math.Sin(angleOfAttack);
+            }
+            
             movementResistanceForceVector = dragForceVector;
+
+            // Because we aren't considering pressure, this works the same in air and water. 
+            thrustForceVector = internalForceVector * (thrustForce + angleOfAttackThrustForce + propulsionThrustForce); 
+            internalForceVector = thrustForceVector;
         }
 
         // Jump
@@ -203,6 +233,13 @@ public partial class PlayerController : AbstractController
 
         buoyantForceVector = Vector3.Up * (-1 * fluidDensity * gravity.Y * modelVolume);
         externalForceVector += buoyantForceVector;
+
+
+        // NOT PHYSICAL ADDED FOR GAME FEEL
+        // Internal force is scaled to be up to twice as strong if it is in a direction opposite current velocity.
+        float dotProduct = internalForceVector.Normalized().Dot(Model.Velocity.Normalized());
+        dotProduct = (dotProduct / -2f) + 1.5f; // Magic numbers to convert range of [-1,1] to [1,2] but reversed
+        internalForceVector *= dotProduct;
 
         // Sum up all forces. Internal, external, and friction
         totalForceVector += internalForceVector;
