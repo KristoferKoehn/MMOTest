@@ -13,6 +13,10 @@ public partial class Flag : RigidBody3D
 	Actor carry = null;
 
 	Timer ReturnTimer = null;
+    public override void _EnterTree()
+    {
+		this.SetMultiplayerAuthority(1);
+    }
 
     // Called when the node enters the scene tree for the first time.
     public override void _Ready()
