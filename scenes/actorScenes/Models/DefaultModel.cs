@@ -66,4 +66,17 @@ public partial class DefaultModel : AbstractModel
     {
         return this.ActorID;
     }
+
+    [Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
+    public override void AssignDeathState(bool isdead)
+    {
+        GD.Print("death state from server: " + isdead);
+        this.IsDead = isdead;
+    }
+
+    [Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
+    public override void MovePlayerToPosition(Vector3 globalPosition)
+    {
+        this.GlobalPosition = globalPosition;
+    }
 }

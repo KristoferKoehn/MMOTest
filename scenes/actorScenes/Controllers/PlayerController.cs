@@ -97,6 +97,8 @@ public partial class PlayerController : AbstractController
     // Called when the node enters the scene tree for the first time.
     public override void _Ready()
     {
+        Input.MouseMode = Input.MouseModeEnum.Captured;
+ 
         // So this whole bit feels a little backwards. The forces are ultimately what moves the model, we are inferring what those forces should be from exported variables that are more intuitive to set.
         jumpVelocity = (float)Math.Sqrt(jumpHeight * 2 * -gravity.Y); // This one is a little bit of a doozy. Has to do with velocity averages and calculating time to max height
         jumpForce = jumpVelocity * mass * 60; // 60 for 60fps. This will be multiplied by delta later, so the 60 is here to cancel it out.
@@ -110,6 +112,17 @@ public partial class PlayerController : AbstractController
     // Called every frame. 'delta' is the elapsed time since the previous frame.
     public override void _Process(double delta)
 	{
+        if (Input.IsActionJustPressed("pause"))
+        {
+            if (Input.MouseMode == Input.MouseModeEnum.Captured)
+            {
+                Input.MouseMode = Input.MouseModeEnum.Visible;
+            }
+            else
+            {
+                Input.MouseMode = Input.MouseModeEnum.Captured;
+            }
+        }
         
 	}
 
@@ -126,6 +139,13 @@ public partial class PlayerController : AbstractController
     public override void _PhysicsProcess(double delta)
     {
         if (Model == null) { return; }
+
+        if (Model.IsDead) {
+            totalForceVector = Vector3.Zero;
+            externalForceVector = Vector3.Zero;
+            internalForceVector = Vector3.Zero;
+            return;
+        }
 
         this.GlobalPosition = this.Model.GlobalPosition;
 
@@ -263,6 +283,19 @@ public partial class PlayerController : AbstractController
 
     public override void _Input(InputEvent @event)
     {
+
+        if (Input.MouseMode != Input.MouseModeEnum.Captured)
+        {
+            InputEventMouseButton button = @event as InputEventMouseButton;
+            if (button != null)
+            {
+                Input.MouseMode = Input.MouseModeEnum.Captured;
+            } else
+            {
+                return;
+            }
+        }
+
         InputEventMouseMotion motion = @event as InputEventMouseMotion;
 		if (motion != null)
 		{
