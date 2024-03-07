@@ -30,15 +30,15 @@ public partial class Flag : RigidBody3D
 		ReturnTimer = GetNode<Timer>("ReturnTimer");
 		ProgressBar = GetNode<ProgressBar>("SubViewport/ProgressBar");
 		PBSprite = GetNode<Sprite3D>("Sprite3D");
-		ReturnTimer.Start(ReturnTime);
+		ReturnTimer.WaitTime = ReturnTime;
 		ReturnTimer.Paused = true;
 	}
 
 	// Called every frame. 'delta' is the elapsed time since the previous frame.
 	public override void _Process(double delta)
 	{
-		ProgressBar.Value = TimeRemaining - ReturnTime;
 
+        ProgressBar.Value = TimeRemaining - ReturnTime;
 
         if (Multiplayer.GetUniqueId() != 1)
         {
@@ -46,9 +46,9 @@ public partial class Flag : RigidBody3D
         }
 
 		TimeRemaining = (float)ReturnTimer.TimeLeft;
+        
 
         ally.RemoveAll(item => DeathManager.GetInstance().IsActorDead(item));
-
 
 		if(ally.Count < 1 )
 		{
