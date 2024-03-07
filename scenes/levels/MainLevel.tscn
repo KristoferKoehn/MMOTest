@@ -82,6 +82,10 @@ transform = Transform3D(1.215, 0, 0, 0, 1.215, 0, 0, 0, 1.215, 9.57125, 12.7561,
 [node name="Root Scene" parent="TerrainModels" instance=ExtResource("14_wcegp")]
 transform = Transform3D(-0.509521, 0.421593, -0.750099, -0.0347982, 0.860934, 0.507525, 0.859754, 0.284697, -0.423993, 15.7992, 1.93172, -1.56176)
 
+[node name="StaticBody3D" parent="TerrainModels/Root Scene/RootNode/SM_Rock_Cluster_Large_02" index="0"]
+collision_layer = 3
+collision_mask = 3
+
 [node name="Root Scene2" parent="TerrainModels" instance=ExtResource("3_lwi4g")]
 transform = Transform3D(-0.0191755, 0, -1.43987, 0, 1.44, 0, 1.43987, 0, -0.0191755, -18.0226, 1.76999, -5.50047)
 
@@ -153,3 +157,4 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8.02635, 0.476275, -19.3646)
 [connection signal="despawned" from="AbilitySpawner" to="." method="_on_ability_spawner_despawned"]
 
 [editable path="Main"]
+[editable path="TerrainModels/Root Scene"]
