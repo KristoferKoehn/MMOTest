@@ -23,12 +23,12 @@ public partial class Flag : RigidBody3D
 	// Called every frame. 'delta' is the elapsed time since the previous frame.
 	public override void _Process(double delta)
 	{
-		if(Multiplayer.GetUniqueId() != 1)
-		{
-			return;
-		}
+        if (Multiplayer.GetUniqueId() != 1)
+        {
+            return;
+        }
 
-		ally.RemoveAll(item => DeathManager.GetInstance().IsActorDead(item));
+        ally.RemoveAll(item => DeathManager.GetInstance().IsActorDead(item));
 		if(ally.Count < 1 )
 		{
 			ReturnTimer.Paused = true;
@@ -50,6 +50,10 @@ public partial class Flag : RigidBody3D
 
 	public void _on_ally_collide_body_entered(Node3D node)
 	{
+        if (Multiplayer.GetUniqueId() != 1)
+        {
+            return;
+        }
 
         AbstractModel model = node as AbstractModel;
         if (model != null)
@@ -75,8 +79,12 @@ public partial class Flag : RigidBody3D
 
 	public void _on_enemy_collide_body_entered(Node3D node)
 	{
-		//if enemy and not pickup
-		if(pickup)
+        if (Multiplayer.GetUniqueId() != 1)
+        {
+            return;
+        }
+
+        if (pickup)
 		{
 			return;
 		}
