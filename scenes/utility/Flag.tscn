@@ -16,6 +16,8 @@ properties/1/spawn = true
 properties/1/replication_mode = 1
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_gkvfs"]
+radius = 0.180715
+height = 0.914217
 
 [node name="Flag" type="RigidBody3D"]
 collision_layer = 0
@@ -48,5 +50,5 @@ shape = SubResource("CapsuleShape3D_8b3bw")
 replication_config = SubResource("SceneReplicationConfig_5bg0v")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.00896, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.46501, 0)
 shape = SubResource("CapsuleShape3D_gkvfs")

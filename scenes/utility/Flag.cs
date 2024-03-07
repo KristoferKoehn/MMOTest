@@ -1,5 +1,6 @@
 using Godot;
 using MMOTest.Backend;
+using MMOTest.scripts.Managers;
 using System.Collections.Generic;
 
 public partial class Flag : RigidBody3D
@@ -7,15 +8,16 @@ public partial class Flag : RigidBody3D
 
     [Export]
     public Teams team { get; set; }
-	public List<Actor> enemy = new List<Actor>();
     public List<Actor> ally = new List<Actor>();
 	bool pickup = false;
 	Actor carry = null;
 
+	Timer ReturnTimer = null;
+
     // Called when the node enters the scene tree for the first time.
     public override void _Ready()
 	{
-
+		ReturnTimer = GetNode<Timer>("ReturnTimer");
 	}
 
 	// Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -26,25 +28,43 @@ public partial class Flag : RigidBody3D
 			return;
 		}
 
-		if(carry != null)
+		ally.RemoveAll(item => DeathManager.GetInstance().IsActorDead(item));
+		if(ally.Count < 1 )
 		{
-			if(!carry.ClientModelReference.IsDead)
-			{
+			ReturnTimer.Paused = true;
+		} else
+		{
+            ReturnTimer.Paused = false;
+        }
 
-			} else
-			{
-				pickup = false;
-				
-			}
+        if (carry != null && DeathManager.GetInstance().IsActorDead(carry)) 
+		{
+			this.GlobalPosition = carry.PuppetModelReference.GlobalPosition;
+			this.LinearVelocity = carry.ClientModelReference.Velocity;
+		} else
+		{
+			carry = null;
+			pickup = false;
 		}
 	}
 
 	public void _on_ally_collide_body_entered(Node3D node)
 	{
-		//check if ally
-		//	if ally, if not picked up, if clock isn't started start
-			// start clock
-	}
+
+        AbstractModel model = node as AbstractModel;
+        if (model != null)
+        {
+            StatBlock sb = StatManager.GetInstance().GetStatBlock(model.GetActorID());
+            if ((Teams)sb.GetStat(StatType.CTF_TEAM) == this.team)
+            {
+                ally.Add(ActorManager.GetInstance().GetActor(model.GetActorID()));
+				if(!pickup)
+				{
+					ReturnTimer.Paused = false;
+				}
+            }
+        }
+    }
 
 	public void _on_capture_point_collide_body_entered(Node3D node)
 	{
@@ -56,6 +76,19 @@ public partial class Flag : RigidBody3D
 	public void _on_enemy_collide_body_entered(Node3D node)
 	{
 		//if enemy and not pickup
+		if(pickup)
+		{
+			return;
+		}
 
+		AbstractModel model = node as AbstractModel;
+		if (model != null) {
+			StatBlock sb = StatManager.GetInstance().GetStatBlock(model.GetActorID());
+			if ((Teams)sb.GetStat(StatType.CTF_TEAM) != this.team)
+			{
+				carry = ActorManager.GetInstance().GetActor(model.GetActorID());
+				pickup = true;
+			}
+		}
 	}
 }

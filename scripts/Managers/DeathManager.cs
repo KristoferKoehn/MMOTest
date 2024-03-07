@@ -59,5 +59,12 @@ namespace MMOTest.scripts.Managers
             }
             return true;
         }
+
+        public bool IsActorDead(Actor actor)
+        {
+            if(DeadActors.ContainsKey(actor.ActorID)) { return true; }
+            return false;
+        }
+
     }
 }
