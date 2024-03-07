@@ -1,0 +1,14 @@
+[gd_scene load_steps=3 format=3 uid="uid://dku3bda6106pa"]
+
+[ext_resource type="Script" path="res://scenes/utility/Flag.cs" id="1_6c8x2"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_8b3bw"]
+
+[node name="Flag" type="Node3D"]
+script = ExtResource("1_6c8x2")
+
+[node name="Area3D" type="Area3D" parent="."]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Area3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.01205, 0)
+shape = SubResource("CapsuleShape3D_8b3bw")
