@@ -20,7 +20,6 @@ public partial class FireballExplosion : AbstractAbility
         SphereShape3D sphereShape3D = (SphereShape3D)GetNode<CollisionShape3D>("Area3D/CollisionShape3D").Shape;
         G.TweenProperty(sphereShape3D, "radius", 6.06f, ExplosionSpeed);
         
-        
         if (host)
         {
             t.Finished += QueueFree;

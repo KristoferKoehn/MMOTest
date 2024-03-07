@@ -24,6 +24,8 @@ properties/1/replication_mode = 1
 radius = 0.431379
 
 [node name="Fireball" type="RigidBody3D"]
+collision_layer = 4
+collision_mask = 3
 gravity_scale = 0.6
 script = ExtResource("1_j4lpo")
 
