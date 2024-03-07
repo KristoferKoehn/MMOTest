@@ -25,6 +25,8 @@ lock_rotation = true
 script = ExtResource("1_6c8x2")
 
 [node name="EnemyCollide" type="Area3D" parent="."]
+collision_layer = 2
+collision_mask = 2
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="EnemyCollide"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.01205, 0)
@@ -32,6 +34,8 @@ shape = SubResource("CapsuleShape3D_8b3bw")
 
 [node name="AllyCollide" type="Area3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.17044, 0)
+collision_layer = 2
+collision_mask = 2
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="AllyCollide"]
 shape = SubResource("CylinderShape3D_58qr5")
