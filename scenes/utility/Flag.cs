@@ -17,7 +17,8 @@ public partial class Flag : RigidBody3D
 	ProgressBar ProgressBar = null;
 	Sprite3D PBSprite = null;
 
-	float TimeRemaining = float.MaxValue;
+	[Export]
+	float TimeRemaining { get; set; }
 
     public override void _EnterTree()
     {
@@ -30,6 +31,8 @@ public partial class Flag : RigidBody3D
 		ReturnTimer = GetNode<Timer>("ReturnTimer");
 		ProgressBar = GetNode<ProgressBar>("SubViewport/ProgressBar");
 		PBSprite = GetNode<Sprite3D>("Sprite3D");
+		ProgressBar.MinValue = -ReturnTime;
+		TimeRemaining = ReturnTime;
 		ReturnTimer.WaitTime = ReturnTime;
 		ReturnTimer.Paused = true;
 	}
@@ -46,7 +49,7 @@ public partial class Flag : RigidBody3D
         }
 
 		TimeRemaining = (float)ReturnTimer.TimeLeft;
-        
+		GD.Print(TimeRemaining);
 
         ally.RemoveAll(item => DeathManager.GetInstance().IsActorDead(item));
 
@@ -76,6 +79,7 @@ public partial class Flag : RigidBody3D
         {
             return;
         }
+		
 
         AbstractModel model = node as AbstractModel;
         if (model != null)
@@ -83,6 +87,7 @@ public partial class Flag : RigidBody3D
             StatBlock sb = StatManager.GetInstance().GetStatBlock(model.GetActorID());
             if ((Teams)sb.GetStat(StatType.CTF_TEAM) == this.team)
             {
+                GD.Print("Ally colliding with ally area");
                 ally.Add(ActorManager.GetInstance().GetActor(model.GetActorID()));
 				if(!pickup)
 				{
