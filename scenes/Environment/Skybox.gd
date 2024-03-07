@@ -95,8 +95,9 @@ func _ready() -> void :
 	_update()
 
 func _process( delta: float ) -> void :
-	if not Engine.is_editor_hint() : # We don't want a time lapse in the editor
-		day_time += delta * time_scale
+	pass
+#	if not Engine.is_editor_hint() : # We don't want a time lapse in the editor
+#		day_time += delta * time_scale
 
 func _update() -> void :
 	if OS.has_feature("dedicated_server") :

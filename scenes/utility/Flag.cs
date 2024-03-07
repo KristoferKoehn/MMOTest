@@ -15,6 +15,7 @@ public partial class Flag : RigidBody3D
 	Actor carry = null;
 	Timer ReturnTimer = null;
 	ProgressBar ProgressBar = null;
+	Sprite3D PBSprite = null;
 
 	float TimeRemaining = float.MaxValue;
 
@@ -28,6 +29,7 @@ public partial class Flag : RigidBody3D
 	{
 		ReturnTimer = GetNode<Timer>("ReturnTimer");
 		ProgressBar = GetNode<ProgressBar>("SubViewport/ProgressBar");
+		PBSprite = GetNode<Sprite3D>("Sprite3D");
 		ReturnTimer.Start(ReturnTime);
 		ReturnTimer.Paused = true;
 	}
@@ -64,7 +66,8 @@ public partial class Flag : RigidBody3D
 		{
 			carry = null;
 			pickup = false;
-		}
+            PBSprite.Visible = false;
+        }
 	}
 
 	public void _on_ally_collide_body_entered(Node3D node)
@@ -117,6 +120,8 @@ public partial class Flag : RigidBody3D
                 GD.Print("ENEMYPICKUP");
                 carry = ActorManager.GetInstance().GetActor(model.GetActorID());
 				pickup = true;
+				PBSprite.Visible = false;
+				ReturnTimer.WaitTime = 7;
 			}
 		}
 	}
