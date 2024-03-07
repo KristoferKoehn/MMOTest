@@ -29,8 +29,8 @@ public partial class PlayerController : AbstractController
     private float fluidDensity; // 1.293 for air, 998 for water.
 
     private float dragCoefficient = 1.15f; // Ranges between 1.0 and 1.3 for a person. https://en.wikipedia.org/wiki/Drag_coefficient
-    private float staticFrictionCoefficient = 0.7f; // best guess. Leather on wood, with the grain is 0.61. So a leather shoe on stone or dirt? idk. a bit higher. // Needs a setter and surface detection of some kind? so we can switch to an ice coefficient? Also, kinetic friction at some point? https://www.engineeringtoolbox.com/friction-coefficients-d_778.html 
-    private float kineticFrictionCoefficient = 0.6f; // Also a guess 
+    private float staticFrictionCoefficient = 1f; // best guess. Leather on wood, with the grain is 0.61. So a leather shoe on stone or dirt? idk. a bit higher. // Needs a setter and surface detection of some kind? so we can switch to an ice coefficient? Also, kinetic friction at some point? https://www.engineeringtoolbox.com/friction-coefficients-d_778.html 
+    private float kineticFrictionCoefficient = 0.9f; // Also a guess 
 
     // Physics exports
     // These are about the character itself
@@ -84,7 +84,7 @@ public partial class PlayerController : AbstractController
     [Export] private float JetpackFuelConsumptionRate = 0.1f;
     [Export] private float JetpackFuelRefillRate = 0.5f;
     [Export] private float jetPackForce = 1500f; // Arbitrary. Might turn into a calculation later. Give it a better handle
-    [Export] private float propulsionThrustForce = 0f;
+    [Export] private float propulsionThrustForce = 1500f;
 
     
     public override void _EnterTree()
@@ -176,15 +176,28 @@ public partial class PlayerController : AbstractController
             // Logic for running
 
             // Spin up "engine"
-            runningSpeedAccelerationVector = internalForceVector * sprintAcceleration;
+            runningSpeedAccelerationVector = internalForceVector * (sprintAcceleration * (float)delta);
             currentRunningSpeedVector += runningSpeedAccelerationVector;
-            if (currentRunningSpeedVector.Length() > maxSprintSpeed)
+            if (runningSpeedAccelerationVector == Vector3.Zero) // Ramp down (foot off gas)
             {
+                if (currentRunningSpeedVector.Length() > (sprintAcceleration * (float)delta))
+                {
+                    runningSpeedAccelerationVector = Vector3.Zero;
+                }
+                else
+                {
+                    Vector3 decelerationVector = -currentRunningSpeedVector.Normalized() * (sprintAcceleration * (float)delta);
+                    currentRunningSpeedVector += decelerationVector;
+                }
+            }
+
+            if (currentRunningSpeedVector.Length() > maxSprintSpeed)
+            { 
                 currentRunningSpeedVector = currentRunningSpeedVector.Normalized() * maxSprintSpeed;
             }
 
             currentRunningSpeedVector.Y = Model.Velocity.Y; // Setting equal here means that the y component of the velocity wont be considered when calculating attempted acceleration
-            float attemptedAcceleration = (currentRunningSpeedVector.Length() - Model.Velocity.Length()) / (float)delta;
+            float attemptedAcceleration = Math.Abs(currentRunningSpeedVector.Length() - Model.Velocity.Length()) / (float)delta;
             float runningForce = realMass * attemptedAcceleration;
             
             normalForce = Model.GetFloorNormal().Normalized().Y * (realMass * Math.Abs(gravity.Y));
@@ -195,11 +208,21 @@ public partial class PlayerController : AbstractController
                 
                 // Friction added to sliding
                 frictionForceVector = -Model.Velocity.Normalized() * (kineticFrictionCoefficient * normalForce);
-                movementResistanceForceVector = frictionForceVector;
+            }
+            else
+            {
+                frictionForceVector = new Vector3();
             }
 
-            runningForceVector = internalForceVector * runningForce;
+            //if (runningForce > 1500)
+            //{
+            //    GD.Print(runningForce);
+            //}
+
+            runningForceVector = currentRunningSpeedVector.Normalized() * runningForce;
             internalForceVector = runningForceVector;
+
+            movementResistanceForceVector = frictionForceVector;
         }
         else
         {
@@ -231,8 +254,8 @@ public partial class PlayerController : AbstractController
             // Do fuel and stuff
         }
 
-        buoyantForceVector = Vector3.Up * (-1 * fluidDensity * gravity.Y * modelVolume);
-        externalForceVector += buoyantForceVector;
+        //buoyantForceVector = Vector3.Up * (-1 * fluidDensity * gravity.Y * modelVolume);
+        //externalForceVector += buoyantForceVector;
 
 
         // NOT PHYSICAL ADDED FOR GAME FEEL
