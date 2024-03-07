@@ -79,6 +79,7 @@ public partial class Flag : RigidBody3D
 
 	public void _on_enemy_collide_body_entered(Node3D node)
 	{
+		GD.Print("I SEE YOU");
         if (Multiplayer.GetUniqueId() != 1)
         {
             return;
@@ -94,7 +95,8 @@ public partial class Flag : RigidBody3D
 			StatBlock sb = StatManager.GetInstance().GetStatBlock(model.GetActorID());
 			if ((Teams)sb.GetStat(StatType.CTF_TEAM) != this.team)
 			{
-				carry = ActorManager.GetInstance().GetActor(model.GetActorID());
+                GD.Print("ENEMYPICKUP");
+                carry = ActorManager.GetInstance().GetActor(model.GetActorID());
 				pickup = true;
 			}
 		}
