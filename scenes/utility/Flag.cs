@@ -41,7 +41,7 @@ public partial class Flag : RigidBody3D
             ReturnTimer.Paused = false;
         }
 
-        if (carry != null && DeathManager.GetInstance().IsActorDead(carry)) 
+        if (carry != null && !DeathManager.GetInstance().IsActorDead(carry)) 
 		{
 			this.GlobalPosition = carry.PuppetModelReference.GlobalPosition;
 			this.LinearVelocity = carry.ClientModelReference.Velocity;
