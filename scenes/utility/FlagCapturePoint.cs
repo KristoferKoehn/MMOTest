@@ -14,17 +14,16 @@ public partial class FlagCapturePoint : Area3D
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
 	{
-
-	}
-
-	// Called every frame. 'delta' is the elapsed time since the previous frame.
-	public override void _Process(double delta)
-	{
-
+		
 	}
 
 	public void _on_body_entered(Node3D body)
 	{
+		if (Multiplayer.GetUniqueId() != 1)
+		{
+			return;
+		}
+
         Flag flag = body as Flag;
 		bool validCap = true;
 		if (flag != null)
@@ -43,7 +42,8 @@ public partial class FlagCapturePoint : Area3D
 
 					if (validCap)
 					{
-						//send message
+						GD.Print((flag.team).ToString() + " flag captured");
+						
 					}
 				} 
 			} 
