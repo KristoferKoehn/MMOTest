@@ -80,6 +80,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.07859, 0.51283, 21.0261)
 team = 1
 
 [node name="Red Team Capture" parent="Objective Nodes" instance=ExtResource("5_erfut")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.61241, 1.04279, 20.6829)
 team = 1
 
 [node name="Blue Team Flag" parent="Objective Nodes" instance=ExtResource("16_2ujqw")]
