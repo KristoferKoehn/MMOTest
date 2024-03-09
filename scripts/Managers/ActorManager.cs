@@ -58,7 +58,7 @@ public partial class ActorManager : Node
 			statsDict[StatType.CTF_TEAM] = (float)Teams.BLUE_TEAM;
         } else
 		{
-            statsDict[StatType.CTF_TEAM] = (float)Teams.BLUE_TEAM;
+            statsDict[StatType.CTF_TEAM] = (float)Teams.RED_TEAM;
         }
 
         statBlock.SetStatBlock(statsDict);
