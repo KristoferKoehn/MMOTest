@@ -11,6 +11,7 @@ public partial class ActorManager : Node
 	Dictionary<long, Actor> actors = new Dictionary<long, Actor>();
 	static ActorManager instance = null;
 
+
 	private ActorManager() 
 	{
 		
@@ -50,8 +51,15 @@ public partial class ActorManager : Node
 			[StatType.ABILITY_POINTS] = 14,
 			[StatType.CASTING_SPEED] = 12,
 			[StatType.PHYSICAL_DAMAGE] = 15,
-			[StatType.CTF_TEAM] = (float)Teams.BLUE_TEAM
         };
+
+		if(actors.Count % 2 == 0)
+		{
+			statsDict[StatType.CTF_TEAM] = (float)Teams.BLUE_TEAM;
+        } else
+		{
+            statsDict[StatType.CTF_TEAM] = (float)Teams.BLUE_TEAM;
+        }
 
         statBlock.SetStatBlock(statsDict);
 		actor.stats = statBlock;

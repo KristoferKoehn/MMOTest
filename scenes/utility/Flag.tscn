@@ -1,11 +1,8 @@
-[gd_scene load_steps=7 format=3 uid="uid://dku3bda6106pa"]
+[gd_scene load_steps=5 format=3 uid="uid://dku3bda6106pa"]
 
 [ext_resource type="Script" path="res://scenes/utility/Flag.cs" id="1_6c8x2"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_8b3bw"]
-
-[sub_resource type="CylinderShape3D" id="CylinderShape3D_58qr5"]
-radius = 2.52015
 
 [sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_5bg0v"]
 properties/0/path = NodePath(".:team")
@@ -25,34 +22,22 @@ properties/3/replication_mode = 1
 radius = 0.180715
 height = 0.914217
 
-[sub_resource type="ViewportTexture" id="ViewportTexture_70rba"]
-viewport_path = NodePath("SubViewport")
-
 [node name="Flag" type="RigidBody3D"]
 collision_layer = 0
 lock_rotation = true
 script = ExtResource("1_6c8x2")
-TimeRemaining = 7.0
 
-[node name="EnemyCollide" type="Area3D" parent="."]
+[node name="ActorCollide" type="Area3D" parent="."]
 collision_layer = 0
 collision_mask = 2
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="EnemyCollide"]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="ActorCollide"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.01205, 0)
 shape = SubResource("CapsuleShape3D_8b3bw")
 
-[node name="AllyCollide" type="Area3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.17044, 0)
-collision_layer = 0
-collision_mask = 2
-
-[node name="CollisionShape3D" type="CollisionShape3D" parent="AllyCollide"]
-shape = SubResource("CylinderShape3D_58qr5")
-
 [node name="CapturePointCollide" type="Area3D" parent="."]
 collision_layer = 8
-collision_mask = 8
+collision_mask = 0
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="CapturePointCollide"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.01205, 0)
@@ -70,26 +55,5 @@ replication_config = SubResource("SceneReplicationConfig_5bg0v")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.46501, 0)
 shape = SubResource("CapsuleShape3D_gkvfs")
 
-[node name="SubViewport" type="SubViewport" parent="."]
-size = Vector2i(512, 64)
-
-[node name="ProgressBar" type="ProgressBar" parent="SubViewport"]
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-min_value = -7.0
-max_value = 0.0
-value = -7.0
-
-[node name="Sprite3D" type="Sprite3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.50828, 0)
-modulate = Color(1, 1, 1, 0.541176)
-billboard = 1
-shaded = true
-texture = SubResource("ViewportTexture_70rba")
-
-[connection signal="body_entered" from="EnemyCollide" to="." method="_on_enemy_collide_body_entered"]
-[connection signal="body_entered" from="AllyCollide" to="." method="_on_ally_collide_body_entered"]
-[connection signal="body_entered" from="CapturePointCollide" to="." method="_on_capture_point_collide_body_entered"]
+[connection signal="body_entered" from="ActorCollide" to="." method="_on_enemy_collide_body_entered"]
+[connection signal="body_entered" from="ActorCollide" to="." method="_on_actor_collide_body_entered"]

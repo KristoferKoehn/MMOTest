@@ -6,19 +6,13 @@ using System.Collections.Generic;
 public partial class Flag : RigidBody3D
 {
 
-    [Export]
-    public Teams team { get; set; }
 	[Export]
-	public float ReturnTime { get; set; } = 7;
-    public List<Actor> ally = new List<Actor>();
-	bool pickup = false;
+	public Teams team { get; set; }
+	[Export]
+	public bool Carried = false;
+	public bool AtBase = true;
+	Vector3 ReturnPosition { get;set; }
 	Actor carry = null;
-	Timer ReturnTimer = null;
-	ProgressBar ProgressBar = null;
-	Sprite3D PBSprite = null;
-
-	[Export]
-	float TimeRemaining { get; set; }
 
     public override void _EnterTree()
     {
@@ -28,36 +22,16 @@ public partial class Flag : RigidBody3D
     // Called when the node enters the scene tree for the first time.
     public override void _Ready()
 	{
-		ReturnTimer = GetNode<Timer>("ReturnTimer");
-		ProgressBar = GetNode<ProgressBar>("SubViewport/ProgressBar");
-		PBSprite = GetNode<Sprite3D>("Sprite3D");
-		ProgressBar.MinValue = -ReturnTime;
-		TimeRemaining = ReturnTime;
-		ReturnTimer.WaitTime = ReturnTime;
-		ReturnTimer.Paused = true;
+		ReturnPosition = this.GlobalPosition;
 	}
 
 	// Called every frame. 'delta' is the elapsed time since the previous frame.
 	public override void _Process(double delta)
 	{
 
-        ProgressBar.Value = TimeRemaining - ReturnTime;
-
         if (Multiplayer.GetUniqueId() != 1)
         {
             return;
-        }
-
-		TimeRemaining = (float)ReturnTimer.TimeLeft;
-
-        ally.RemoveAll(item => DeathManager.GetInstance().IsActorDead(item));
-
-		if(ally.Count < 1 )
-		{
-			ReturnTimer.Paused = true;
-		} else
-		{
-            ReturnTimer.Paused = false;
         }
 
         if (carry != null && !DeathManager.GetInstance().IsActorDead(carry) && !carry.PuppetModelReference.IsQueuedForDeletion()) 
@@ -67,43 +41,12 @@ public partial class Flag : RigidBody3D
 		} else
 		{
 			carry = null;
-			pickup = false;
-            PBSprite.Visible = true;
+			Carried = false;
         }
+
 	}
 
-	public void _on_ally_collide_body_entered(Node3D node)
-	{
-        if (Multiplayer.GetUniqueId() != 1)
-        {
-            return;
-        }
-		
-
-        AbstractModel model = node as AbstractModel;
-        if (model != null)
-        {
-            StatBlock sb = StatManager.GetInstance().GetStatBlock(model.GetActorID());
-            if ((Teams)sb.GetStat(StatType.CTF_TEAM) == this.team)
-            {
-                GD.Print("Ally colliding with ally area");
-                ally.Add(ActorManager.GetInstance().GetActor(model.GetActorID()));
-				if(!pickup)
-				{
-					ReturnTimer.Paused = false;
-				}
-            }
-        }
-    }
-
-	public void _on_capture_point_collide_body_entered(Node3D node)
-	{
-		//if capture point is not this team
-			//count team score
-		//else do nothing
-	}
-
-	public void _on_enemy_collide_body_entered(Node3D node)
+	public void _on_actor_collide_body_entered(Node3D node)
 	{
 
         if (Multiplayer.GetUniqueId() != 1)
@@ -111,7 +54,7 @@ public partial class Flag : RigidBody3D
             return;
         }
 
-        if (pickup)
+        if (Carried)
 		{
 			return;
 		}
@@ -123,9 +66,13 @@ public partial class Flag : RigidBody3D
 			{
                 GD.Print("ENEMYPICKUP");
                 carry = ActorManager.GetInstance().GetActor(model.GetActorID());
-				pickup = true;
-				PBSprite.Visible = false;
-				ReturnTimer.WaitTime = 7;
+				Carried = true;
+				AtBase = false;
+			} else if (!Carried && !AtBase)
+			{
+				GD.Print("INSTANT RETURN");
+				this.GlobalPosition = ReturnPosition;
+				AtBase = true;
 			}
 		}
 	}
