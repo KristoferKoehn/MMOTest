@@ -79,15 +79,19 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3, 0)
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.07859, 0.51283, 21.0261)
 team = 1
 
-[node name="Red Team Capture" parent="Objective Nodes" instance=ExtResource("5_erfut")]
+[node name="Red Team Capture" parent="Objective Nodes" node_paths=PackedStringArray("AcceptedFlags") instance=ExtResource("5_erfut")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.61241, 1.04279, 20.6829)
 team = 1
+AcceptedFlags = [NodePath("../Blue Team Flag")]
 
 [node name="Blue Team Flag" parent="Objective Nodes" instance=ExtResource("16_2ujqw")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.526517, -6.15469)
+team = 2
 
-[node name="Blue Team Capture" parent="Objective Nodes" instance=ExtResource("5_erfut")]
+[node name="Blue Team Capture" parent="Objective Nodes" node_paths=PackedStringArray("AcceptedFlags") instance=ExtResource("5_erfut")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.548806, -6.06529)
+team = 2
+AcceptedFlags = [NodePath("../Red Team Flag")]
 
 [node name="TerrainModels" type="Node" parent="."]
 
