@@ -155,7 +155,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8.02635, 0.476275, -19.3646)
 
 [node name="Flag" parent="." instance=ExtResource("16_2ujqw")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.07859, 10.8626, 0)
-team = 2
+team = 1
 
 [connection signal="child_entered_tree" from="PuppetModels" to="." method="_on_puppet_models_child_entered_tree"]
 [connection signal="child_entered_tree" from="ClientModels" to="." method="_on_client_models_child_entered_tree"]
