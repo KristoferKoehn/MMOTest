@@ -17,14 +17,14 @@ public partial class FlagCapturePoint : Area3D
 		
 	}
 
-	public void _on_area_entered(Node3D body)
+	public void _on_area_entered(Area3D area)
 	{
 		if (Multiplayer.GetUniqueId() != 1)
 		{
 			return;
 		}
 
-        Flag flag = body as Flag;
+        Flag flag = area.GetParent<Node>() as Flag;
 		bool validCap = true;
 		if (flag != null)
 		{
