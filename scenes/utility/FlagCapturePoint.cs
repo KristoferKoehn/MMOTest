@@ -10,7 +10,7 @@ public partial class FlagCapturePoint : Area3D
 	[Export]
 	public Array<Flag> AcceptedFlags { get; set; } = new Array<Flag>();
 	[Export]
-	public Array<Flag> RequiredFlagsForValidCapture { get; set; }
+	public Array<Flag> RequiredFlagsForValidCapture { get; set; } = new Array<Flag>();
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
 	{
