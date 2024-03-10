@@ -23,6 +23,7 @@ public partial class Flag : RigidBody3D
     public override void _Ready()
 	{
 		ReturnPosition = this.GlobalPosition;
+		CTFManager.GetInstance().RegisterTeam(team);
 	}
 
 	// Called every frame. 'delta' is the elapsed time since the previous frame.
