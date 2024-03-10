@@ -17,7 +17,7 @@ public partial class FlagCapturePoint : Area3D
 		
 	}
 
-	public void _on_body_entered(Node3D body)
+	public void _on_area_entered(Node3D body)
 	{
 		if (Multiplayer.GetUniqueId() != 1)
 		{
