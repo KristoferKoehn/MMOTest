@@ -84,7 +84,10 @@ public partial class MainLevel : Node3D
         this.AddChild(t);
         t.Start(5);
         t.Timeout += Connector.HostRefresh;
-        t.Timeout += PrintStatus;
+        Timer f = new Timer();
+        this.AddChild(f);
+        f.Start(15);
+        f.Timeout += PrintStatus;
     }
     
 
