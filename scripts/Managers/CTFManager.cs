@@ -23,14 +23,13 @@ public partial class CTFManager : Node
             GameLoop.Root.GetNode<MainLevel>("GameLoop/MainLevel").AddChild(instance);
             instance.Name = "CTFManager";
         }
-        return instance;
         JObject j = new JObject()
         {
             { "type", "CTF" },
             { "action", "return"},
-            { }
 
         };
+        return instance;
     }
 
     public void RegisterTeam(Teams team)
