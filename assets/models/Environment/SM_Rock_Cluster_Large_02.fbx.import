@@ -3,7 +3,7 @@
 importer="scene"
 importer_version=1
 type="PackedScene"
-uid="uid://djwd6kogh3ovm"
+uid="uid://y75go2p4yica"
 path="res://.godot/imported/SM_Rock_Cluster_Large_02.fbx-9c6d57561004d0096a7fbd00c9a755b0.scn"
 
 [deps]
@@ -29,22 +29,6 @@ animation/fps=30
 animation/trimming=false
 animation/remove_immutable_tracks=true
 import_script/path=""
-_subresources={
-"materials": {
-"lambert1": {
-"use_external/enabled": true,
-"use_external/path": "res://assets/resources/nature_01_material.tres"
-}
-},
-"nodes": {
-"PATH:AnimationPlayer": {
-"import/skip_import": true
-},
-"PATH:RootNode/SM_Rock_Cluster_Large_02": {
-"generate/physics": true,
-"physics/shape_type": 1
-}
-}
-}
+_subresources={}
 gltf/naming_version=1
 gltf/embedded_image_handling=1
