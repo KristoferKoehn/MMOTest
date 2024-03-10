@@ -42,7 +42,7 @@ public partial class CTFManager : Node
             //report event
         } else if (actionName == "capture")
         {
-            Teams t = (Teams)(float)job.Property("team").Value;
+            Teams t = (Teams)Enum.Parse(typeof(Teams),job.Property("team").Value.ToString());
             score[t]++;
 
         } else if (actionName == "pickup")

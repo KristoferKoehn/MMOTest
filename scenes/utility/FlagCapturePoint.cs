@@ -19,8 +19,8 @@ public partial class FlagCapturePoint : Area3D
 	private List<MeshInstance3D> LineMeshes = new List<MeshInstance3D>();
 	public override void _Ready()
 	{
-		
-	}
+        CTFManager.GetInstance().RegisterTeam(team);
+    }
 
     public override void _Process(double delta)
     {
