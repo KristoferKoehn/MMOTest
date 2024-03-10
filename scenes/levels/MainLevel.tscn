@@ -11,7 +11,7 @@
 [ext_resource type="PackedScene" uid="uid://kjx7cubaoq1a" path="res://assets/models/Environment/SM_Tree_Swamp_01.fbx" id="11_qr35p"]
 [ext_resource type="PackedScene" uid="uid://csd4qe34wtrt" path="res://assets/models/Environment/SM_Tree_Large_01.fbx" id="12_186dn"]
 [ext_resource type="PackedScene" uid="uid://btpdpe6qunryb" path="res://assets/models/Environment/SM_Tree_Willow_Large_01.fbx" id="13_syfwg"]
-[ext_resource type="PackedScene" uid="uid://djwd6kogh3ovm" path="res://assets/models/Environment/SM_Rock_Cluster_Large_02.fbx" id="14_wcegp"]
+[ext_resource type="PackedScene" uid="uid://y75go2p4yica" path="res://assets/models/Environment/SM_Rock_Cluster_Large_02.fbx" id="14_wcegp"]
 [ext_resource type="PackedScene" uid="uid://dle18fc5mg1f0" path="res://assets/models/Environment/SM_Terrain_RiverSide_01.fbx" id="15_hp3ea"]
 [ext_resource type="Texture2D" uid="uid://c8arnlq67qi7" path="res://assets/textures&grids/grids/Dark/texture_05.png" id="15_n384o"]
 [ext_resource type="PackedScene" uid="uid://dku3bda6106pa" path="res://scenes/utility/Flag.tscn" id="16_2ujqw"]
