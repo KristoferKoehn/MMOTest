@@ -1,5 +1,7 @@
 using Godot;
 using Godot.Collections;
+using MMOTest.scripts.Managers;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
@@ -96,13 +98,10 @@ public partial class FlagCapturePoint : Area3D
 		bool validCap = true;
 		if (flag != null)
 		{
-			GD.Print("Is Flag");
 			if(flag.Carried)
 			{
-                GD.Print("Flag is carried");
                 if (AcceptedFlags.Contains(flag))
 				{
-                    GD.Print("Flag is accepted flag");
                     foreach (Flag req in RequiredFlagsForValidCapture)
 					{
 						if (!req.AtBase)
@@ -113,8 +112,17 @@ public partial class FlagCapturePoint : Area3D
 
 					if (validCap)
 					{
-						GD.Print((flag.team).ToString() + " flag captured");
-					}
+                        JObject j = new JObject()
+						{
+							{ "type", "CTF" },
+							{ "action", "capture"},
+							{ "ActorID", flag.carry.ActorID},
+							{ "team", team.ToString()}
+						};
+                        MessageQueue.GetInstance().AddMessage(j);
+
+                        flag.ReturnHome();
+                    }
 				} 
 			} 
 		}

@@ -1,6 +1,7 @@
 using Godot;
 using MMOTest.Backend;
 using MMOTest.scripts.Managers;
+using Newtonsoft.Json.Linq;
 using System.Collections.Generic;
 
 public partial class Flag : RigidBody3D
@@ -12,7 +13,7 @@ public partial class Flag : RigidBody3D
 	public bool Carried = false;
 	public bool AtBase = true;
 	Vector3 ReturnPosition { get;set; }
-	Actor carry = null;
+	public Actor carry = null;
 
     public override void _EnterTree()
     {
@@ -47,6 +48,16 @@ public partial class Flag : RigidBody3D
 
 	}
 
+
+	public void ReturnHome()
+	{
+		this.GlobalPosition = ReturnPosition;
+		carry = null;
+		Carried = false;
+		AtBase = true;
+	}
+
+
 	public void _on_actor_collide_body_entered(Node3D node)
 	{
 
@@ -65,15 +76,30 @@ public partial class Flag : RigidBody3D
 			StatBlock sb = StatManager.GetInstance().GetStatBlock(model.GetActorID());
 			if ((Teams)sb.GetStat(StatType.CTF_TEAM) != this.team)
 			{
-                GD.Print("ENEMYPICKUP " + team.ToString() + " flag!");
                 carry = ActorManager.GetInstance().GetActor(model.GetActorID());
 				Carried = true;
 				AtBase = false;
-			} else if (!Carried && !AtBase)
+                JObject j = new JObject()
+				{
+					{ "type", "CTF" },
+					{ "action", "pickup"},
+					{ "ActorID", model.GetActorID()},
+					{ "team", team.ToString()}
+				};
+                MessageQueue.GetInstance().AddMessage(j);
+
+
+            } else if (!Carried && !AtBase)
 			{
-				GD.Print(team.ToString() + "Flag RETURNED");
-				this.GlobalPosition = ReturnPosition;
-				AtBase = true;
+				ReturnHome();
+                JObject j = new JObject()
+				{
+					{ "type", "CTF" },
+					{ "action", "return"},
+					{ "ActorID", model.GetActorID()},
+                    { "team", team.ToString()}
+                };
+                MessageQueue.GetInstance().AddMessage(j);
 			}
 		}
 	}

@@ -23,12 +23,7 @@ public partial class CTFManager : Node
             GameLoop.Root.GetNode<MainLevel>("GameLoop/MainLevel").AddChild(instance);
             instance.Name = "CTFManager";
         }
-        JObject j = new JObject()
-        {
-            { "type", "CTF" },
-            { "action", "return"},
-
-        };
+        
         return instance;
     }
 
@@ -41,19 +36,19 @@ public partial class CTFManager : Node
     public void ConsumeMessage(JObject job)
     {
         string actionName = job.Property("action").Value.ToString();
-        if(actionName == "return")
+        GD.Print("CTF MANAGER: " + job.Property("team").Value.ToString() + " flag " + actionName + " by " + job.Property("ActorID").Value.ToString());
+        if (actionName == "return")
         {
             //report event
         } else if (actionName == "capture")
         {
-            //increment score
-            //
             Teams t = (Teams)(float)job.Property("team").Value;
             score[t]++;
+
         } else if (actionName == "pickup")
         {
             //report event 
-        }
+        } 
     }
 
 
