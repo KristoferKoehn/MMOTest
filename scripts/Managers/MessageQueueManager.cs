@@ -57,6 +57,10 @@ namespace MMOTest.scripts.Managers
                     DeathManager.GetInstance().AddActor(ActorManager.GetInstance().GetActor((int)m["target"]));
                     //use the source data from the message here somehow
                 }
+                if( MessageType == "CTF")
+                {
+                    CTFManager.GetInstance().ConsumeMessage(m);
+                }
                 
                 
                 //if type == pickup
