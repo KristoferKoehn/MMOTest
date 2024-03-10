@@ -91,7 +91,7 @@ team = 2
 [node name="Blue Team Capture" parent="Objective Nodes" node_paths=PackedStringArray("AcceptedFlags") instance=ExtResource("5_erfut")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.548806, -6.06529)
 team = 2
-AcceptedFlags = [NodePath("../Red Team Flag")]
+AcceptedFlags = [NodePath("../Red Team Flag"), NodePath("../Blue Team Flag")]
 
 [node name="TerrainModels" type="Node" parent="."]
 
