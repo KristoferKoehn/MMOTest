@@ -28,11 +28,14 @@ public partial class FlagCapturePoint : Area3D
 		bool validCap = true;
 		if (flag != null)
 		{
+			GD.Print("Is Flag");
 			if(flag.Carried)
 			{
-				if(AcceptedFlags.Contains(flag))
+                GD.Print("Flag is carried");
+                if (AcceptedFlags.Contains(flag))
 				{
-					foreach(Flag req in RequiredFlagsForValidCapture)
+                    GD.Print("Flag is accepted flag");
+                    foreach (Flag req in RequiredFlagsForValidCapture)
 					{
 						if (!req.AtBase)
 						{
@@ -43,7 +46,6 @@ public partial class FlagCapturePoint : Area3D
 					if (validCap)
 					{
 						GD.Print((flag.team).ToString() + " flag captured");
-						
 					}
 				} 
 			} 
