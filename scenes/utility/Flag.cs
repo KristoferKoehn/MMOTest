@@ -64,13 +64,13 @@ public partial class Flag : RigidBody3D
 			StatBlock sb = StatManager.GetInstance().GetStatBlock(model.GetActorID());
 			if ((Teams)sb.GetStat(StatType.CTF_TEAM) != this.team)
 			{
-                GD.Print("ENEMYPICKUP");
+                GD.Print("ENEMYPICKUP " + team.ToString() + " flag!");
                 carry = ActorManager.GetInstance().GetActor(model.GetActorID());
 				Carried = true;
 				AtBase = false;
 			} else if (!Carried && !AtBase)
 			{
-				GD.Print("INSTANT RETURN");
+				GD.Print(team.ToString() + "Flag RETURNED");
 				this.GlobalPosition = ReturnPosition;
 				AtBase = true;
 			}
