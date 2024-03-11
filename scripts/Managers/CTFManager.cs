@@ -1,5 +1,6 @@
 using Godot;
 using Godot.Collections;
+using MMOTest.scripts.Managers;
 using Newtonsoft.Json.Linq;
 using System;
 
@@ -37,6 +38,7 @@ public partial class CTFManager : Node
     {
         string actionName = job.Property("action").Value.ToString();
         GD.Print("CTF MANAGER: " + job.Property("team").Value.ToString() + " flag " + actionName + " by " + job.Property("ActorID").Value.ToString());
+        UIManager.GetInstance().NotifyAll(job.Property("team").Value.ToString() + " flag " + actionName + " by " + job.Property("ActorID").Value.ToString());
         if (actionName == "return")
         {
             //report event
@@ -47,7 +49,7 @@ public partial class CTFManager : Node
 
         } else if (actionName == "pickup")
         {
-            //report event 
+            //report event
         } 
     }
 

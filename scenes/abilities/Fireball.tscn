@@ -8,7 +8,7 @@ height = 0.6
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_v6lc1"]
 transparency = 4
-albedo_color = Color(1, 0.294118, 0, 0.847059)
+albedo_color = Color(2, 0.588, 0, 0.847)
 emission_enabled = true
 emission = Color(1, 0.372549, 0, 1)
 

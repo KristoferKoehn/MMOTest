@@ -28,6 +28,7 @@ public partial class MainLevel : Node3D
         DeathManager.GetInstance();
         SpawnManager.GetInstance();
         CTFManager.GetInstance();
+        UIManager.GetInstance();
     }
 
 
@@ -66,7 +67,6 @@ public partial class MainLevel : Node3D
     {
         if (Multiplayer.GetUniqueId() != 1)
         {
-            
             return;
         }
 
@@ -163,9 +163,9 @@ public partial class MainLevel : Node3D
         PlayerModel.ActorID = ActorID;
         if (!host)
         {
-            GetNode<PlayerController>("PlayerController").AttachModel(PlayerModel);
             ActorManager.GetInstance().CreateActor(PlayerModel, null, PeerId, ActorID);
             StatManager.GetInstance().RpcId(1, "RequestStatBlock", ActorID);
+            GetNode<PlayerController>("PlayerController").AttachModel(PlayerModel);
         }
         return PlayerModel;
     }

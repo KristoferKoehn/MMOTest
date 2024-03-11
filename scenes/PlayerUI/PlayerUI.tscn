@@ -10,3 +10,15 @@ offset_left = 23.0
 offset_top = 23.0
 offset_right = 443.0
 offset_bottom = 50.0
+
+[node name="ActorID" type="Label" parent="."]
+offset_left = 11.0
+offset_top = 616.0
+offset_right = 160.0
+offset_bottom = 639.0
+
+[node name="Team" type="Label" parent="."]
+offset_left = 13.0
+offset_top = 587.0
+offset_right = 102.0
+offset_bottom = 610.0
