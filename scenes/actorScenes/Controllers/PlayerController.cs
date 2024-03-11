@@ -177,24 +177,24 @@ public partial class PlayerController : AbstractController
 
             // Spin up "engine"
             runningSpeedAccelerationVector = internalForceVector * (sprintAcceleration * (float)delta);
-            currentRunningSpeedVector += runningSpeedAccelerationVector;
             if (runningSpeedAccelerationVector == Vector3.Zero) // Ramp down (foot off gas)
             {
-                if (currentRunningSpeedVector.Length() > (sprintAcceleration * (float)delta))
+                if (currentRunningSpeedVector.Length() < (sprintAcceleration * (float)delta))
                 {
-                    runningSpeedAccelerationVector = Vector3.Zero;
+                    runningSpeedAccelerationVector = -currentRunningSpeedVector;
                 }
                 else
                 {
-                    Vector3 decelerationVector = -currentRunningSpeedVector.Normalized() * (sprintAcceleration * (float)delta);
-                    currentRunningSpeedVector += decelerationVector;
+                    runningSpeedAccelerationVector = -currentRunningSpeedVector.Normalized() * (sprintAcceleration * (float)delta);
                 }
             }
+            currentRunningSpeedVector += runningSpeedAccelerationVector;
 
             if (currentRunningSpeedVector.Length() > maxSprintSpeed)
             { 
                 currentRunningSpeedVector = currentRunningSpeedVector.Normalized() * maxSprintSpeed;
             }
+            // Consider adding Perpendicular dampening here.
 
             currentRunningSpeedVector.Y = Model.Velocity.Y; // Setting equal here means that the y component of the velocity wont be considered when calculating attempted acceleration
             float attemptedAcceleration = Math.Abs(currentRunningSpeedVector.Length() - Model.Velocity.Length()) / (float)delta;
