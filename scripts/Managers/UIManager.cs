@@ -41,7 +41,7 @@ namespace MMOTest.scripts.Managers
         {
             NotificationLabel nl = NotificationLabelPackedScene.Instantiate<NotificationLabel>();
             nl.Text = Notification;
-            nl.GlobalPosition = UIs[ActorID].GetViewport().GetVisibleRect().Size * 0.75f;
+            nl.GlobalPosition = UIs[ActorID].GetViewport().GetVisibleRect().Size * 0.7f;
             UIs[ActorID].AddChild(nl);
         }
 
