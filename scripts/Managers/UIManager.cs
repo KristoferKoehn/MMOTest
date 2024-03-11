@@ -9,6 +9,7 @@ namespace MMOTest.scripts.Managers
         private PackedScene NotificationLabelPackedScene = GD.Load<PackedScene>("res://scenes/utility/NotificationLabel.tscn");
         private static UIManager instance = null;
         private Dictionary<int, PlayerUI> UIs = new Dictionary<int, PlayerUI>();
+        private List<int> ActorList = new List<int>();
 
         private UIManager() { }
 
@@ -30,6 +31,12 @@ namespace MMOTest.scripts.Managers
         }
 
         [Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
+        public void RegisterActor(int ActorID)
+        {
+            ActorList.Add(ActorID);
+        }
+
+        [Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
         public void PushNotification(int ActorID, string Notification)
         {
             NotificationLabel nl = NotificationLabelPackedScene.Instantiate<NotificationLabel>();
@@ -38,14 +45,19 @@ namespace MMOTest.scripts.Managers
             UIs[ActorID].AddChild(nl);
         }
 
-
         public void NotifyAll(string Notification)
         {
-            foreach(int aID in UIs.Keys)
+            foreach(int aID in ActorList)
             {
                 long pID = ActorManager.GetInstance().GetActor(aID).ActorMultiplayerAuthority;
                 RpcId(pID, "PushNotification", aID, Notification);
             }
+        }
+
+        [Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
+        public void UnregisterActor(int ActorID)
+        {
+            ActorList.Remove(ActorID);
         }
     }
 

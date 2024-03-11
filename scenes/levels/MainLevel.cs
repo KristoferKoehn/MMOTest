@@ -137,8 +137,10 @@ public partial class MainLevel : Node3D
             ActorManager.GetInstance().RemoveActor(actor.ActorID);
             actor.ClientModelReference.QueueFree();
             actor.PuppetModelReference.QueueFree();
+            UIManager.GetInstance().UnregisterActor(actor.ActorID);
             GD.Print("Actor Left: " + actor.ActorID);
         }
+
     }
 
 
