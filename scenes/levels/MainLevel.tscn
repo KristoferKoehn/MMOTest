@@ -1,4 +1,4 @@
-[gd_scene load_steps=21 format=3 uid="uid://cj5kbymecdp11"]
+[gd_scene load_steps=22 format=3 uid="uid://cj5kbymecdp11"]
 
 [ext_resource type="Script" path="res://scenes/levels/MainLevel.cs" id="1_i7bbw"]
 [ext_resource type="PackedScene" uid="uid://bmk783fseep4a" path="res://scenes/actorScenes/Controllers/PlayerController.tscn" id="2_5xjtm"]
@@ -15,6 +15,7 @@
 [ext_resource type="Texture2D" uid="uid://c8arnlq67qi7" path="res://assets/textures&grids/grids/Dark/texture_05.png" id="15_n384o"]
 [ext_resource type="PackedScene" uid="uid://dku3bda6106pa" path="res://scenes/utility/Flag.tscn" id="16_2ujqw"]
 [ext_resource type="PackedScene" uid="uid://bjjceeyq3csc3" path="res://scenes/Environment/Skybox.tscn" id="16_l618w"]
+[ext_resource type="PackedScene" uid="uid://gdgmjxg8runr" path="res://assets/models/Props/SM_Env_Mushroom_Giant_01.fbx" id="17_bq21n"]
 [ext_resource type="PackedScene" uid="uid://cuaikm7d1lbke" path="res://scenes/utility/SpawnArea.tscn" id="17_el60w"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_dvsge"]
@@ -171,6 +172,9 @@ Shape = SubResource("BoxShape3D_2okmg")
 transform = Transform3D(-0.0567974, 0, -0.998386, 0, 1, 0, 0.998386, 0, -0.0567974, -8.65889, 0.857038, -49.5979)
 Team = 2
 Shape = SubResource("BoxShape3D_8nmv1")
+
+[node name="Root Scene" parent="." instance=ExtResource("17_bq21n")]
+transform = Transform3D(98.196, 0, -174.234, 0, 200, 0, 174.234, 0, 98.196, -14.9755, 6.48644, 2.27282)
 
 [connection signal="child_entered_tree" from="PuppetModels" to="." method="_on_puppet_models_child_entered_tree"]
 [connection signal="child_entered_tree" from="ClientModels" to="." method="_on_client_models_child_entered_tree"]
