@@ -50,7 +50,8 @@ public partial class MainLevel : Node3D
         {
             headless = true;
         }
-        else if (host && headless)
+
+        if (host && headless)
         {
             HeadlessHost();
         }
