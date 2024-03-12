@@ -29,6 +29,7 @@ public partial class MainLevel : Node3D
         SpawnManager.GetInstance();
         CTFManager.GetInstance();
         UIManager.GetInstance();
+        
     }
 
 
