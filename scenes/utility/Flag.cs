@@ -39,7 +39,7 @@ public partial class Flag : RigidBody3D
         if (carry != null && !DeathManager.GetInstance().IsActorDead(carry) && !carry.PuppetModelReference.IsQueuedForDeletion()) 
 		{
 			this.GlobalPosition = carry.PuppetModelReference.GlobalPosition;
-			this.LinearVelocity = carry.ClientModelReference.Velocity;
+			this.LinearVelocity = carry.PuppetModelReference.Velocity;
 		} else
 		{
 			carry = null;

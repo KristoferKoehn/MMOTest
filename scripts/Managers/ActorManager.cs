@@ -116,6 +116,7 @@ public partial class ActorManager : Node
 			//makes all the stuff line up. Assign all synced variables from client to puppet
 			actor.PuppetModelReference.GlobalPosition = actor.ClientModelReference.GlobalPosition;
             actor.PuppetModelReference.GlobalRotation = actor.ClientModelReference.GlobalRotation;
+            actor.PuppetModelReference.Velocity = actor.ClientModelReference.Velocity;
             if (actor.PuppetModelReference.GetAnimationPlayer().CurrentAnimation != actor.ClientModelReference.GetAnimationPlayer().CurrentAnimation)
 			{
 				actor.PuppetModelReference.GetAnimationPlayer().CurrentAnimation = actor.ClientModelReference.GetAnimationPlayer().CurrentAnimation;
