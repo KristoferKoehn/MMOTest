@@ -189,15 +189,15 @@ public partial class PlayerController : AbstractController
             //    }
             //}
             //currentRunningSpeedVector += runningSpeedAccelerationVector;
-            currentRunningSpeedVector = internalForceVector * maxSprintSpeed;
+            //currentRunningSpeedVector = internalForceVector * maxSprintSpeed;
 
             //if (currentRunningSpeedVector.Length() > maxSprintSpeed)
-            //{ 
+            //{
             //    currentRunningSpeedVector = currentRunningSpeedVector.Normalized() * maxSprintSpeed;
             //}
             // Consider adding Perpendicular dampening here.
 
-            currentRunningSpeedVector.Y = Model.Velocity.Y; // Setting equal here means that the y component of the velocity wont be considered when calculating attempted acceleration
+           currentRunningSpeedVector.Y = Model.Velocity.Y; // Setting equal here means that the y component of the velocity wont be considered when calculating attempted acceleration
             float attemptedAcceleration = Math.Abs(currentRunningSpeedVector.Length() - Model.Velocity.Length()) / (float)delta;
             float runningForce = realMass * attemptedAcceleration;
             
@@ -280,7 +280,15 @@ public partial class PlayerController : AbstractController
         totalForceVector += movementResistanceForceVector;
         
         // Update Model velocity. V_next = v_current + (time * acceleration). Acceleration = force / mass. Gravity is an acceleration value, so it is added to acceleration.
-        Model.Velocity = Model.Velocity + ((float)delta * ((totalForceVector / realMass)));//+ gravity));
+        if (Model.IsOnFloor())
+        {
+            Model.Velocity = Model.Velocity + ((float)delta * ((totalForceVector / realMass)));
+        }
+        else
+        {
+            Model.Velocity = Model.Velocity + ((float)delta * ((totalForceVector / realMass) + gravity));
+        }
+        
         totalForceVector = Vector3.Zero; // Reset force to recalculate next frame.
         
         Model.MoveAndSlide(); // Move the model according to its new velocity.
