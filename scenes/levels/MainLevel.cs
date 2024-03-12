@@ -79,8 +79,8 @@ public partial class MainLevel : Node3D
         Multiplayer.PeerDisconnected += RemoveActor;
         Timer t = new Timer();
         this.AddChild(t);
-        t.Start(5);
         t.Timeout += Connector.HostRefresh;
+        t.Start(5);
         Timer f = new Timer();
         this.AddChild(f);
         f.Start(15);
