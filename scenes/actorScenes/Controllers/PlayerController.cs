@@ -176,24 +176,25 @@ public partial class PlayerController : AbstractController
             // Logic for running
 
             // Spin up "engine"
-            runningSpeedAccelerationVector = internalForceVector * (sprintAcceleration * (float)delta);
-            if (runningSpeedAccelerationVector == Vector3.Zero) // Ramp down (foot off gas)
-            {
-                if (currentRunningSpeedVector.Length() < (sprintAcceleration * (float)delta))
-                {
-                    runningSpeedAccelerationVector = -currentRunningSpeedVector;
-                }
-                else
-                {
-                    runningSpeedAccelerationVector = -currentRunningSpeedVector.Normalized() * (sprintAcceleration * (float)delta);
-                }
-            }
-            currentRunningSpeedVector += runningSpeedAccelerationVector;
+            //runningSpeedAccelerationVector = internalForceVector * (sprintAcceleration * (float)delta);
+            //if (runningSpeedAccelerationVector == Vector3.Zero) // Ramp down (foot off gas)
+            //{
+            //    if (currentRunningSpeedVector.Length() < (sprintAcceleration * (float)delta))
+            //    {
+            //        runningSpeedAccelerationVector = -currentRunningSpeedVector;
+            //    }
+            //    else
+            //    {
+            //        runningSpeedAccelerationVector = -currentRunningSpeedVector.Normalized() * (sprintAcceleration * (float)delta);
+            //    }
+            //}
+            //currentRunningSpeedVector += runningSpeedAccelerationVector;
+            currentRunningSpeedVector = internalForceVector * maxSprintSpeed;
 
-            if (currentRunningSpeedVector.Length() > maxSprintSpeed)
-            { 
-                currentRunningSpeedVector = currentRunningSpeedVector.Normalized() * maxSprintSpeed;
-            }
+            //if (currentRunningSpeedVector.Length() > maxSprintSpeed)
+            //{ 
+            //    currentRunningSpeedVector = currentRunningSpeedVector.Normalized() * maxSprintSpeed;
+            //}
             // Consider adding Perpendicular dampening here.
 
             currentRunningSpeedVector.Y = Model.Velocity.Y; // Setting equal here means that the y component of the velocity wont be considered when calculating attempted acceleration
@@ -207,7 +208,7 @@ public partial class PlayerController : AbstractController
                 runningForce = kineticFrictionCoefficient * normalForce; // Sliding out
                 
                 // Friction added to sliding
-                frictionForceVector = -Model.Velocity.Normalized() * (kineticFrictionCoefficient * normalForce);
+                //frictionForceVector = -Model.Velocity.Normalized() * (kineticFrictionCoefficient * normalForce);
             }
             else
             {
@@ -219,7 +220,15 @@ public partial class PlayerController : AbstractController
             //    GD.Print(runningForce);
             //}
 
-            runningForceVector = currentRunningSpeedVector.Normalized() * runningForce;
+            if (currentRunningSpeedVector != Vector3.Zero)
+            {
+                runningForceVector = currentRunningSpeedVector.Normalized() * runningForce;
+            }
+            else
+            {
+                runningForceVector = -Model.Velocity.Normalized() * runningForce; // Shouldnt have resonance?
+            }
+            
             internalForceVector = runningForceVector;
 
             movementResistanceForceVector = frictionForceVector;
@@ -271,7 +280,7 @@ public partial class PlayerController : AbstractController
         totalForceVector += movementResistanceForceVector;
         
         // Update Model velocity. V_next = v_current + (time * acceleration). Acceleration = force / mass. Gravity is an acceleration value, so it is added to acceleration.
-        Model.Velocity = Model.Velocity + ((float)delta * ((totalForceVector / realMass) + gravity));
+        Model.Velocity = Model.Velocity + ((float)delta * ((totalForceVector / realMass)));//+ gravity));
         totalForceVector = Vector3.Zero; // Reset force to recalculate next frame.
         
         Model.MoveAndSlide(); // Move the model according to its new velocity.
