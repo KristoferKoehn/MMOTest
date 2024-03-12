@@ -3,13 +3,13 @@
 importer="scene"
 importer_version=1
 type="PackedScene"
-uid="uid://y75go2p4yica"
-path="res://.godot/imported/SM_Rock_Cluster_Large_02.fbx-9c6d57561004d0096a7fbd00c9a755b0.scn"
+uid="uid://cbl5070hfuxpk"
+path="res://.godot/imported/SM_Wep_Banner_03.fbx-6968c4fe94b72b519cff7f001fdca4d2.scn"
 
 [deps]
 
-source_file="res://assets/models/Environment/SM_Rock_Cluster_Large_02.fbx"
-dest_files=["res://.godot/imported/SM_Rock_Cluster_Large_02.fbx-9c6d57561004d0096a7fbd00c9a755b0.scn"]
+source_file="res://assets/models/Props/SM_Wep_Banner_03.fbx"
+dest_files=["res://.godot/imported/SM_Wep_Banner_03.fbx-6968c4fe94b72b519cff7f001fdca4d2.scn"]
 
 [params]
 
@@ -30,10 +30,16 @@ animation/trimming=false
 animation/remove_immutable_tracks=true
 import_script/path=""
 _subresources={
+"materials": {
+"lambert2": {
+"use_external/enabled": true,
+"use_external/path": "res://assets/resources/BannerMaterial.tres"
+}
+},
 "nodes": {
-"PATH:RootNode/SM_Rock_Cluster_Large_02": {
-"generate/physics": true,
-"physics/shape_type": 1
+"PATH:AnimationPlayer": {
+"import/skip_import": true,
+"optimizer/enabled": false
 }
 }
 }

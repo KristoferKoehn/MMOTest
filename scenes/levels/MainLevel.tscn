@@ -4,18 +4,18 @@
 [ext_resource type="PackedScene" uid="uid://bmk783fseep4a" path="res://scenes/actorScenes/Controllers/PlayerController.tscn" id="2_5xjtm"]
 [ext_resource type="PackedScene" uid="uid://b0dfc5akx67ol" path="res://assets/models/Environment/SM_Rock_Cluster_Large_01.fbx" id="3_lwi4g"]
 [ext_resource type="PackedScene" uid="uid://bweojy4bb8ksn" path="res://scenes/utility/FlagCapturePoint.tscn" id="5_erfut"]
-[ext_resource type="PackedScene" uid="uid://dowxpyitffujj" path="res://scenes/actorScenes/Models/DefaultModel.tscn" id="6_4u8na"]
 [ext_resource type="PackedScene" uid="uid://d0aht2a472go2" path="res://assets/models/Environment/SM_Prop_Pillar_Moss_01.fbx" id="10_77aai"]
 [ext_resource type="PackedScene" uid="uid://bxwqb7jn3mudp" path="res://assets/models/Environment/SM_Tree_Swamp_02.fbx" id="10_krodx"]
 [ext_resource type="PackedScene" uid="uid://113d7ed8l3lx" path="res://assets/models/Environment/SM_Tree_Generic_Giant_01.fbx" id="11_mwtu5"]
 [ext_resource type="PackedScene" uid="uid://kjx7cubaoq1a" path="res://assets/models/Environment/SM_Tree_Swamp_01.fbx" id="11_qr35p"]
 [ext_resource type="PackedScene" uid="uid://csd4qe34wtrt" path="res://assets/models/Environment/SM_Tree_Large_01.fbx" id="12_186dn"]
 [ext_resource type="PackedScene" uid="uid://btpdpe6qunryb" path="res://assets/models/Environment/SM_Tree_Willow_Large_01.fbx" id="13_syfwg"]
-[ext_resource type="PackedScene" uid="uid://djwd6kogh3ovm" path="res://assets/models/Environment/SM_Rock_Cluster_Large_02.fbx" id="14_wcegp"]
+[ext_resource type="PackedScene" uid="uid://y75go2p4yica" path="res://assets/models/Environment/SM_Rock_Cluster_Large_02.fbx" id="14_wcegp"]
 [ext_resource type="PackedScene" uid="uid://dle18fc5mg1f0" path="res://assets/models/Environment/SM_Terrain_RiverSide_01.fbx" id="15_hp3ea"]
 [ext_resource type="Texture2D" uid="uid://c8arnlq67qi7" path="res://assets/textures&grids/grids/Dark/texture_05.png" id="15_n384o"]
 [ext_resource type="PackedScene" uid="uid://dku3bda6106pa" path="res://scenes/utility/Flag.tscn" id="16_2ujqw"]
 [ext_resource type="PackedScene" uid="uid://bjjceeyq3csc3" path="res://scenes/Environment/Skybox.tscn" id="16_l618w"]
+[ext_resource type="PackedScene" uid="uid://gdgmjxg8runr" path="res://assets/models/Props/SM_Env_Mushroom_Giant_01.fbx" id="17_bq21n"]
 [ext_resource type="PackedScene" uid="uid://cuaikm7d1lbke" path="res://scenes/utility/SpawnArea.tscn" id="17_el60w"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_dvsge"]
@@ -76,22 +76,24 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3, 0)
 [node name="Objective Nodes" type="Node" parent="."]
 
 [node name="Red Team Flag" parent="Objective Nodes" instance=ExtResource("16_2ujqw")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.07859, 0.51283, 21.0261)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.77074, 0.51283, 21.0261)
 team = 1
 
-[node name="Red Team Capture" parent="Objective Nodes" node_paths=PackedStringArray("AcceptedFlags") instance=ExtResource("5_erfut")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.61241, 1.04279, 20.6829)
+[node name="Red Team Capture" parent="Objective Nodes" node_paths=PackedStringArray("AcceptedFlags", "RequiredFlagsForValidCapture") instance=ExtResource("5_erfut")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -14.5391, 0.743986, 21.4917)
 team = 1
-AcceptedFlags = [NodePath("../Blue Team Flag")]
+AcceptedFlags = [NodePath("../Blue Team Flag"), null]
+RequiredFlagsForValidCapture = [NodePath("../Red Team Flag")]
 
 [node name="Blue Team Flag" parent="Objective Nodes" instance=ExtResource("16_2ujqw")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.526517, -6.15469)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.526517, -6.30923)
 team = 2
 
-[node name="Blue Team Capture" parent="Objective Nodes" node_paths=PackedStringArray("AcceptedFlags") instance=ExtResource("5_erfut")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.548806, -6.06529)
+[node name="Blue Team Capture" parent="Objective Nodes" node_paths=PackedStringArray("AcceptedFlags", "RequiredFlagsForValidCapture") instance=ExtResource("5_erfut")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.04809, 0.848915, -5.23307)
 team = 2
-AcceptedFlags = [NodePath("../Red Team Flag"), NodePath("../Blue Team Flag")]
+AcceptedFlags = [NodePath("../Red Team Flag")]
+RequiredFlagsForValidCapture = [NodePath("../Blue Team Flag")]
 
 [node name="TerrainModels" type="Node" parent="."]
 
@@ -158,7 +160,7 @@ transform = Transform3D(0.965268, 0, -0.261263, 0, 1, 0, 0.261263, 0, 0.965268, 
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 22.3552, 1.11976, 24.7272)
 
 [node name="Unaffiliated Spawn" parent="." instance=ExtResource("17_el60w")]
-transform = Transform3D(0.764393, 0, -0.644751, 0, 1, 0, 0.644751, 0, 0.764393, -0.669, 1.85704, 0.623056)
+transform = Transform3D(0.764393, 0, -0.644751, 0, 1, 0, 0.644751, 0, 0.764393, -0.669, 1.85704, 1.07745)
 Shape = SubResource("BoxShape3D_a6bmg")
 
 [node name="Red Team Spawn" parent="." instance=ExtResource("17_el60w")]
@@ -171,8 +173,8 @@ transform = Transform3D(-0.0567974, 0, -0.998386, 0, 1, 0, 0.998386, 0, -0.05679
 Team = 2
 Shape = SubResource("BoxShape3D_8nmv1")
 
-[node name="DefaultModel" parent="." instance=ExtResource("6_4u8na")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8.02635, 0.476275, -19.3646)
+[node name="Root Scene" parent="." instance=ExtResource("17_bq21n")]
+transform = Transform3D(98.196, 0, -174.234, 0, 200, 0, 174.234, 0, 98.196, -14.9755, 6.48644, 2.27282)
 
 [connection signal="child_entered_tree" from="PuppetModels" to="." method="_on_puppet_models_child_entered_tree"]
 [connection signal="child_entered_tree" from="ClientModels" to="." method="_on_client_models_child_entered_tree"]
@@ -180,4 +182,3 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8.02635, 0.476275, -19.3646)
 [connection signal="despawned" from="AbilitySpawner" to="." method="_on_ability_spawner_despawned"]
 
 [editable path="Main"]
-[editable path="TerrainModels/Root Scene17"]

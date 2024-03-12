@@ -1,6 +1,7 @@
-[gd_scene load_steps=5 format=3 uid="uid://dku3bda6106pa"]
+[gd_scene load_steps=6 format=3 uid="uid://dku3bda6106pa"]
 
 [ext_resource type="Script" path="res://scenes/utility/Flag.cs" id="1_6c8x2"]
+[ext_resource type="PackedScene" uid="uid://co8j54ypbdf3k" path="res://assets/models/Props/SM_Wep_Banner_02.fbx" id="2_tmlkt"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_8b3bw"]
 
@@ -48,6 +49,9 @@ replication_config = SubResource("SceneReplicationConfig_5bg0v")
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.46501, 0)
 shape = SubResource("CapsuleShape3D_gkvfs")
+
+[node name="Root Scene" parent="." instance=ExtResource("2_tmlkt")]
+transform = Transform3D(150, 0, 0, 0, 150, 0, 0, 0, 150, 0, 0, 0)
 
 [connection signal="body_entered" from="ActorCollide" to="." method="_on_enemy_collide_body_entered"]
 [connection signal="body_entered" from="ActorCollide" to="." method="_on_actor_collide_body_entered"]

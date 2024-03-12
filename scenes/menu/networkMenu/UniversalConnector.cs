@@ -134,6 +134,7 @@ public class UniversalConnector
 
     public void HostRefresh()
     {
+        GD.Print(("We get here"));
         SendCommand($"{{\"request_type\": \"host_refresh\", \"uuid\": \"{HostUUID}\"}}");
     }
 

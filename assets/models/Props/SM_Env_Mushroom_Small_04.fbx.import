@@ -3,13 +3,13 @@
 importer="scene"
 importer_version=1
 type="PackedScene"
-uid="uid://y75go2p4yica"
-path="res://.godot/imported/SM_Rock_Cluster_Large_02.fbx-9c6d57561004d0096a7fbd00c9a755b0.scn"
+uid="uid://cwfnh430erfv5"
+path="res://.godot/imported/SM_Env_Mushroom_Small_04.fbx-554bb5a0648d6c94d0fa90eb0190cea9.scn"
 
 [deps]
 
-source_file="res://assets/models/Environment/SM_Rock_Cluster_Large_02.fbx"
-dest_files=["res://.godot/imported/SM_Rock_Cluster_Large_02.fbx-9c6d57561004d0096a7fbd00c9a755b0.scn"]
+source_file="res://assets/models/Props/SM_Env_Mushroom_Small_04.fbx"
+dest_files=["res://.godot/imported/SM_Env_Mushroom_Small_04.fbx-554bb5a0648d6c94d0fa90eb0190cea9.scn"]
 
 [params]
 
@@ -29,13 +29,6 @@ animation/fps=30
 animation/trimming=false
 animation/remove_immutable_tracks=true
 import_script/path=""
-_subresources={
-"nodes": {
-"PATH:RootNode/SM_Rock_Cluster_Large_02": {
-"generate/physics": true,
-"physics/shape_type": 1
-}
-}
-}
+_subresources={}
 gltf/naming_version=1
 gltf/embedded_image_handling=1

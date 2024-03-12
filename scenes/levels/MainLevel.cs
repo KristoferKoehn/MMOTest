@@ -17,7 +17,7 @@ public partial class MainLevel : Node3D
 
     ENetMultiplayerPeer EnetPeer;
     PackedScene PuppetPlayer = GD.Load<PackedScene>("res://scenes/actorScenes/Models/DefaultModel.tscn");
-    PackedScene PlayerController = GD.Load<PackedScene>("res://scenes/actorScenes/player.tscn");
+
     public override void _EnterTree()
     {
         //gonna make sure these are instantiated on client and host
@@ -27,6 +27,9 @@ public partial class MainLevel : Node3D
         MessageQueueManager.GetInstance();
         DeathManager.GetInstance();
         SpawnManager.GetInstance();
+        CTFManager.GetInstance();
+        UIManager.GetInstance();
+        
     }
 
 
@@ -47,11 +50,8 @@ public partial class MainLevel : Node3D
         {
             headless = true;
         }
-        if (host && !headless)
-        {
-            PeerHost();
-        } 
-        else if (host && headless)
+
+        if (host && headless)
         {
             HeadlessHost();
         }
@@ -65,7 +65,6 @@ public partial class MainLevel : Node3D
     {
         if (Multiplayer.GetUniqueId() != 1)
         {
-            
             return;
         }
 
@@ -80,24 +79,10 @@ public partial class MainLevel : Node3D
         Multiplayer.PeerConnected += EstablishActor;
         Multiplayer.PeerDisconnected += RemoveActor;
         Timer t = new Timer();
+        t.Timeout += Connector.HostRefresh;
         this.AddChild(t);
         t.Start(5);
-        t.Timeout += Connector.HostRefresh;
-        t.Timeout += PrintStatus;
     }
-    
-
-    //this will break
-    public void PeerHost()
-    {
-        GD.Print("Peerhost functionality effectively deprecated");
-        EnetPeer.CreateServer(PORT);
-        Multiplayer.MultiplayerPeer = EnetPeer;
-        Multiplayer.PeerConnected += EstablishActor;
-        Multiplayer.PeerDisconnected += RemoveActor;
-        EstablishActor(Multiplayer.GetUniqueId());
-    }
-
 
     public void EstablishActor(long PeerId)
     {
@@ -133,8 +118,10 @@ public partial class MainLevel : Node3D
             ActorManager.GetInstance().RemoveActor(actor.ActorID);
             actor.ClientModelReference.QueueFree();
             actor.PuppetModelReference.QueueFree();
+            UIManager.GetInstance().UnregisterActor(actor.ActorID);
             GD.Print("Actor Left: " + actor.ActorID);
         }
+
     }
 
 
@@ -159,24 +146,11 @@ public partial class MainLevel : Node3D
         PlayerModel.ActorID = ActorID;
         if (!host)
         {
-            GetNode<PlayerController>("PlayerController").AttachModel(PlayerModel);
             ActorManager.GetInstance().CreateActor(PlayerModel, null, PeerId, ActorID);
             StatManager.GetInstance().RpcId(1, "RequestStatBlock", ActorID);
+            GetNode<PlayerController>("PlayerController").AttachModel(PlayerModel);
         }
         return PlayerModel;
-    }
-
-    [Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
-    public void SendMessage(string message)
-    {
-        JObject jsonMessagePayload = JObject.Parse(message);
-        MessageQueue.GetInstance().AddMessage(jsonMessagePayload);
-    }
-
-    //when a clientmodel enters scene tree
-    public void _on_client_models_child_entered_tree(Node node)
-    {
-
     }
 
     //when a puppetmodel enters scene tree

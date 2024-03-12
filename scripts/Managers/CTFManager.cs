@@ -1,5 +1,6 @@
 using Godot;
 using Godot.Collections;
+using MMOTest.scripts.Managers;
 using Newtonsoft.Json.Linq;
 using System;
 
@@ -23,14 +24,8 @@ public partial class CTFManager : Node
             GameLoop.Root.GetNode<MainLevel>("GameLoop/MainLevel").AddChild(instance);
             instance.Name = "CTFManager";
         }
+        
         return instance;
-        JObject j = new JObject()
-        {
-            { "type", "CTF" },
-            { "action", "return"},
-            { }
-
-        };
     }
 
     public void RegisterTeam(Teams team)
@@ -42,19 +37,20 @@ public partial class CTFManager : Node
     public void ConsumeMessage(JObject job)
     {
         string actionName = job.Property("action").Value.ToString();
-        if(actionName == "return")
+        GD.Print("CTF MANAGER: " + job.Property("team").Value.ToString() + " flag " + actionName + " by " + job.Property("ActorID").Value.ToString());
+        UIManager.GetInstance().NotifyAll(job.Property("team").Value.ToString() + " flag " + actionName + " by " + job.Property("ActorID").Value.ToString());
+        if (actionName == "return")
         {
             //report event
         } else if (actionName == "capture")
         {
-            //increment score
-            //
-            Teams t = (Teams)(float)job.Property("team").Value;
+            Teams t = (Teams)Enum.Parse(typeof(Teams),job.Property("team").Value.ToString());
             score[t]++;
+
         } else if (actionName == "pickup")
         {
-            //report event 
-        }
+            //report event
+        } 
     }
 
 
