@@ -160,16 +160,16 @@ transform = Transform3D(0.965268, 0, -0.261263, 0, 1, 0, 0.261263, 0, 0.965268, 
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 22.3552, 1.11976, 24.7272)
 
 [node name="Unaffiliated Spawn" parent="." instance=ExtResource("17_el60w")]
-transform = Transform3D(0.764393, 0, -0.644751, 0, 1, 0, 0.644751, 0, 0.764393, -0.669, 1.85704, 1.07745)
+transform = Transform3D(0.764393, 0, -0.644751, 0, 1, 0, 0.644751, 0, 0.764393, -1.85626, 1.64457, 1.34909)
 Shape = SubResource("BoxShape3D_a6bmg")
 
 [node name="Red Team Spawn" parent="." instance=ExtResource("17_el60w")]
-transform = Transform3D(0.402571, 0, -0.915389, 0, 1, 0, 0.915389, 0, 0.402571, 11.4546, 0.857038, 40.6597)
+transform = Transform3D(0.402571, 0, -0.915389, 0, 1, 0, 0.915389, 0, 0.402571, 11.503, 0.506, 39.63)
 Team = 1
 Shape = SubResource("BoxShape3D_2okmg")
 
 [node name="Blue Team Spawn" parent="." instance=ExtResource("17_el60w")]
-transform = Transform3D(-0.0567974, 0, -0.998386, 0, 1, 0, 0.998386, 0, -0.0567974, -8.65889, 0.857038, -49.5979)
+transform = Transform3D(-0.0567974, 0, -0.998386, 0, 1, 0, 0.998386, 0, -0.0567974, -8.659, 0.506, -49.598)
 Team = 2
 Shape = SubResource("BoxShape3D_8nmv1")
 
