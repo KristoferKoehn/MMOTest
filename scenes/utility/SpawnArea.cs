@@ -91,6 +91,9 @@ public partial class SpawnArea : Area3D
                 }
             }
         }
+
+        // Test
+        p.Y = 0f;
         return p;
     }
 
