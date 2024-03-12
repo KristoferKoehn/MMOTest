@@ -1,9 +1,5 @@
 ﻿using Godot;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
 
 namespace MMOTest.scripts.Managers
 {
@@ -11,8 +7,10 @@ namespace MMOTest.scripts.Managers
     {
 
         private static ConnectionManager instance = null;
-        private ConnectionManager() { }
 
+        ENetMultiplayerPeer EnetPeer;
+
+        private ConnectionManager() { }
         public static ConnectionManager GetInstance()
         {
             if (instance == null)
@@ -25,7 +23,19 @@ namespace MMOTest.scripts.Managers
             return instance;
         }
 
+        //join
 
+        //host
+
+        //spawn player
+            //establishActor
+
+        //server stuff
+            //subscribe to peerconnected
+           
+        //receive connection -> get actor data -> hand off to actormanager
+
+        //getting actor data needs to be sourced from a manager that could have access to database
 
     }
 }

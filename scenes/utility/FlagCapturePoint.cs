@@ -19,6 +19,12 @@ public partial class FlagCapturePoint : Area3D
 	private List<MeshInstance3D> LineMeshes = new List<MeshInstance3D>();
 	public override void _Ready()
 	{
+		if(Engine.IsEditorHint())
+		{
+			return;
+		}
+
+
         CTFManager.GetInstance().RegisterTeam(team);
     }
 
@@ -40,7 +46,6 @@ public partial class FlagCapturePoint : Area3D
 				MeshInstance3D mesh = new MeshInstance3D();
                 ImmediateMesh line = new ImmediateMesh();
                 OrmMaterial3D material = new OrmMaterial3D();
-
 
 				material.ShadingMode = BaseMaterial3D.ShadingModeEnum.Unshaded;
 				material.AlbedoColor = Colors.Chartreuse;

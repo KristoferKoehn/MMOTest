@@ -86,7 +86,7 @@ AcceptedFlags = [NodePath("../Blue Team Flag"), null]
 RequiredFlagsForValidCapture = [NodePath("../Red Team Flag")]
 
 [node name="Blue Team Flag" parent="Objective Nodes" instance=ExtResource("16_2ujqw")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.526517, -6.15469)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.526517, -6.30923)
 team = 2
 
 [node name="Blue Team Capture" parent="Objective Nodes" node_paths=PackedStringArray("AcceptedFlags", "RequiredFlagsForValidCapture") instance=ExtResource("5_erfut")]

@@ -17,7 +17,7 @@ public partial class MainLevel : Node3D
 
     ENetMultiplayerPeer EnetPeer;
     PackedScene PuppetPlayer = GD.Load<PackedScene>("res://scenes/actorScenes/Models/DefaultModel.tscn");
-    PackedScene PlayerController = GD.Load<PackedScene>("res://scenes/actorScenes/player.tscn");
+
     public override void _EnterTree()
     {
         //gonna make sure these are instantiated on client and host
@@ -49,10 +49,6 @@ public partial class MainLevel : Node3D
         {
             headless = true;
         }
-        if (host && !headless)
-        {
-            PeerHost();
-        } 
         else if (host && headless)
         {
             HeadlessHost();
@@ -89,19 +85,6 @@ public partial class MainLevel : Node3D
         f.Start(15);
         f.Timeout += PrintStatus;
     }
-    
-
-    //this will break
-    public void PeerHost()
-    {
-        GD.Print("Peerhost functionality effectively deprecated");
-        EnetPeer.CreateServer(PORT);
-        Multiplayer.MultiplayerPeer = EnetPeer;
-        Multiplayer.PeerConnected += EstablishActor;
-        Multiplayer.PeerDisconnected += RemoveActor;
-        EstablishActor(Multiplayer.GetUniqueId());
-    }
-
 
     public void EstablishActor(long PeerId)
     {
@@ -170,19 +153,6 @@ public partial class MainLevel : Node3D
             GetNode<PlayerController>("PlayerController").AttachModel(PlayerModel);
         }
         return PlayerModel;
-    }
-
-    [Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
-    public void SendMessage(string message)
-    {
-        JObject jsonMessagePayload = JObject.Parse(message);
-        MessageQueue.GetInstance().AddMessage(jsonMessagePayload);
-    }
-
-    //when a clientmodel enters scene tree
-    public void _on_client_models_child_entered_tree(Node node)
-    {
-
     }
 
     //when a puppetmodel enters scene tree
