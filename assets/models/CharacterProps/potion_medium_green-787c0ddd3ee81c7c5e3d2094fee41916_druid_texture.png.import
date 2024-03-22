@@ -1,0 +1,36 @@
+[remap]
+
+importer="texture"
+type="CompressedTexture2D"
+uid="uid://7c15fg6qo075"
+path.s3tc="res://.godot/imported/potion_medium_green-787c0ddd3ee81c7c5e3d2094fee41916_druid_texture.png-0bd3887a20ed59b199bcb55eb31789fc.s3tc.ctex"
+metadata={
+"imported_formats": ["s3tc_bptc"],
+"vram_texture": true
+}
+generator_parameters={}
+
+[deps]
+
+source_file="res://assets/models/CharacterProps/potion_medium_green-787c0ddd3ee81c7c5e3d2094fee41916_druid_texture.png"
+dest_files=["res://.godot/imported/potion_medium_green-787c0ddd3ee81c7c5e3d2094fee41916_druid_texture.png-0bd3887a20ed59b199bcb55eb31789fc.s3tc.ctex"]
+
+[params]
+
+compress/mode=2
+compress/high_quality=false
+compress/lossy_quality=0.7
+compress/hdr_compression=1
+compress/normal_map=0
+compress/channel_pack=0
+mipmaps/generate=true
+mipmaps/limit=-1
+roughness/mode=0
+roughness/src_normal=""
+process/fix_alpha_border=true
+process/premult_alpha=false
+process/normal_map_invert_y=false
+process/hdr_as_srgb=false
+process/hdr_clamp_exposure=false
+process/size_limit=0
+detect_3d/compress_to=0
