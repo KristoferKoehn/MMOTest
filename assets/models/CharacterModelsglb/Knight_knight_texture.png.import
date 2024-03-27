@@ -2,17 +2,20 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://dsxaocx67cjsn"
-path.s3tc="res://.godot/imported/engineer_texture.png-1aa5a2ec6c0c3d4b7c6ee5f2abb84188.s3tc.ctex"
+uid="uid://dtepa80bndle1"
+path.s3tc="res://.godot/imported/Knight_knight_texture.png-eac517eb90df79ed6bfc333d819e32db.s3tc.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc"],
 "vram_texture": true
 }
+generator_parameters={
+"md5": "af4707185c3e9844f7ed166c1a2e24f8"
+}
 
 [deps]
 
-source_file="res://assets/models/CharacterProps/engineer_texture.png"
-dest_files=["res://.godot/imported/engineer_texture.png-1aa5a2ec6c0c3d4b7c6ee5f2abb84188.s3tc.ctex"]
+source_file="res://assets/models/CharacterModelsglb/Knight_knight_texture.png"
+dest_files=["res://.godot/imported/Knight_knight_texture.png-eac517eb90df79ed6bfc333d819e32db.s3tc.ctex"]
 
 [params]
 

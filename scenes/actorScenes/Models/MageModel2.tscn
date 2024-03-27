@@ -1,148 +1,19 @@
-[gd_scene load_steps=32 format=3 uid="uid://cx2kfedy6dn14"]
+[gd_scene load_steps=6 format=3 uid="uid://cx2kfedy6dn14"]
 
 [ext_resource type="PackedScene" uid="uid://ecd4kk8un4o3" path="res://assets/models/CharacterModelsglb/Mage.glb" id="1_1ix0j"]
 
-[sub_resource type="AnimationNodeBlend2" id="AnimationNodeBlend2_fmqx4"]
-filter_enabled = true
-filters = ["Rig/Skeleton3D:chest", "Rig/Skeleton3D:elbowIK.l", "Rig/Skeleton3D:elbowIK.r", "Rig/Skeleton3D:hand.l", "Rig/Skeleton3D:hand.r", "Rig/Skeleton3D:handIK.l", "Rig/Skeleton3D:handIK.r", "Rig/Skeleton3D:handslot.l", "Rig/Skeleton3D:handslot.r", "Rig/Skeleton3D:head", "Rig/Skeleton3D:lowerarm.l", "Rig/Skeleton3D:lowerarm.r", "Rig/Skeleton3D:spine", "Rig/Skeleton3D:upperarm.l", "Rig/Skeleton3D:upperarm.r"]
+[sub_resource type="AnimationNodeBlendTree" id="AnimationNodeBlendTree_g3tqd"]
 
-[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_4x63k"]
-animation = &"Block"
-
-[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_f8j5n"]
-animation = &"Block_Attack"
-
-[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_c1wen"]
-animation = &"Block_Hit"
-
-[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_2g0rp"]
-animation = &"Blocking"
-
-[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_bdhpq"]
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_jusmt"]
 advance_mode = 2
 
-[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_qkogm"]
-switch_mode = 2
-advance_mode = 2
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_jm2l6"]
 
-[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_jxo44"]
-
-[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_q42ku"]
-advance_mode = 2
-advance_condition = &"Block Hit"
-
-[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_g3qyf"]
-switch_mode = 2
-advance_mode = 2
-
-[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_3samv"]
-advance_mode = 2
-advance_condition = &"Block Attack"
-
-[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_w6das"]
-switch_mode = 2
-advance_mode = 2
-
-[sub_resource type="AnimationNodeStateMachine" id="AnimationNodeStateMachine_ktfrr"]
-states/Block/node = SubResource("AnimationNodeAnimation_4x63k")
-states/Block/position = Vector2(345, 148)
-states/Block_Attack/node = SubResource("AnimationNodeAnimation_f8j5n")
-states/Block_Attack/position = Vector2(507, 238)
-states/Block_Hit/node = SubResource("AnimationNodeAnimation_c1wen")
-states/Block_Hit/position = Vector2(507, 50)
-states/Blocking/node = SubResource("AnimationNodeAnimation_2g0rp")
-states/Blocking/position = Vector2(507, 151)
-states/End/position = Vector2(662, 151)
-states/Start/position = Vector2(345, 56)
-transitions = ["Start", "Block", SubResource("AnimationNodeStateMachineTransition_bdhpq"), "Block", "Blocking", SubResource("AnimationNodeStateMachineTransition_qkogm"), "Blocking", "End", SubResource("AnimationNodeStateMachineTransition_jxo44"), "Blocking", "Block_Hit", SubResource("AnimationNodeStateMachineTransition_q42ku"), "Block_Hit", "Blocking", SubResource("AnimationNodeStateMachineTransition_g3qyf"), "Blocking", "Block_Attack", SubResource("AnimationNodeStateMachineTransition_3samv"), "Block_Attack", "Blocking", SubResource("AnimationNodeStateMachineTransition_w6das")]
-graph_offset = Vector2(-43, -46)
-
-[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_lo8yr"]
-animation = &"Running_Strafe_Left"
-
-[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_04yrd"]
-animation = &"Running_Strafe_Right"
-
-[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_p6201"]
-animation = &"Walking_Backwards"
-
-[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_n06xs"]
-animation = &"Running_A"
-
-[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_7xtfw"]
-animation = &"Idle"
-
-[sub_resource type="AnimationNodeBlendSpace2D" id="AnimationNodeBlendSpace2D_4b14c"]
-blend_point_0/node = SubResource("AnimationNodeAnimation_lo8yr")
-blend_point_0/pos = Vector2(-1, 0)
-blend_point_1/node = SubResource("AnimationNodeAnimation_04yrd")
-blend_point_1/pos = Vector2(1, 0)
-blend_point_2/node = SubResource("AnimationNodeAnimation_p6201")
-blend_point_2/pos = Vector2(0, -1)
-blend_point_3/node = SubResource("AnimationNodeAnimation_n06xs")
-blend_point_3/pos = Vector2(0, 1)
-blend_point_4/node = SubResource("AnimationNodeAnimation_7xtfw")
-blend_point_4/pos = Vector2(0, 0)
-sync = true
-
-[sub_resource type="AnimationNodeBlendTree" id="AnimationNodeBlendTree_2d3p3"]
-graph_offset = Vector2(-685.806, -106.616)
-nodes/BlockingAnimationBlend/node = SubResource("AnimationNodeBlend2_fmqx4")
-nodes/BlockingAnimationBlend/position = Vector2(-140, 40)
-nodes/BlockingState/node = SubResource("AnimationNodeStateMachine_ktfrr")
-nodes/BlockingState/position = Vector2(-340, 160)
-nodes/SubLocomotion/node = SubResource("AnimationNodeBlendSpace2D_4b14c")
-nodes/SubLocomotion/position = Vector2(-340, -40)
-nodes/output/position = Vector2(120, 60)
-node_connections = [&"BlockingAnimationBlend", 0, &"SubLocomotion", &"BlockingAnimationBlend", 1, &"BlockingState", &"output", 0, &"BlockingAnimationBlend"]
-
-[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_vpyev"]
-animation = &"Death_A"
-
-[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_nwhau"]
-animation = &"Death_A_Pose"
-
-[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_ulu45"]
-animation = &"Throw"
-
-[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_f1yd7"]
-switch_mode = 2
-advance_mode = 2
-
-[sub_resource type="AnimationNodeStateMachine" id="AnimationNodeStateMachine_3gfkg"]
-states/Blocking/node = SubResource("AnimationNodeBlendTree_2d3p3")
-states/Blocking/position = Vector2(619.384, 383)
-states/Death_A/node = SubResource("AnimationNodeAnimation_vpyev")
-states/Death_A/position = Vector2(-44, 398)
-states/Death_A_Pose/node = SubResource("AnimationNodeAnimation_nwhau")
-states/Death_A_Pose/position = Vector2(-44, 476)
-states/End/position = Vector2(573, 98)
-states/Start/position = Vector2(37, 98)
-states/Throw/node = SubResource("AnimationNodeAnimation_ulu45")
-states/Throw/position = Vector2(-163, 394)
-transitions = ["Death_A", "Death_A_Pose", SubResource("AnimationNodeStateMachineTransition_f1yd7")]
-graph_offset = Vector2(-321.616, -99)
-
-[sub_resource type="AnimationNodeBlendSpace2D" id="AnimationNodeBlendSpace2D_bhciq"]
-
-[sub_resource type="AnimationNodeBlend2" id="AnimationNodeBlend2_mm1y7"]
-
-[sub_resource type="AnimationNodeBlendSpace2D" id="AnimationNodeBlendSpace2D_45hih"]
-
-[sub_resource type="AnimationNodeBlend2" id="AnimationNodeBlend2_y7kxe"]
-
-[sub_resource type="AnimationNodeBlendTree" id="AnimationNodeBlendTree_nvt81"]
-graph_offset = Vector2(-928.925, -77.3617)
-nodes/BaseLocomotion/node = SubResource("AnimationNodeBlendSpace2D_bhciq")
-nodes/BaseLocomotion/position = Vector2(-920, -40)
-nodes/Blend2/node = SubResource("AnimationNodeBlend2_mm1y7")
-nodes/Blend2/position = Vector2(-160, 140)
-nodes/Dodge/node = SubResource("AnimationNodeBlendSpace2D_45hih")
-nodes/Dodge/position = Vector2(-1140, 100)
-nodes/FeetAction/node = SubResource("AnimationNodeBlend2_y7kxe")
-nodes/FeetAction/position = Vector2(-560, 100)
-nodes/output/position = Vector2(80, 140)
-node_connections = [&"Blend2", 0, &"FeetAction", &"FeetAction", 0, &"BaseLocomotion", &"output", 0, &"Blend2"]
+[sub_resource type="AnimationNodeStateMachine" id="AnimationNodeStateMachine_ji65s"]
+states/Blended/node = SubResource("AnimationNodeBlendTree_g3tqd")
+states/Blended/position = Vector2(402, 33)
+transitions = ["Start", "Blended", SubResource("AnimationNodeStateMachineTransition_jusmt"), "Blended", "End", SubResource("AnimationNodeStateMachineTransition_jm2l6")]
+graph_offset = Vector2(-88, -17)
 
 [node name="Mage" instance=ExtResource("1_1ix0j")]
 
@@ -206,23 +77,9 @@ transform = Transform3D(1, 0, -8.47033e-22, 0, 0.965926, 0.258819, 0, -0.258819,
 [node name="Mage_Cape" parent="Rig/Skeleton3D" index="5"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.21587, -1.02333e-07)
 
-[node name="AnimationTreeOld" type="AnimationTree" parent="." index="2"]
-active = false
-root_motion_track = NodePath("Rig/Skeleton3D:root")
-tree_root = SubResource("AnimationNodeStateMachine_3gfkg")
-anim_player = NodePath("../AnimationPlayer")
-parameters/Blocking/BlockingAnimationBlend/blend_amount = 1.0
-"parameters/Blocking/BlockingState/conditions/Block Attack" = false
-"parameters/Blocking/BlockingState/conditions/Block Hit" = false
-parameters/Blocking/SubLocomotion/blend_position = Vector2(0, 0)
+[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="." index="2"]
 
 [node name="AnimationTree" type="AnimationTree" parent="." index="3"]
 root_motion_track = NodePath("Rig/Skeleton3D:root")
-tree_root = SubResource("AnimationNodeBlendTree_nvt81")
+tree_root = SubResource("AnimationNodeStateMachine_ji65s")
 anim_player = NodePath("../AnimationPlayer")
-parameters/BaseLocomotion/blend_position = Vector2(0, 0)
-parameters/Blend2/blend_amount = 0
-parameters/Dodge/blend_position = Vector2(0, 0)
-parameters/FeetAction/blend_amount = 0
-
-[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="." index="4"]
