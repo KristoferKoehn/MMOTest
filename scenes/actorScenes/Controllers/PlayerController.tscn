@@ -4,7 +4,8 @@
 
 [node name="PlayerController" type="Node3D"]
 script = ExtResource("1_kwuie")
-propulsionThrustForce = 100.0
+maxSprintSpeed = 100.0
+sprintAcceleration = 2.0
 
 [node name="CameraVerticalRotationPoint" type="Node3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.4, 0)
