@@ -189,6 +189,7 @@ public partial class PlayerController : AbstractController
             //    }
             //}
             //currentRunningSpeedVector += runningSpeedAccelerationVector;
+
             currentRunningSpeedVector = internalForceVector * maxSprintSpeed;
 
             if (currentRunningSpeedVector.Length() > maxSprintSpeed)
@@ -218,10 +219,9 @@ public partial class PlayerController : AbstractController
                 frictionForceVector = new Vector3();
             }
 
-
+            // Helps stop
             if (currentRunningSpeedVector == Vector3.Zero && runningForceVector.Length() < (kineticFrictionCoefficient * normalForce))
             {
-                
                 runningForceVector = runningForceVector.Normalized() * (kineticFrictionCoefficient * normalForce); // We are stopping, but aren't using the full force available to us to do so.
 
                 // Not DRY, but we are reversing the extra force to help stopping so our estimation here is correct
