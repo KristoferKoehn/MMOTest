@@ -135,8 +135,9 @@ public partial class MainLevel : Node3D
     [Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
     public AbstractModel SpawnClientModel(long PeerId, int ActorID)
     {
-        
-        DefaultModel PlayerModel = GD.Load<PackedScene>("res://scenes/actorScenes/Models/DefaultModel.tscn").Instantiate<DefaultModel>();
+
+        //DefaultModel PlayerModel = GD.Load<PackedScene>("res://scenes/actorScenes/Models/DefaultModel.tscn").Instantiate<DefaultModel>();
+        MageModel PlayerModel = GD.Load<PackedScene>("res://scenes/actorScenes/Models/MageModel.tscn").Instantiate<MageModel>();
         PlayerModel.GetMultiplayerSynchronizer().SetVisibilityFor(0, false);
         PlayerModel.GetMultiplayerSynchronizer().SetVisibilityFor(1, true);
         PlayerModel.GetMultiplayerSynchronizer().SetVisibilityFor((int)PeerId, true);
