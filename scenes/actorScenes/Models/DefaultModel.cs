@@ -79,4 +79,9 @@ public partial class DefaultModel : AbstractModel
     {
         this.GlobalPosition = globalPosition;
     }
+
+    public override AnimationTree GetAnimationTree()
+    {
+        throw new NotImplementedException();
+    }
 }

@@ -7,6 +7,7 @@ public partial class MageModel : AbstractModel
     [Export] public int ActorID { get; set; } = -1;
     public long SimulationPeerId { get; set; } = -2;
     AbstractController playerController { get; set; }
+    AnimationTree AnimationTree { get; set; }
 
     public override void AttachController(AbstractController controller)
     {
@@ -21,6 +22,14 @@ public partial class MageModel : AbstractModel
             this.Visible = false;
             this.GetNode<CollisionShape3D>("CollisionShape3D").Disabled = true;
         }
+
+        AnimationTree at;
+        if ((at = GetNodeOrNull<AnimationTree>("AnimationTree")) != null)
+        {
+            AnimationTree = at;
+        }
+
+
     }
 
 	// Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -78,5 +87,10 @@ public partial class MageModel : AbstractModel
     public override void MovePlayerToPosition(Vector3 globalPosition)
     {
         this.GlobalPosition = globalPosition;
+    }
+
+    public override AnimationTree GetAnimationTree()
+    {
+        return AnimationTree;
     }
 }
