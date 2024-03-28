@@ -30,8 +30,9 @@ public partial class PlayerController : AbstractController
     private float fluidDensity; // 1.293 for air, 998 for water.
 
     private float dragCoefficient = 1.15f; // Ranges between 1.0 and 1.3 for a person. https://en.wikipedia.org/wiki/Drag_coefficient
-    private float staticFrictionCoefficient = 1f; // best guess. Leather on wood, with the grain is 0.61. So a leather shoe on stone or dirt? idk. a bit higher. // Needs a setter and surface detection of some kind? so we can switch to an ice coefficient? Also, kinetic friction at some point? https://www.engineeringtoolbox.com/friction-coefficients-d_778.html 
-    private float kineticFrictionCoefficient = 0.9f; // Also a guess 
+    // Should be like 1, 0.9. High for game feel for now.
+    private float staticFrictionCoefficient = 2.0f; // best guess. Leather on wood, with the grain is 0.61. So a leather shoe on stone or dirt? idk. a bit higher. // Needs a setter and surface detection of some kind? so we can switch to an ice coefficient? Also, kinetic friction at some point? https://www.engineeringtoolbox.com/friction-coefficients-d_778.html 
+    private float kineticFrictionCoefficient = 1.8f; // Also a guess 
 
     // Physics exports
     // These are about the character itself
@@ -47,6 +48,7 @@ public partial class PlayerController : AbstractController
     [Export] private float maxSwimSpeed = 2.2f; // 2.2 Meters per second. https://www.wired.com/2012/08/olympics-physics-swimming/
     [Export] private float maxFlySpeed = 0f; // People cant fly. Should be zero, but having it at 10 helps a bit.The air thrust force needs to be calculated differently. Drag doesnt make sense.
     [Export] private float angleOfAttack = (float)(Math.PI / 4f);// How much you glide while falling;
+    [Export] private float turnSpeed = 10f;
 
     // These are derived from the exported values and are actually used in calculations
     private float jumpVelocity;
@@ -86,8 +88,8 @@ public partial class PlayerController : AbstractController
     [Export] private float JetpackFuelRefillRate = 0.5f;
     [Export] private float jetPackForce = 1500f; // Arbitrary. Might turn into a calculation later. Give it a better handle
     [Export] private float propulsionThrustForce = 1500f;
-
     
+
     public override void _EnterTree()
     {
         CameraVerticalRotationPoint = GetNode<Node3D>("CameraVerticalRotationPoint");
@@ -175,7 +177,7 @@ public partial class PlayerController : AbstractController
         if (globalDirectionVector != Vector3.Zero)
         {
             Transform3D tr = Model.Transform.LookingAt(Model.GlobalPosition + -(globalDirectionVector));
-            this.Model.Transform = this.Model.Transform.InterpolateWith(tr, 10f * (float)delta);
+            this.Model.Transform = this.Model.Transform.InterpolateWith(tr, turnSpeed * (float)delta);
         }
         
         
@@ -186,7 +188,7 @@ public partial class PlayerController : AbstractController
         {
             // Logic for running
 
-            // Spin up "engine"
+            //Spin up "engine"
             //runningSpeedAccelerationVector = internalForceVector * (sprintAcceleration * (float)delta);
             //if (runningSpeedAccelerationVector == Vector3.Zero) // Ramp down (foot off gas)
             //{
