@@ -41,8 +41,8 @@ public partial class PlayerController : AbstractController
 
     // These are about the desired behavior of the character
     [Export] private float jumpHeight = 3f; // 3 meters is way higher than people can jump but 0.3 feels bad because you cant pick up your legs to clear a fence.
-    [Export] private float maxSprintSpeed = 10f;
-    [Export] private float sprintAcceleration = 1.25f; // 10 meters a second. Ballpark of olympic athletes in 200m races TODO: Use this somehow.
+    [Export] private float maxSprintSpeed = 10f; // 10 meters a second. Ballpark of olympic athletes in 200m races TODO: Use this somehow.
+    [Export] private float sprintAcceleration = 1.25f; 
     [Export] private float maxSwimSpeed = 2.2f; // 2.2 Meters per second. https://www.wired.com/2012/08/olympics-physics-swimming/
     [Export] private float maxFlySpeed = 0f; // People cant fly. Should be zero, but having it at 10 helps a bit.The air thrust force needs to be calculated differently. Drag doesnt make sense.
     [Export] private float angleOfAttack = (float)(Math.PI / 4f);// How much you glide while falling;
@@ -189,45 +189,45 @@ public partial class PlayerController : AbstractController
             //    }
             //}
             //currentRunningSpeedVector += runningSpeedAccelerationVector;
-            //currentRunningSpeedVector = internalForceVector * maxSprintSpeed;
+            currentRunningSpeedVector = internalForceVector * maxSprintSpeed;
 
-            //if (currentRunningSpeedVector.Length() > maxSprintSpeed)
-            //{
-            //    currentRunningSpeedVector = currentRunningSpeedVector.Normalized() * maxSprintSpeed;
-            //}
-            // Consider adding Perpendicular dampening here.
+            if (currentRunningSpeedVector.Length() > maxSprintSpeed)
+            {
+                currentRunningSpeedVector = currentRunningSpeedVector.Normalized() * maxSprintSpeed;
+            }
+            //Consider adding Perpendicular dampening here.
 
-           currentRunningSpeedVector.Y = Model.Velocity.Y; // Setting equal here means that the y component of the velocity wont be considered when calculating attempted acceleration
-            float attemptedAcceleration = Math.Abs(currentRunningSpeedVector.Length() - Model.Velocity.Length()) / (float)delta;
-            float runningForce = realMass * attemptedAcceleration;
+            currentRunningSpeedVector.Y = Model.Velocity.Y; // Setting equal here means that the y component of the velocity won't be considered when calculating attempted acceleration
+            Vector3 attemptedAcceleration = (currentRunningSpeedVector - Model.Velocity) / (float)delta;
+            currentRunningSpeedVector.Y = 0; // Set back to zero after comparison
+            Vector3 runningForce = realMass * attemptedAcceleration; // Should be capped here by physical human limitations too
             
             normalForce = Model.GetFloorNormal().Normalized().Y * (realMass * Math.Abs(gravity.Y));
             float maxStaticFrictionForce = staticFrictionCoefficient * normalForce;
-            if (runningForce >= maxStaticFrictionForce)
+            if (Math.Abs(runningForce.Length()) > maxStaticFrictionForce)
             {
-                runningForce = kineticFrictionCoefficient * normalForce; // Sliding out
+                runningForce = runningForce.Normalized() * (kineticFrictionCoefficient * normalForce); // Max we can get from friction. Should "slip" from trying to run too fast on ice
                 
+                // Not sure about these comments
                 // Friction added to sliding
-                //frictionForceVector = -Model.Velocity.Normalized() * (kineticFrictionCoefficient * normalForce);
+                // frictionForceVector = -Model.Velocity.Normalized() * (kineticFrictionCoefficient * normalForce);
             }
             else
             {
+                // Running force is already correct, and we have full traction so friction is only helping, we can set it to zero.
                 frictionForceVector = new Vector3();
             }
 
-            //if (runningForce > 1500)
-            //{
-            //    GD.Print(runningForce);
-            //}
 
-            if (currentRunningSpeedVector != Vector3.Zero)
-            {
-                runningForceVector = currentRunningSpeedVector.Normalized() * runningForce;
-            }
-            else
-            {
-                runningForceVector = -Model.Velocity.Normalized() * runningForce; // Shouldnt have resonance?
-            }
+            //if (currentRunningSpeedVector == Vector3.Zero)
+            //{
+            //    runningForceVector = -Model.Velocity.Normalized() * Math.Abs(runningForce); // We are stopping, shouldnt have resonance?
+            //}
+            //else
+            //{
+            //    runningForceVector = currentRunningSpeedVector.Normalized() * runningForce;
+            //}
+            runningForceVector = runningForce;
             
             internalForceVector = runningForceVector;
 
@@ -263,8 +263,8 @@ public partial class PlayerController : AbstractController
             // Do fuel and stuff
         }
 
-        //buoyantForceVector = Vector3.Up * (-1 * fluidDensity * gravity.Y * modelVolume);
-        //externalForceVector += buoyantForceVector;
+        buoyantForceVector = Vector3.Up * (-1 * fluidDensity * gravity.Y * modelVolume);
+        externalForceVector += buoyantForceVector;
 
 
         // NOT PHYSICAL ADDED FOR GAME FEEL
