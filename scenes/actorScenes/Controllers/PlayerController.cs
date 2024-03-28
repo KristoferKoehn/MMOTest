@@ -200,13 +200,13 @@ public partial class PlayerController : AbstractController
             currentRunningSpeedVector.Y = Model.Velocity.Y; // Setting equal here means that the y component of the velocity won't be considered when calculating attempted acceleration
             Vector3 attemptedAcceleration = (currentRunningSpeedVector - Model.Velocity) / (float)delta;
             currentRunningSpeedVector.Y = 0; // Set back to zero after comparison
-            Vector3 runningForce = realMass * attemptedAcceleration; // Should be capped here by physical human limitations too
+            runningForceVector = realMass * attemptedAcceleration; // Should be capped here by physical human limitations too
             
             normalForce = Model.GetFloorNormal().Normalized().Y * (realMass * Math.Abs(gravity.Y));
             float maxStaticFrictionForce = staticFrictionCoefficient * normalForce;
-            if (Math.Abs(runningForce.Length()) > maxStaticFrictionForce)
+            if (Math.Abs(runningForceVector.Length()) > maxStaticFrictionForce)
             {
-                runningForce = runningForce.Normalized() * (kineticFrictionCoefficient * normalForce); // Max we can get from friction. Should "slip" from trying to run too fast on ice
+                runningForceVector = runningForceVector.Normalized() * (kineticFrictionCoefficient * normalForce); // Max we can get from friction. Should "slip" from trying to run too fast on ice
                 
                 // Not sure about these comments
                 // Friction added to sliding
@@ -219,16 +219,22 @@ public partial class PlayerController : AbstractController
             }
 
 
-            //if (currentRunningSpeedVector == Vector3.Zero)
-            //{
-            //    runningForceVector = -Model.Velocity.Normalized() * Math.Abs(runningForce); // We are stopping, shouldnt have resonance?
-            //}
-            //else
-            //{
-            //    runningForceVector = currentRunningSpeedVector.Normalized() * runningForce;
-            //}
-            runningForceVector = runningForce;
-            
+            if (currentRunningSpeedVector == Vector3.Zero && runningForceVector.Length() < (kineticFrictionCoefficient * normalForce))
+            {
+                
+                runningForceVector = runningForceVector.Normalized() * (kineticFrictionCoefficient * normalForce); // We are stopping, but aren't using the full force available to us to do so.
+
+                // Not DRY, but we are reversing the extra force to help stopping so our estimation here is correct
+                float estimatedStoppingForce = realMass * Model.Velocity.Length() / (float)delta;
+                float estimatedDotProduct = internalForceVector.Normalized().Dot(Model.Velocity.Normalized());
+                estimatedDotProduct = (estimatedDotProduct / -2f) + 1.5f; // Magic numbers to convert range of [-1,1] to [1,2] but reversed
+                estimatedStoppingForce /= estimatedDotProduct;
+                if (estimatedStoppingForce < runningForceVector.Length())
+                {
+                    runningForceVector = runningForceVector.Normalized() * estimatedStoppingForce;
+                }
+            }
+
             internalForceVector = runningForceVector;
 
             movementResistanceForceVector = frictionForceVector;
