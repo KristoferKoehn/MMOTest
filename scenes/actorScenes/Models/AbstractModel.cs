@@ -14,6 +14,8 @@ public abstract partial class AbstractModel : CharacterBody3D
 	public abstract MultiplayerSynchronizer GetMultiplayerSynchronizer();
 	public abstract AnimationPlayer GetAnimationPlayer();
 
+	public abstract AnimationTree GetAnimationTree();
+
 	[Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
 	public abstract void AssignDeathState(bool isdead);
 
