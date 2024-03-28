@@ -16,7 +16,7 @@ public partial class MainLevel : Node3D
     string ClientNodePath = "ClientModels";
 
     ENetMultiplayerPeer EnetPeer;
-    PackedScene PuppetPlayer = GD.Load<PackedScene>("res://scenes/actorScenes/Models/DefaultModel.tscn");
+    PackedScene PuppetPlayer = GD.Load<PackedScene>("res://scenes/actorScenes/Models/MageModel.tscn");
 
     public override void _EnterTree()
     {
@@ -96,7 +96,7 @@ public partial class MainLevel : Node3D
         }
 
         AbstractModel client = SpawnClientModel(PeerId, ActorID);
-        AbstractModel puppet = PuppetPlayer.Instantiate<DefaultModel>();
+        AbstractModel puppet = PuppetPlayer.Instantiate<MageModel>();
         puppet.SetTrackingPeerId(PeerId);
         puppet.SetActorID(ActorID);
         client.SetTrackingPeerId(PeerId);
