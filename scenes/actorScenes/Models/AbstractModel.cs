@@ -12,6 +12,7 @@ public abstract partial class AbstractModel : CharacterBody3D
 	public abstract void SetActorID(int actorId);
 	public abstract int GetActorID();
 	public abstract long GetTrackingPeerId();
+	public abstract void ApplyImpulse(Vector3 vec);
 	public abstract MultiplayerSynchronizer GetMultiplayerSynchronizer();
 	public abstract AnimationPlayer GetAnimationPlayer();
 

@@ -53,7 +53,7 @@ public partial class FireballExplosion : AbstractAbility
     public void _on_area_3d_body_entered(Node3D node)
     {
         
-        if(node is DefaultModel)
+        if(node is AbstractModel)
         {
 
             if (host)
@@ -62,7 +62,7 @@ public partial class FireballExplosion : AbstractAbility
             }
             else
             {
-                ((DefaultModel)node).ApplyImpulse((node.Position + new Vector3(0, 1.0f, 0) - this.Position).Normalized() * 60000);
+                ((AbstractModel)node).ApplyImpulse((node.Position + new Vector3(0, 1.0f, 0) - this.Position).Normalized() * 60000);
             }
         }
     }

@@ -5,7 +5,6 @@ public partial class MageModel : AbstractModel
 {
     [Export] public long TrackingPeerId { get; set; } = -1;
     [Export] public int ActorID { get; set; } = -1;
-    public long SimulationPeerId { get; set; } = -2;
     AbstractController playerController { get; set; }
     AnimationTree AnimationTree { get; set; }
 
@@ -37,7 +36,7 @@ public partial class MageModel : AbstractModel
 	{
 	}
 
-    public void ApplyImpulse(Vector3 vec)
+    public override void ApplyImpulse(Vector3 vec)
     {
         //if not puppet, apply impulse. This prevents puppets from being pushed around/throwing errors because they don't have controllers
         if (playerController != null)
