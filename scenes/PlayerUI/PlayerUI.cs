@@ -41,4 +41,14 @@ public partial class PlayerUI : CanvasLayer
 		float health = sb.GetStat(StatType.HEALTH);
         progressBar.Value = health;
 	}
+
+	public Label MakeLabel(Vector2 pos)
+	{
+		Label label = new Label();
+		label.GlobalPosition = pos;
+		this.AddChild(label);
+		return label;
+	} 
+
+
 }
