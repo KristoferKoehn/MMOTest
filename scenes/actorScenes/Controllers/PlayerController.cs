@@ -3,6 +3,7 @@ using MMOTest.scripts.Managers;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
+using static Godot.TextServer;
 
 public partial class PlayerController : AbstractController
 {
@@ -168,7 +169,17 @@ public partial class PlayerController : AbstractController
         }
 
         inputDirection = Input.GetVector("left", "right", "forward", "backward");
-        internalForceVector = (Transform.Basis * new Vector3(inputDirection.X, 0, inputDirection.Y)).Normalized();
+
+        this.Model.GetAnimationTree().Set("parameters/Blended/Locomotion/blend_position", new Vector2(inputDirection.X, -Math.Abs(inputDirection.Y)));
+        Vector3 globalDirectionVector = Transform.Basis * new Vector3(inputDirection.X, 0, inputDirection.Y).Normalized();
+        if (globalDirectionVector != Vector3.Zero)
+        {
+            Transform3D tr = Model.Transform.LookingAt(Model.GlobalPosition + -(globalDirectionVector));
+            this.Model.Transform = this.Model.Transform.InterpolateWith(tr, 10f * (float)delta);
+        }
+        
+        
+        internalForceVector = globalDirectionVector.Normalized();
         
         // Update to better function in the future when other surface detections are implemented, add logic for water, ice, etc.
         if (Model.IsOnFloor())
@@ -208,14 +219,11 @@ public partial class PlayerController : AbstractController
             if (Math.Abs(runningForceVector.Length()) > maxStaticFrictionForce)
             {
                 runningForceVector = runningForceVector.Normalized() * (kineticFrictionCoefficient * normalForce); // Max we can get from friction. Should "slip" from trying to run too fast on ice
-                
-                // Not sure about these comments
-                // Friction added to sliding
-                // frictionForceVector = -Model.Velocity.Normalized() * (kineticFrictionCoefficient * normalForce);
             }
             else
             {
-                // Running force is already correct, and we have full traction so friction is only helping, we can set it to zero.
+                // Maybe need to do stopping here?
+                // Running force is already correct, and we have full traction so friction is only helping us move forward, we can set it to zero.
                 frictionForceVector = new Vector3();
             }
 
@@ -284,15 +292,17 @@ public partial class PlayerController : AbstractController
         totalForceVector += externalForceVector;
         externalForceVector = Vector3.Zero; // Reset to begin accumulation again.
         totalForceVector += movementResistanceForceVector;
-        
+
         // Update Model velocity. V_next = v_current + (time * acceleration). Acceleration = force / mass. Gravity is an acceleration value, so it is added to acceleration.
+        Model.Velocity = Model.Velocity + ((float)delta * ((totalForceVector / realMass) + gravity));
+        
         if (Model.IsOnFloor())
         {
-            Model.Velocity = Model.Velocity + ((float)delta * ((totalForceVector / realMass)));
+            this.Model.GetAnimationTree().Set("parameters/Blended/Floating/blend_amount", 0f);
         }
         else
         {
-            Model.Velocity = Model.Velocity + ((float)delta * ((totalForceVector / realMass) + gravity));
+            this.Model.GetAnimationTree().Set("parameters/Blended/Floating/blend_amount", 1f);
         }
         
         totalForceVector = Vector3.Zero; // Reset force to recalculate next frame.
@@ -346,6 +356,7 @@ public partial class PlayerController : AbstractController
 		if (motion != null)
 		{
             this.RotateY(Mathf.DegToRad(-motion.Relative.X * HorizontalMouseSensitivity));
+            
             CameraVerticalRotationPoint.RotateX(Mathf.DegToRad(-motion.Relative.Y * VerticalMouseSensitity));
             if (CameraVerticalRotationPoint.Rotation.X > Mathf.DegToRad(90))
             {
@@ -355,7 +366,7 @@ public partial class PlayerController : AbstractController
             {
                 CameraVerticalRotationPoint.RotateX(Mathf.DegToRad(-90) - CameraVerticalRotationPoint.Rotation.X);
             }
-		}
+        }
     }
 
     public override void ApplyImpulse(Vector3 vec)
