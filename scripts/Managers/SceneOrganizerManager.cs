@@ -8,7 +8,6 @@ public partial class SceneOrganizerManager : Node
 
     private static SceneOrganizerManager instance = null;
     public Node3D CurrentLevel = null;
-    Dictionary<string, PackedScene> scenes = new Dictionary<string, PackedScene>();
     List<string> sceneNames = new List<string>()
     {
         "res://scenes/actorScenes/Models/MageModel.tscn",
@@ -34,7 +33,7 @@ public partial class SceneOrganizerManager : Node
     {
         foreach (string sceneName in sceneNames)
         {
-            scenes[sceneName] = ResourceLoader.Load<PackedScene>(sceneName, cacheMode: ResourceLoader.CacheMode.Reuse);
+            ResourceLoader.Load<PackedScene>(sceneName, cacheMode: ResourceLoader.CacheMode.Reuse);
         }
     }
 
@@ -47,17 +46,6 @@ public partial class SceneOrganizerManager : Node
     public Node3D GetCurrentLevel()
     {
         return CurrentLevel;
-    }
-
-    public PackedScene GetPackedScene(string sceneName)
-    {
-        if(scenes.ContainsKey(sceneName))
-        {
-            return scenes[sceneName];
-        } else
-        {
-            return null;
-        }
     }
 
 }
