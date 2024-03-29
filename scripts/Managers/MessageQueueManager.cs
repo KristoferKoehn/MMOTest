@@ -40,11 +40,12 @@ namespace MMOTest.scripts.Managers
                 string MessageType = m["type"].ToString();
                 if (MessageType == "cast")
                 {
-                    AbstractAbility ability = GD.Load<PackedScene>($"res://scenes/abilities/{m.Property("spell").Value}.tscn").Instantiate<AbstractAbility>();
+                    AbstractAbility ability = ResourceLoader.Load<PackedScene>($"res://scenes/abilities/{m.Property("spell").Value}.tscn", cacheMode: ResourceLoader.CacheMode.Reuse).Instantiate<AbstractAbility>();
                     ability.SetMultiplayerAuthority(1); //this will change to be pulled from json
                     ability.Initialize(m);
                     GetTree().Root.GetNode<Node>("GameLoop/MainLevel/AbilityModels").AddChild(ability, forceReadableName: true);
                 }
+
                 //if type == statchange do that
                 if (MessageType == "statchange")
                 {
