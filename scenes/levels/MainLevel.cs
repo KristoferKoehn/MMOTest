@@ -24,6 +24,7 @@ public partial class MainLevel : Node3D
         //gonna make sure these are instantiated on client and host
         ActorManager.GetInstance();
         ConnectionManager.GetInstance();
+        SceneOrganizerManager.GetInstance();
         CTFManager.GetInstance();
         DeathManager.GetInstance();
         MessageQueue.GetInstance();
@@ -46,20 +47,7 @@ public partial class MainLevel : Node3D
     public override void _Ready()
     {
         SceneOrganizerManager.GetInstance().SetCurrentLevel(this);
-        EnetPeer = new ENetMultiplayerPeer();
-        if (OS.HasFeature("dedicated_server"))
-        {
-            headless = true;
-        }
 
-        if (host && headless)
-        {
-            HeadlessHost();
-        }
-        else
-        {
-            Join();
-        }
     }
 
     public override void _Process(double delta)
@@ -73,6 +61,7 @@ public partial class MainLevel : Node3D
         MessageQueueManager.GetInstance().ProcessMessages();
     }
 
+    /*
     public void HeadlessHost()
     {
         EnetPeer.CreateServer(PORT);
@@ -154,6 +143,7 @@ public partial class MainLevel : Node3D
         }
         return PlayerModel;
     }
+    */
 
     //when a puppetmodel enters scene tree
     public void _on_puppet_models_child_entered_tree(Node node)
