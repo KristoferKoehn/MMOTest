@@ -35,6 +35,7 @@ namespace MMOTest.scripts.Managers
 
         public override void _Ready()
         {
+            EnetPeer = new ENetMultiplayerPeer();
             if (OS.HasFeature("dedicated_server"))
             {
                 headless = true;
