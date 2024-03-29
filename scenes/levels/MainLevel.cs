@@ -16,20 +16,21 @@ public partial class MainLevel : Node3D
     string ClientNodePath = "ClientModels";
 
     ENetMultiplayerPeer EnetPeer;
-    PackedScene PuppetPlayer = GD.Load<PackedScene>("res://scenes/actorScenes/Models/MageModel.tscn");
+    PackedScene PuppetPlayer = ResourceLoader.Load<PackedScene>("res://scenes/actorScenes/Models/MageModel.tscn", cacheMode: ResourceLoader.CacheMode.Reuse);
+
 
     public override void _EnterTree()
     {
         //gonna make sure these are instantiated on client and host
         ActorManager.GetInstance();
-        MessageQueue.GetInstance();
-        StatManager.GetInstance();
-        MessageQueueManager.GetInstance();
-        DeathManager.GetInstance();
-        SpawnManager.GetInstance();
+        ConnectionManager.GetInstance();
         CTFManager.GetInstance();
+        DeathManager.GetInstance();
+        MessageQueue.GetInstance();
+        MessageQueueManager.GetInstance();
+        SpawnManager.GetInstance();
+        StatManager.GetInstance();
         UIManager.GetInstance();
-        
     }
 
 
@@ -44,7 +45,7 @@ public partial class MainLevel : Node3D
 
     public override void _Ready()
     {
-        
+        SceneOrganizerManager.GetInstance().SetCurrentLevel(this);
         EnetPeer = new ENetMultiplayerPeer();
         if (OS.HasFeature("dedicated_server"))
         {
@@ -137,7 +138,7 @@ public partial class MainLevel : Node3D
     {
 
         //DefaultModel PlayerModel = GD.Load<PackedScene>("res://scenes/actorScenes/Models/DefaultModel.tscn").Instantiate<DefaultModel>();
-        MageModel PlayerModel = GD.Load<PackedScene>("res://scenes/actorScenes/Models/MageModel.tscn").Instantiate<MageModel>();
+        MageModel PlayerModel = ResourceLoader.Load<PackedScene>("res://scenes/actorScenes/Models/MageModel.tscn", cacheMode: ResourceLoader.CacheMode.Reuse).Instantiate<MageModel>();
         PlayerModel.GetMultiplayerSynchronizer().SetVisibilityFor(0, false);
         PlayerModel.GetMultiplayerSynchronizer().SetVisibilityFor(1, true);
         PlayerModel.GetMultiplayerSynchronizer().SetVisibilityFor((int)PeerId, true);
