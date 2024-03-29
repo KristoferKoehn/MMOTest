@@ -33,7 +33,7 @@ namespace MMOTest.scripts.Managers
             return instance;
         }
 
-        public override void _Ready()
+        public void InitializeConnection()
         {
             EnetPeer = new ENetMultiplayerPeer();
             if (OS.HasFeature("dedicated_server"))
