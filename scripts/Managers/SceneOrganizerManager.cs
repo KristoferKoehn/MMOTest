@@ -23,7 +23,7 @@ public partial class SceneOrganizerManager : Node
         if (instance == null)
         {
             instance = new SceneOrganizerManager();
-            GameLoop.Root.GetNode<MainLevel>("GameLoop/MainLevel").AddChild(instance);
+            GameLoop.Root.GetNode<GameLoop>("GameLoop").AddChild(instance);
             instance.Name = "SceneOrganizerManager";
         }
 

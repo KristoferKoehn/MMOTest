@@ -1,4 +1,5 @@
 using Godot;
+using MMOTest.scripts.Managers;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -12,10 +13,13 @@ public partial class GameLoop : Node
     public override void _EnterTree()
     {
         Root = GetTree().Root;
+        ConnectionManager.GetInstance();
+        SceneOrganizerManager.GetInstance();
     }
 
     public override void _Ready()
     {
+
         
         if (OS.HasFeature("dedicated_server"))
         {
@@ -23,7 +27,7 @@ public partial class GameLoop : Node
             UniversalConnector connector = new UniversalConnector("50.47.173.115", PORT);
             connector.Host("ActorImplementation", ip);
             MainLevel tL = GD.Load<PackedScene>("res://scenes/levels/MainLevel.tscn").Instantiate<MainLevel>();
-            tL.Connector = connector;
+            //tL.Connector = connector;
             tL.host = true;
             this.PushScene(tL);
         } else
