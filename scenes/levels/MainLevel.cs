@@ -68,21 +68,4 @@ public partial class MainLevel : Node3D
         t.ApplyHost(ConnectionManager.GetInstance().host);
     }
 
-    
-    //get info from database 
-    /*
-    string connectionString = "Data Source=your_database_file_path.db";
-    using (SqliteConnection connection = new SqliteConnection(connectionString))
-    {
-        connection.Open();
-        using (SqliteCommand command = connection.CreateCommand())
-        {
-           //figure out connection stuff
-            command.CommandText = connectionString;
-            command.ExecuteReader();
-        }
-        connection.Close();
-    }
-    */
-
 }
