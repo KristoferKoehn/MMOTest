@@ -132,7 +132,7 @@ namespace MMOTest.scripts.Managers
             {
                 ActorManager.GetInstance().CreateActor(PlayerModel, null, PeerId, ActorID);
                 StatManager.GetInstance().RpcId(1, "RequestStatBlock", ActorID);
-                GetNode<PlayerController>("PlayerController").AttachModel(PlayerModel);
+                level.GetNode<PlayerController>("PlayerController").AttachModel(PlayerModel);
             }
             return PlayerModel;
         }
