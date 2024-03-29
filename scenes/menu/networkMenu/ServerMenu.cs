@@ -1,4 +1,5 @@
 using Godot;
+using MMOTest.scripts.Managers;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -74,7 +75,8 @@ public partial class ServerMenu : Node2D
 			TreeItem selection = tree.GetSelected();
 			string ip = connector.Join(selection.GetText(0));
             MainLevel tL = GD.Load<PackedScene>("res://scenes/levels/MainLevel.tscn").Instantiate<MainLevel>();
-			tL.ServerAddress = ip;
+			ConnectionManager.GetInstance().ServerAddress = ip;
+			ConnectionManager.GetInstance().InitializeConnection();
             this.GetParent<GameLoop>().PushScene(tL);
         } else if (this.GetNode<TextEdit>("Control/TextEdit").Text.Length > 0)
 		{

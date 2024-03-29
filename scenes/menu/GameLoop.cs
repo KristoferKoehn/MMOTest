@@ -19,8 +19,6 @@ public partial class GameLoop : Node
 
     public override void _Ready()
     {
-
-        
         if (OS.HasFeature("dedicated_server"))
         {
             string ip = UpnpSetup();
