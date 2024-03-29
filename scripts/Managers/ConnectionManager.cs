@@ -40,7 +40,6 @@ namespace MMOTest.scripts.Managers
             {
                 headless = true;
             }
-
             if (host && headless)
             {
                 HeadlessHost();
@@ -49,6 +48,8 @@ namespace MMOTest.scripts.Managers
             {
                 Join();
             }
+
+            GD.Print("headless: " + headless + " host: " + host);
         }
 
         public void HeadlessHost()
