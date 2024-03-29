@@ -26,7 +26,7 @@ namespace MMOTest.scripts.Managers
             if (instance == null)
             {
                 instance = new ConnectionManager();
-                GameLoop.Root.GetNode<MainLevel>("GameLoop").AddChild(instance);
+                GameLoop.Root.GetNode<MainLevel>("GameLoop/MainLevel").AddChild(instance);
                 instance.Name = "ConnectionManager";
             }
 
