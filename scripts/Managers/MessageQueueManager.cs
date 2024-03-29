@@ -44,7 +44,6 @@ namespace MMOTest.scripts.Managers
                     ability.SetMultiplayerAuthority(1); //this will change to be pulled from json
                     ability.Initialize(m);
                     GetTree().Root.GetNode<Node>("GameLoop/MainLevel/AbilityModels").AddChild(ability, forceReadableName: true);
-                    GD.Print("mask layer " + ability.CollisionMask);
                 }
 
                 //if type == statchange do that
