@@ -76,7 +76,6 @@ public partial class ServerMenu : Node2D
 			string ip = connector.Join(selection.GetText(0));
             MainLevel tL = GD.Load<PackedScene>("res://scenes/levels/MainLevel.tscn").Instantiate<MainLevel>();
 			ConnectionManager.GetInstance().ServerAddress = ip;
-			ConnectionManager.GetInstance().InitializeConnection();
             this.GetParent<GameLoop>().PushScene(tL);
         } else if (this.GetNode<TextEdit>("Control/TextEdit").Text.Length > 0)
 		{

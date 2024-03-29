@@ -28,7 +28,6 @@ public partial class GameLoop : Node
             ConnectionManager.GetInstance().Connector = connector;
             ConnectionManager.GetInstance().host = true;
             this.PushScene(tL);
-            ConnectionManager.GetInstance().InitializeConnection();
         } else
         {
             PushScene(ResourceLoader.Load<PackedScene>("res://scenes/menu/MainMenu.tscn").Instantiate());

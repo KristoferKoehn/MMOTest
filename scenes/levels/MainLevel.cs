@@ -46,7 +46,9 @@ public partial class MainLevel : Node3D
 
     public override void _Ready()
     {
+
         SceneOrganizerManager.GetInstance().SetCurrentLevel(this);
+        ConnectionManager.GetInstance().InitializeConnection();
 
     }
 
