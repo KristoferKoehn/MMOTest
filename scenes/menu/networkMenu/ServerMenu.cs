@@ -42,8 +42,8 @@ public partial class ServerMenu : Node2D
             //start host
 
             MainLevel tL = GD.Load<PackedScene>("res://scenes/levels/MainLevel.tscn").Instantiate<MainLevel>();
-			tL.Connector = connector;
-			tL.host = true;
+            ConnectionManager.GetInstance().Connector = connector;
+            ConnectionManager.GetInstance().host = true;
             this.GetParent<GameLoop>().PushScene(tL);
         }
 	}
@@ -81,7 +81,7 @@ public partial class ServerMenu : Node2D
 		{
             string ip = this.GetNode<TextEdit>("Control/TextEdit").Text;
             MainLevel tL = GD.Load<PackedScene>("res://scenes/levels/MainLevel.tscn").Instantiate<MainLevel>();
-            tL.ServerAddress = ip;
+            ConnectionManager.GetInstance().ServerAddress = ip;
             this.GetParent<GameLoop>().PushScene(tL);
         }
 	}
