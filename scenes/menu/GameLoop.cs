@@ -28,8 +28,7 @@ public partial class GameLoop : Node
             connector.Host("ActorImplementation", ip);
             MainLevel tL = GD.Load<PackedScene>("res://scenes/levels/MainLevel.tscn").Instantiate<MainLevel>();
             ConnectionManager.GetInstance().Connector = connector;
-            //tL.Connector = connector;
-            tL.host = true;
+            ConnectionManager.GetInstance().host = true;
             this.PushScene(tL);
         } else
         {
