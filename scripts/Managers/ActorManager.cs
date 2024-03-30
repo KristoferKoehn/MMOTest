@@ -97,7 +97,6 @@ public partial class ActorManager : Node
 				actorsList.Add(actor);
 			}
 		}
-
 		return actorsList;
     }
 
@@ -109,7 +108,6 @@ public partial class ActorManager : Node
 			//do client-only stuff here
 			return;
 		}
-
 
         foreach (Actor actor in actors.Values)
 		{

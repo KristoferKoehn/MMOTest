@@ -24,6 +24,7 @@ offset_right = 102.0
 offset_bottom = 610.0
 
 [node name="Control" type="Control" parent="."]
+visible = false
 layout_mode = 3
 anchors_preset = 0
 offset_left = 225.0
