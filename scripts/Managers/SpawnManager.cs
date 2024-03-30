@@ -37,6 +37,15 @@ namespace MMOTest.scripts.Managers
             spawnAreas.Remove(spawnArea);
         }
 
+        public Vector3 GetValidSpawnPosition(Teams team)
+        {
+            RandomNumberGenerator rng = new RandomNumberGenerator();
+            List<SpawnArea> validAreas = spawnAreas.Where(x => x.Team == team).ToList();
+            int index = rng.RandiRange(0, validAreas.Count - 1);
+
+            return validAreas[index].GetValidSpawnPoint();
+        }
+
         public void SpawnActor(int ActorID)
         {
             Actor actor = ActorManager.GetInstance().GetActor(ActorID);
@@ -61,16 +70,48 @@ namespace MMOTest.scripts.Managers
 
             actor.ClientModelReference.RpcId(actor.ActorMultiplayerAuthority, "AssignDeathState", false);
 
-            RandomNumberGenerator rng = new RandomNumberGenerator();
 
             Teams t = (Teams)sb.GetStat(StatType.CTF_TEAM);
-            List<SpawnArea> validAreas = spawnAreas.Where(x => x.Team == t).ToList();
-            int index = rng.RandiRange(0, validAreas.Count - 1);
-
-            Vector3 spawnPosition = validAreas[index].GetValidSpawnPoint();
+            Vector3 spawnPosition = GetValidSpawnPosition(t);
 
             //move model to position, controller should follow automatically
             actor.ClientModelReference.RpcId(actor.ActorMultiplayerAuthority, "MovePlayerToPosition", spawnPosition);
         }
+
+        [Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
+        public void SpawnActorAs(int ActorID, string ClassName)
+        {
+            //
+
+
+            Actor actor = ActorManager.GetInstance().GetActor(ActorID);
+            StatBlock sb = actor.stats;
+            AbstractModel model = actor.PuppetModelReference;
+            float delta = sb.GetStat(StatType.MAX_HEALTH) - sb.GetStat(StatType.HEALTH);
+            JObject b = new JObject
+            {
+                { "type", "statchange" },
+                { "TargetID", ActorID },
+                { "SourceID", 1 },
+            };
+
+            List<StatProperty> values = new List<StatProperty>
+            {
+                new StatProperty(StatType.HEALTH, delta)
+            };
+
+            b["stats"] = JsonConvert.SerializeObject(values);
+            MessageQueue.GetInstance().AddMessage(b);
+            //reach into client and turn off death
+
+            actor.ClientModelReference.RpcId(actor.ActorMultiplayerAuthority, "AssignDeathState", false);
+
+            Teams t = (Teams)sb.GetStat(StatType.CTF_TEAM);
+            Vector3 spawnPosition = GetValidSpawnPosition(t);
+
+            //move model to position, controller should follow automatically
+            actor.ClientModelReference.RpcId(actor.ActorMultiplayerAuthority, "MovePlayerToPosition", spawnPosition);
+        }
+
     }
 }
