@@ -31,8 +31,8 @@ public partial class PlayerController : AbstractController
 
     private float dragCoefficient = 1.15f; // Ranges between 1.0 and 1.3 for a person. https://en.wikipedia.org/wiki/Drag_coefficient
     // Should be like 1, 0.9. High for game feel for now.
-    private float staticFrictionCoefficient = 2.0f; // best guess. Leather on wood, with the grain is 0.61. So a leather shoe on stone or dirt? idk. a bit higher. // Needs a setter and surface detection of some kind? so we can switch to an ice coefficient? Also, kinetic friction at some point? https://www.engineeringtoolbox.com/friction-coefficients-d_778.html 
-    private float kineticFrictionCoefficient = 1.8f; // Also a guess 
+    private float staticFrictionCoefficient = 0.7f; // best guess. Leather on wood, with the grain is 0.61. So a leather shoe on stone or dirt? idk. a bit higher. // Needs a setter and surface detection of some kind? so we can switch to an ice coefficient? Also, kinetic friction at some point? https://www.engineeringtoolbox.com/friction-coefficients-d_778.html 
+    private float kineticFrictionCoefficient = 0.6f; // Also a guess 
 
     // Physics exports
     // These are about the character itself
@@ -42,19 +42,17 @@ public partial class PlayerController : AbstractController
     [Export] private float modelVolume = 0.075f; // cubic meters, surprisingly.
 
     // These are about the desired behavior of the character
-    [Export] private float jumpHeight = 3f; // 3 meters is way higher than people can jump but 0.3 feels bad because you cant pick up your legs to clear a fence.
-    [Export] private float maxSprintSpeed = 10f; // 10 meters a second. Ballpark of olympic athletes in 200m races TODO: Use this somehow.
-    [Export] private float sprintAcceleration = 1.25f; 
+    [Export] private float jumpHeight = 0.3f; // 3 meters is way higher than people can jump but 0.3 feels bad because you cant pick up your legs to clear a fence.
+    [Export] private float maxSprintSpeed = 7f; // 10 meters a second. Ballpark of olympic athletes in 200m races.
     [Export] private float maxSwimSpeed = 2.2f; // 2.2 Meters per second. https://www.wired.com/2012/08/olympics-physics-swimming/
-    [Export] private float maxFlySpeed = 0f; // People cant fly. Should be zero, but having it at 10 helps a bit.The air thrust force needs to be calculated differently. Drag doesnt make sense.
-    [Export] private float angleOfAttack = (float)(Math.PI / 4f);// How much you glide while falling;
-    [Export] private float turnSpeed = 10f;
+    [Export] private float maxFlySpeed = 7f; //Terminal velocity?  // People cant fly. Should be zero, but having it at 10 helps a bit.The air thrust force needs to be calculated differently. Drag doesnt make sense.
+    [Export] private float angleOfAttack = (float)(Math.PI / 4f); // How much you glide while falling;
 
     // These are derived from the exported values and are actually used in calculations
     private float jumpVelocity;
     private float jumpForce;
     private float angleOfAttackThrustForce; // Derived from angle of attack and drag
-    private float airThrustForce ; // Force generated to fly, like a bird.
+    private float airThrustForce = 500;// = 500; // Force generated to fly, like a bird.
     private float swimThrustForce; // Force generated to swim.
     private float thrustForce; // total Thrust force
 
@@ -79,16 +77,20 @@ public partial class PlayerController : AbstractController
 
     // Total
     private Vector3 totalForceVector = new Vector3(); // Accumulates all forces and applies it to the model.
-    
-    
+
+    // This is an animation thing
+    [Export] private float turnSpeed = 10f;
+    private Vector2 locomotionBlendPositionVector = new Vector2();
+
     // Jetpack stuff, mage only
     [Export] private float JetpackMaxFuel = 10f;
     private float JetPackFuel = 10f;
     [Export] private float JetpackFuelConsumptionRate = 0.1f;
     [Export] private float JetpackFuelRefillRate = 0.5f;
-    [Export] private float jetPackForce = 1500f; // Arbitrary. Might turn into a calculation later. Give it a better handle
-    [Export] private float propulsionThrustForce = 1500f;
-    
+    [Export] private float jetPackForce = 1000f; // Arbitrary. Might turn into a calculation later. Give it a better handle
+    [Export] private float propulsionThrustForce = 000f; // 500?
+
+    public bool WaterFlag { get; private set; }
 
     public override void _EnterTree()
     {
@@ -106,7 +108,6 @@ public partial class PlayerController : AbstractController
         jumpVelocity = (float)Math.Sqrt(jumpHeight * 2 * -gravity.Y); // This one is a little bit of a doozy. Has to do with velocity averages and calculating time to max height
         jumpForce = jumpVelocity * mass * 60; // 60 for 60fps. This will be multiplied by delta later, so the 60 is here to cancel it out.
         swimThrustForce = 0.5f * waterDensity * maxSwimSpeed * maxSwimSpeed * dragCoefficient * modelProjectedArea; // Needs to be equal to drag at max speed.
-        //airThrustForce = 0.5f * airDensity * maxFlySpeed * maxFlySpeed * dragCoefficient * modelProjectedArea; // Needs to be equal to drag at max speed.
         
         fluidDensity = airDensity; // Air by default. Should probably make a check here
         thrustForce = airThrustForce;
@@ -170,63 +171,44 @@ public partial class PlayerController : AbstractController
             //this.GetParent<MainLevel>().RpcId(1,"SendMessage", job.ToString());
         }
 
+        // Get button presses and convert to a vector that points the right way in the world.
         inputDirection = Input.GetVector("left", "right", "forward", "backward");
+        Vector3 transformedInputDirectionVector = Transform.Basis * new Vector3(inputDirection.X, 0, inputDirection.Y).Normalized();
 
-        this.Model.GetAnimationTree().Set("parameters/Blended/Locomotion/blend_position", new Vector2(inputDirection.X, -Math.Abs(inputDirection.Y)));
-        Vector3 globalDirectionVector = Transform.Basis * new Vector3(inputDirection.X, 0, inputDirection.Y).Normalized();
-        if (globalDirectionVector != Vector3.Zero)
+        // Update locomotion animation with the new button key inputs
+        locomotionBlendPositionVector = locomotionBlendPositionVector.MoveToward(inputDirection, 30 * (float)delta);
+        this.Model.GetAnimationTree().Set("parameters/Blended/Locomotion/blend_position", new Vector2(locomotionBlendPositionVector.X, -Math.Abs(locomotionBlendPositionVector.Y)));
+        // Rotate the model to reflect the change
+        if (transformedInputDirectionVector != Vector3.Zero)
         {
-            Transform3D tr = Model.Transform.LookingAt(Model.GlobalPosition + -(globalDirectionVector));
+            Transform3D tr = Model.Transform.LookingAt(Model.GlobalPosition + -(transformedInputDirectionVector));
             this.Model.Transform = this.Model.Transform.InterpolateWith(tr, turnSpeed * (float)delta);
         }
         
+        // Set internal force vector to a normalized version of the direction buttons are being pressed in the world. 
+        internalForceVector = transformedInputDirectionVector.Normalized();
         
-        internalForceVector = globalDirectionVector.Normalized();
-        
-        // Update to better function in the future when other surface detections are implemented, add logic for water, ice, etc.
         if (Model.IsOnFloor())
         {
             // Logic for running
-
-            //Spin up "engine"
-            //runningSpeedAccelerationVector = internalForceVector * (sprintAcceleration * (float)delta);
-            //if (runningSpeedAccelerationVector == Vector3.Zero) // Ramp down (foot off gas)
-            //{
-            //    if (currentRunningSpeedVector.Length() < (sprintAcceleration * (float)delta))
-            //    {
-            //        runningSpeedAccelerationVector = -currentRunningSpeedVector;
-            //    }
-            //    else
-            //    {
-            //        runningSpeedAccelerationVector = -currentRunningSpeedVector.Normalized() * (sprintAcceleration * (float)delta);
-            //    }
-            //}
-            //currentRunningSpeedVector += runningSpeedAccelerationVector;
-
             currentRunningSpeedVector = internalForceVector * maxSprintSpeed;
-
-            if (currentRunningSpeedVector.Length() > maxSprintSpeed)
-            {
-                currentRunningSpeedVector = currentRunningSpeedVector.Normalized() * maxSprintSpeed;
-            }
-            //Consider adding Perpendicular dampening here.
 
             currentRunningSpeedVector.Y = Model.Velocity.Y; // Setting equal here means that the y component of the velocity won't be considered when calculating attempted acceleration
             Vector3 attemptedAcceleration = (currentRunningSpeedVector - Model.Velocity) / (float)delta;
             currentRunningSpeedVector.Y = 0; // Set back to zero after comparison
-            runningForceVector = realMass * attemptedAcceleration; // Should be capped here by physical human limitations too
+            runningForceVector = realMass * attemptedAcceleration;
             
+            // Capped here by physical human limitations
+            if (runningForceVector.Length() > 3000) // Magic number from here: https://www.ncbi.nlm.nih.gov/pmc/articles/PMC9446565/
+            {
+                runningForceVector = runningForceVector.Normalized() * 3000;
+            }
+
             normalForce = Model.GetFloorNormal().Normalized().Y * (realMass * Math.Abs(gravity.Y));
             float maxStaticFrictionForce = staticFrictionCoefficient * normalForce;
             if (Math.Abs(runningForceVector.Length()) > maxStaticFrictionForce)
             {
                 runningForceVector = runningForceVector.Normalized() * (kineticFrictionCoefficient * normalForce); // Max we can get from friction. Should "slip" from trying to run too fast on ice
-            }
-            else
-            {
-                // Maybe need to do stopping here?
-                // Running force is already correct, and we have full traction so friction is only helping us move forward, we can set it to zero.
-                frictionForceVector = new Vector3();
             }
 
             // Helps stop
@@ -239,6 +221,7 @@ public partial class PlayerController : AbstractController
                 float estimatedDotProduct = internalForceVector.Normalized().Dot(Model.Velocity.Normalized());
                 estimatedDotProduct = (estimatedDotProduct / -2f) + 1.5f; // Magic numbers to convert range of [-1,1] to [1,2] but reversed
                 estimatedStoppingForce /= estimatedDotProduct;
+                
                 if (estimatedStoppingForce < runningForceVector.Length())
                 {
                     runningForceVector = runningForceVector.Normalized() * estimatedStoppingForce;
@@ -246,20 +229,29 @@ public partial class PlayerController : AbstractController
             }
 
             internalForceVector = runningForceVector;
-
-            movementResistanceForceVector = frictionForceVector;
+            movementResistanceForceVector = Vector3.Zero; // Turns out that friction and sliding is fully encapsulated by running force vector.
         }
         else
         {
+            //Logic for moving through a fluid (air, water)
+            
             // Drag equation
             dragForceVector = -Model.Velocity.Normalized() * (0.5f * fluidDensity * Model.Velocity.Length() * Model.Velocity.Length() * dragCoefficient * modelProjectedArea);
-            if (inputDirection.Y != 0 || inputDirection.X != 0) // There is input.
+            
+            // If there is input, convert some of the drag into horizontal "lift", according to the players angle of attack.
+            if (inputDirection.Y != 0 || inputDirection.X != 0)
             {
                 angleOfAttackThrustForce = Math.Abs(dragForceVector.Y) * (float)Math.Cos((double)angleOfAttack);
                 dragForceVector.Y *= (float)Math.Sin(angleOfAttack);
             }
             
             movementResistanceForceVector = dragForceVector;
+
+            // Adjust thrust to enforce fly speed cap
+            if (!WaterFlag)
+            {
+                // If thrust would accelerate us past our max fly speed, scale down thrust to match
+            }
 
             // Because we aren't considering pressure, this works the same in air and water. 
             thrustForceVector = internalForceVector * (thrustForce + angleOfAttackThrustForce + propulsionThrustForce); 
@@ -269,13 +261,14 @@ public partial class PlayerController : AbstractController
         // Jump
         if (Input.IsActionJustPressed("jump_dodge") & Model.IsOnFloor())
         {
-            internalForceVector += Vector3.Up * jumpForce;
+            // Testing angled jump, might go back to just, up.
+            internalForceVector += (Transform.Basis * new Vector3(inputDirection.X, 1, inputDirection.Y).Normalized()) * jumpForce; // Could angle this to reflect input direction.
         }
 
         if (Input.IsActionPressed("movementAbility"))
         {
             // Change logic to reflect kit. For now -> mage hover
-            internalForceVector += Vector3.Up * jetPackForce;
+            internalForceVector += (Transform.Basis * new Vector3(inputDirection.X, 1, inputDirection.Y).Normalized()) * jetPackForce;
             // Do fuel and stuff
         }
 
@@ -283,10 +276,10 @@ public partial class PlayerController : AbstractController
         externalForceVector += buoyantForceVector;
 
 
-        // NOT PHYSICAL ADDED FOR GAME FEEL
+        // NOT PHYSICAL, ADDED FOR GAME FEEL
         // Internal force is scaled to be up to twice as strong if it is in a direction opposite current velocity.
         float dotProduct = internalForceVector.Normalized().Dot(Model.Velocity.Normalized());
-        dotProduct = (dotProduct / -2f) + 1.5f; // Magic numbers to convert range of [-1,1] to [1,2] but reversed
+        dotProduct = (dotProduct / -2f) + 1.5f; // Magic numbers to convert range of [-1,1] to [1,2] but reversed. Could be higher for game feel
         internalForceVector *= dotProduct;
 
         // Sum up all forces. Internal, external, and friction
@@ -297,7 +290,10 @@ public partial class PlayerController : AbstractController
 
         // Update Model velocity. V_next = v_current + (time * acceleration). Acceleration = force / mass. Gravity is an acceleration value, so it is added to acceleration.
         Model.Velocity = Model.Velocity + ((float)delta * ((totalForceVector / realMass) + gravity));
-        
+        totalForceVector = Vector3.Zero; // Reset force to recalculate next frame.
+        Model.MoveAndSlide(); // Move the model according to its new velocity.
+
+        // Update animations for being in the air or not
         if (Model.IsOnFloor())
         {
             this.Model.GetAnimationTree().Set("parameters/Blended/Floating/blend_amount", 0f);
@@ -306,23 +302,6 @@ public partial class PlayerController : AbstractController
         {
             this.Model.GetAnimationTree().Set("parameters/Blended/Floating/blend_amount", 1f);
         }
-        
-        totalForceVector = Vector3.Zero; // Reset force to recalculate next frame.
-        
-        Model.MoveAndSlide(); // Move the model according to its new velocity.
-
-        
-        // Kept for reference on setting animations, rotating the model, and jet pack logic.
-        //if (direction != Vector3.Zero)
-        //{
-        //    if (ModelAnimation.CurrentAnimation != "running")
-        //    {
-        //        ModelAnimation.Play("running");
-        //    }
-
-        //    Model.LookAt(Model.Position + direction);
-        //    //CalculatedVelocity += direction;
-        //}
 
         //Model.Velocity = CalculatedVelocity + AppliedGravity + (direction * Speed);
         //Model.MoveAndSlide();
@@ -348,7 +327,8 @@ public partial class PlayerController : AbstractController
             if (button != null)
             {
                 Input.MouseMode = Input.MouseModeEnum.Captured;
-            } else
+            } 
+            else
             {
                 return;
             }
@@ -358,7 +338,6 @@ public partial class PlayerController : AbstractController
 		if (motion != null)
 		{
             this.RotateY(Mathf.DegToRad(-motion.Relative.X * HorizontalMouseSensitivity));
-            
             CameraVerticalRotationPoint.RotateX(Mathf.DegToRad(-motion.Relative.Y * VerticalMouseSensitity));
             if (CameraVerticalRotationPoint.Rotation.X > Mathf.DegToRad(90))
             {
@@ -378,6 +357,7 @@ public partial class PlayerController : AbstractController
 
     public void SetWaterFlag(bool flag)
     {
+        this.WaterFlag = flag;
         if (flag)
         {
             fluidDensity = waterDensity;
