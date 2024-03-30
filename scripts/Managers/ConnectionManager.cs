@@ -116,7 +116,6 @@ namespace MMOTest.scripts.Managers
         public AbstractModel SpawnClientModel(long PeerId, int ActorID)
         {
 
-            //DefaultModel PlayerModel = GD.Load<PackedScene>("res://scenes/actorScenes/Models/DefaultModel.tscn").Instantiate<DefaultModel>();
             MageModel PlayerModel = ResourceLoader.Load<PackedScene>("res://scenes/actorScenes/Models/MageModel.tscn", cacheMode: ResourceLoader.CacheMode.Reuse).Instantiate<MageModel>();
             PlayerModel.GetMultiplayerSynchronizer().SetVisibilityFor(0, false);
             PlayerModel.GetMultiplayerSynchronizer().SetVisibilityFor(1, true);

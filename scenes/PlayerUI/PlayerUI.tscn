@@ -22,3 +22,64 @@ offset_left = 13.0
 offset_top = 587.0
 offset_right = 102.0
 offset_bottom = 610.0
+
+[node name="Control" type="Control" parent="."]
+visible = false
+layout_mode = 3
+anchors_preset = 0
+offset_left = 225.0
+offset_top = 168.0
+offset_right = 916.0
+offset_bottom = 508.0
+
+[node name="Panel" type="Panel" parent="Control"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Label" type="Label" parent="Control/Panel"]
+layout_mode = 0
+offset_left = 29.0
+offset_top = 20.0
+offset_right = 69.0
+offset_bottom = 43.0
+text = "Select class: "
+
+[node name="GridContainer" type="GridContainer" parent="Control/Panel"]
+layout_mode = 1
+offset_left = 44.0
+offset_top = 55.0
+offset_right = 327.0
+offset_bottom = 156.0
+columns = 3
+
+[node name="MageButton" type="Button" parent="Control/Panel/GridContainer"]
+layout_mode = 2
+text = "Mage"
+
+[node name="BarbarianButton" type="Button" parent="Control/Panel/GridContainer"]
+layout_mode = 2
+text = "Barbarian"
+
+[node name="WarriorButton" type="Button" parent="Control/Panel/GridContainer"]
+layout_mode = 2
+text = "Warrior"
+
+[node name="RogueButton" type="Button" parent="Control/Panel/GridContainer"]
+layout_mode = 2
+text = "Rogue"
+
+[node name="DruidButton" type="Button" parent="Control/Panel/GridContainer"]
+layout_mode = 2
+text = "Druid"
+
+[node name="EngineerButton" type="Button" parent="Control/Panel/GridContainer"]
+layout_mode = 2
+text = "Engineer"
+
+[node name="Button" type="Button" parent="Control/Panel/GridContainer"]
+layout_mode = 2
+text = "Necromancer"

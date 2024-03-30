@@ -52,7 +52,7 @@ public partial class ActorManager : Node
 			[StatType.CASTING_SPEED] = 12,
 			[StatType.PHYSICAL_DAMAGE] = 15,
         };
-
+		
 		if(actors.Count % 2 == 0)
 		{
 			statsDict[StatType.CTF_TEAM] = (float)Teams.BLUE_TEAM;
