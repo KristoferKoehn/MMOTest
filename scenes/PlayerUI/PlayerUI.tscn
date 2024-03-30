@@ -24,7 +24,6 @@ offset_right = 102.0
 offset_bottom = 610.0
 
 [node name="Control" type="Control" parent="."]
-visible = false
 layout_mode = 3
 anchors_preset = 0
 offset_left = 225.0
@@ -50,10 +49,10 @@ text = "Select class: "
 
 [node name="GridContainer" type="GridContainer" parent="Control/Panel"]
 layout_mode = 1
-offset_left = 44.0
-offset_top = 55.0
-offset_right = 327.0
-offset_bottom = 156.0
+offset_left = 54.0
+offset_top = 67.0
+offset_right = 337.0
+offset_bottom = 168.0
 columns = 3
 
 [node name="MageButton" type="Button" parent="Control/Panel/GridContainer"]
