@@ -2,7 +2,6 @@
 using MMOTest.Backend;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -233,6 +232,8 @@ namespace MMOTest.scripts.Managers
             }
 
         }
+
+
 
         //get input from player
         //set stat block -full health, stats and stuff
