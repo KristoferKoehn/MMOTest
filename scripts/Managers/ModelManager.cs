@@ -37,7 +37,7 @@ public partial class ModelManager : Node
 	}
 
     [Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
-    public void ClientModelChange(int ActorID, string classname)
+    public void ClientModelChange(int PeerID, int ActorID, string classname)
     {
         //changing the client model clientside
 
@@ -46,12 +46,23 @@ public partial class ModelManager : Node
         if (a != null)
         {
             a.ClientModelReference = ResourceLoader.Load<AbstractModel>("res://scenes/actorScenes/Models/" + classname + "Model");
-            a.ClientModelReference.SetMultiplayerAuthority(Multiplayer.GetUniqueId());
+            a.ClientModelReference.SetMultiplayerAuthority(PeerID);
             SceneOrganizerManager.GetInstance().GetCurrentLevel().GetNode<PlayerController>("PlayerController").AttachModel(a.ClientModelReference);
-
         }
     }
 
+    public void ChangeActorModel(int ActorID, string classname)
+    {
+        long PeerID = ActorManager.GetInstance().GetActor(ActorID).ActorMultiplayerAuthority;
+
+        //remote client model change
+        RpcId(PeerID, "ClientModelChange", (int)PeerID, ActorID, classname);
+        //server client model change
+        ClientModelChange((int)PeerID, ActorID, classname);
+        
+        //
+
+    }
 
     // the route to think about is this:
 

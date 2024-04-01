@@ -3,6 +3,7 @@ using MMOTest.Backend;
 using MMOTest.scripts.Managers;
 using Newtonsoft.Json.Linq;
 using System.Collections.Generic;
+using System.Net.NetworkInformation;
 
 public partial class MainLevel : Node3D
 {
@@ -66,6 +67,11 @@ public partial class MainLevel : Node3D
     {
         AbstractAbility t = (AbstractAbility)node;
         t.ApplyHost(ConnectionManager.GetInstance().host);
+    }
+    
+    public void _on_ability_models_child_exiting_tree(Node node)
+    {
+        GD.Print(node.Name + " left the tree");
     }
 
 }
