@@ -242,12 +242,5 @@ namespace MMOTest.scripts.Managers
         //tell client it has new model - connect controller
         //put player in spawn place
 
-        //Model Manager?
-        //Assigns the model of the player on the server and the client
-        //that's it
-
-
-
-
     }
 }
