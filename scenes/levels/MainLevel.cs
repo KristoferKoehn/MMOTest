@@ -25,6 +25,7 @@ public partial class MainLevel : Node3D
         SpawnManager.GetInstance();
         StatManager.GetInstance();
         UIManager.GetInstance();
+        ModelManager.GetInstance();
     }
 
     public override void _Ready()
