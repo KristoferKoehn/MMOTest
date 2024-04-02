@@ -45,7 +45,24 @@ public partial class PlayerUI : CanvasLayer
 		label.GlobalPosition = pos;
 		this.AddChild(label);
 		return label;
-	} 
+	}
+
+    public override void _Input(InputEvent @event)
+    {
+
+        if (Input.MouseMode != Input.MouseModeEnum.Captured && GetNode<SpawnPanel>("SpawnPanel").spawned)
+        {
+            InputEventMouseButton button = @event as InputEventMouseButton;
+            if (button != null)
+            {
+                Input.MouseMode = Input.MouseModeEnum.Captured;
+            }
+            else
+            {
+                return;
+            }
+        }
+    }
 
 
 }
