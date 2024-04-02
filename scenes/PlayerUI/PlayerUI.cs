@@ -6,7 +6,7 @@ public partial class PlayerUI : CanvasLayer
 {
 
 	ProgressBar progressBar;
-	int ActorID;
+	public int ActorID;
 	bool initialized = false;
 
 

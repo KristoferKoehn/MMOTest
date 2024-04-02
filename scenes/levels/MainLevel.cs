@@ -27,15 +27,6 @@ public partial class MainLevel : Node3D
         UIManager.GetInstance();
     }
 
-    public void PrintStatus()
-    {
-        GD.Print("Peers Connected: " + Multiplayer.GetPeers().Length);
-        foreach (int p in Multiplayer.GetPeers())
-        {
-            GD.Print("Peer ID " + p);
-        }
-    }
-
     public override void _Ready()
     {
 
@@ -67,11 +58,6 @@ public partial class MainLevel : Node3D
     {
         AbstractAbility t = (AbstractAbility)node;
         t.ApplyHost(ConnectionManager.GetInstance().host);
-    }
-    
-    public void _on_ability_models_child_exiting_tree(Node node)
-    {
-        GD.Print(node.Name + " left the tree");
     }
 
 }

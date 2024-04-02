@@ -8,7 +8,7 @@ public partial class ActorManager : Node
 {
 	private bool host;
 
-	Dictionary<long, Actor> actors = new Dictionary<long, Actor>();
+	public Dictionary<long, Actor> actors = new Dictionary<long, Actor>();
 	static ActorManager instance = null;
 
 
@@ -32,7 +32,27 @@ public partial class ActorManager : Node
 		this.host = host;
 	}
 
-	public void CreateActor(AbstractModel player, AbstractModel puppet, long PeerID, int ActorID)
+	public void CreateActor(long PeerID, int ActorID, Dictionary<StatType, float> stats)
+	{
+		Actor actor = new Actor();
+		actor.ActorID = ActorID;
+		actor.ActorMultiplayerAuthority = PeerID;
+		actor.stats = new StatBlock();
+		actor.stats.SetStatBlock(stats);
+		actors[ActorID] = actor;
+	}
+
+    [Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
+    public void CreateActor(long PeerID, int ActorID)
+    {
+        Actor actor = new Actor();
+        actor.ActorID = ActorID;
+        actor.ActorMultiplayerAuthority = PeerID;
+        actor.stats = new StatBlock();
+        actors[ActorID] = actor;
+    }
+
+    public void CreateActor(AbstractModel player, AbstractModel puppet, long PeerID, int ActorID)
 	{
 		Actor actor = new Actor();
 		actor.ClientModelReference = player;
@@ -100,25 +120,4 @@ public partial class ActorManager : Node
 		return actorsList;
     }
 
-
-    public override void _Process(double delta)
-    {
-		if (Multiplayer.GetUniqueId() != 1)
-		{
-			//do client-only stuff here
-			return;
-		}
-
-        foreach (Actor actor in actors.Values)
-		{
-			//makes all the stuff line up. Assign all synced variables from client to puppet
-			actor.PuppetModelReference.GlobalPosition = actor.ClientModelReference.GlobalPosition;
-            actor.PuppetModelReference.GlobalRotation = actor.ClientModelReference.GlobalRotation;
-            actor.PuppetModelReference.Velocity = actor.ClientModelReference.Velocity;
-            if (actor.PuppetModelReference.GetAnimationPlayer().CurrentAnimation != actor.ClientModelReference.GetAnimationPlayer().CurrentAnimation)
-			{
-				actor.PuppetModelReference.GetAnimationPlayer().CurrentAnimation = actor.ClientModelReference.GetAnimationPlayer().CurrentAnimation;
-            }
-        }
-    }
 }

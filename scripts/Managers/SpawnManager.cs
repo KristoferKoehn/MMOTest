@@ -1,4 +1,5 @@
 ﻿using Godot;
+using Godot.Collections;
 using MMOTest.Backend;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -78,10 +79,10 @@ namespace MMOTest.scripts.Managers
         }
 
         [Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
-        public void SpawnPlayer(string classname)
+        public void SpawnPlayer(string classname, int ActorID)
         {
-
-            Dictionary<StatType, float> statsDict;
+            int PeerID = Multiplayer.GetRemoteSenderId();
+            Godot.Collections.Dictionary<StatType, float> statsDict;
             switch (classname)
             {
                 case "Mage":
@@ -228,9 +229,31 @@ namespace MMOTest.scripts.Managers
                     //tell client to update model
                     break;
                 default:
+                    //default andy
+                    statsDict = new()
+                    {
+                        [StatType.HEALTH] = 100,
+                        [StatType.MAX_HEALTH] = 100,
+                        [StatType.MANA] = 100,
+                        [StatType.MAGIC_RESIST] = 13,
+                        [StatType.ARMOR] = 11,
+                        [StatType.ABILITY_POINTS] = 14,
+                        [StatType.CASTING_SPEED] = 12,
+                        [StatType.PHYSICAL_DAMAGE] = 15,
+                    };
                     break;
             }
 
+            StatManager.GetInstance().RpcId(PeerID, "ApplyAllStatChanges", statsDict);
+            ModelManager.GetInstance().ChangeActorModel(ActorID, classname);
+
+            //no teams by default, change this later somehow
+            Vector3 spawnPosition = GetValidSpawnPosition(Teams.NO_TEAM);
+
+            Actor a = ActorManager.GetInstance().GetActor(ActorID);
+
+            //move model to position, controller should follow automatically
+            a.ClientModelReference.RpcId(a.ActorMultiplayerAuthority, "MovePlayerToPosition", spawnPosition);
         }
 
 

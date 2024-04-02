@@ -82,8 +82,15 @@ namespace MMOTest.scripts.Managers
 
             //stop here, wait for spawn signal
 
+            //establish actor across both simulations
+            ActorManager.GetInstance().CreateActor(PeerId, ActorID);
+            ActorManager.GetInstance().RpcId(PeerId, "CreateActor", PeerId, ActorID);
+            //I think that's it?
+
+
 
             //the following must be moved to SpawnManager or something. 
+            /*
             AbstractModel client = SpawnClientModel(PeerId, ActorID);
             AbstractModel puppet = PuppetPlayer.Instantiate<MageModel>();
             RpcId(PeerId, "SpawnClientModel", PeerId, ActorID);
@@ -97,7 +104,7 @@ namespace MMOTest.scripts.Managers
             level.GetNode<Node>(PuppetNodePath).AddChild(puppet, forceReadableName: true);
             ActorManager.GetInstance().CreateActor(client, puppet, PeerId, ActorID);
             SpawnManager.GetInstance().SpawnActor(ActorID);
-
+            */
             //end move
 
         }
