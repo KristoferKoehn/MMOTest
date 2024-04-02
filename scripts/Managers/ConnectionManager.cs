@@ -62,6 +62,7 @@ namespace MMOTest.scripts.Managers
             t.Timeout += Connector.HostRefresh;
             this.AddChild(t);
             t.Start(5);
+
         }
 
         public void Join()
@@ -152,6 +153,7 @@ namespace MMOTest.scripts.Managers
                 ActorManager.GetInstance().CreateActor(PlayerModel, null, PeerId, ActorID);
                 StatManager.GetInstance().RpcId(1, "RequestStatBlock", ActorID);
                 level.GetNode<PlayerController>("PlayerController").AttachModel(PlayerModel);
+                GD.Print("attaching playercontroller");
             }
             return PlayerModel;
         }

@@ -87,7 +87,11 @@ public partial class ModelManager : Node
             a.ClientModelReference.Name = PeerID.ToString();
             a.ClientModelReference.SetActorID(ActorID);
 
-            SceneOrganizerManager.GetInstance().GetCurrentLevel().GetNode<PlayerController>("PlayerController").AttachModel(a.ClientModelReference);
+            if(Multiplayer.GetUniqueId() > 1)
+            {
+                SceneOrganizerManager.GetInstance().GetCurrentLevel().GetNode<PlayerController>("PlayerController").AttachModel(a.ClientModelReference);
+            }
+            
         }
     }
 

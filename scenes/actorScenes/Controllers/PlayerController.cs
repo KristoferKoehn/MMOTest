@@ -102,8 +102,6 @@ public partial class PlayerController : AbstractController
     // Called when the node enters the scene tree for the first time.
     public override void _Ready()
     {
-
- 
         // So this whole bit feels a little backwards. The forces are ultimately what moves the model, we are inferring what those forces should be from exported variables that are more intuitive to set.
         jumpVelocity = (float)Math.Sqrt(jumpHeight * 2 * -gravity.Y); // This one is a little bit of a doozy. Has to do with velocity averages and calculating time to max height
         jumpForce = jumpVelocity * mass * 60; // 60 for 60fps. This will be multiplied by delta later, so the 60 is here to cancel it out.
@@ -111,11 +109,6 @@ public partial class PlayerController : AbstractController
         
         fluidDensity = airDensity; // Air by default. Should probably make a check here
         thrustForce = airThrustForce;
-
-        if (Multiplayer.GetUniqueId() == 1)
-        {
-            this.QueueFree();
-        }
 
     }
 
