@@ -22,6 +22,7 @@ public partial class SpawnPanel : Control
         GD.Print("spawn pressed, class: " + currentClass);
         SpawnManager.GetInstance().RpcId(1, "SpawnPlayer", currentClass, playerUI.ActorID);
         Input.MouseMode = Input.MouseModeEnum.Captured;
+        this.Visible = false;
     }
 
 
