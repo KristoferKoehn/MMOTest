@@ -42,7 +42,7 @@ public partial class PlayerController : AbstractController
     [Export] private float modelVolume = 0.075f; // cubic meters, surprisingly.
 
     // These are about the desired behavior of the character
-    [Export] private float jumpHeight = 0.3f; // 3 meters is way higher than people can jump but 0.3 feels bad because you cant pick up your legs to clear a fence.
+    [Export] private float jumpHeight = 10f; // 3 meters is way higher than people can jump but 0.3 feels bad because you cant pick up your legs to clear a fence.
     [Export] private float maxSprintSpeed = 7f; // 10 meters a second. Ballpark of olympic athletes in 200m races.
     [Export] private float maxSwimSpeed = 2.2f; // 2.2 Meters per second. https://www.wired.com/2012/08/olympics-physics-swimming/
     [Export] private float maxFlySpeed = 7f; //Terminal velocity?  // People cant fly. Should be zero, but having it at 10 helps a bit.The air thrust force needs to be calculated differently. Drag doesnt make sense.
@@ -52,7 +52,7 @@ public partial class PlayerController : AbstractController
     private float jumpVelocity;
     private float jumpForce;
     private float angleOfAttackThrustForce; // Derived from angle of attack and drag
-    private float airThrustForce = 500;// = 500; // Force generated to fly, like a bird.
+    private float airThrustForce;// = 500; // Force generated to fly, like a bird.
     private float swimThrustForce; // Force generated to swim.
     private float thrustForce; // total Thrust force
 
@@ -81,13 +81,15 @@ public partial class PlayerController : AbstractController
     // This is an animation thing
     [Export] private float turnSpeed = 10f;
     private Vector2 locomotionBlendPositionVector = new Vector2();
+    [Export]
+    private float locomotionBlendPositionSpeed = 3.5f;
 
     // Jetpack stuff, mage only
     [Export] private float JetpackMaxFuel = 10f;
     private float JetPackFuel = 10f;
     [Export] private float JetpackFuelConsumptionRate = 0.1f;
     [Export] private float JetpackFuelRefillRate = 0.5f;
-    [Export] private float jetPackForce = 1000f; // Arbitrary. Might turn into a calculation later. Give it a better handle
+    [Export] private float jetPackForce = 1500f; // Arbitrary. Might turn into a calculation later. Give it a better handle
     [Export] private float propulsionThrustForce = 000f; // 500?
 
     public bool WaterFlag { get; private set; }
@@ -176,7 +178,7 @@ public partial class PlayerController : AbstractController
         Vector3 transformedInputDirectionVector = Transform.Basis * new Vector3(inputDirection.X, 0, inputDirection.Y).Normalized();
 
         // Update locomotion animation with the new button key inputs
-        locomotionBlendPositionVector = locomotionBlendPositionVector.MoveToward(inputDirection, 30 * (float)delta);
+        locomotionBlendPositionVector = locomotionBlendPositionVector.MoveToward(inputDirection, locomotionBlendPositionSpeed * (float)delta);
         this.Model.GetAnimationTree().Set("parameters/Blended/Locomotion/blend_position", new Vector2(locomotionBlendPositionVector.X, -Math.Abs(locomotionBlendPositionVector.Y)));
         // Rotate the model to reflect the change
         if (transformedInputDirectionVector != Vector3.Zero)
@@ -254,21 +256,22 @@ public partial class PlayerController : AbstractController
             }
 
             // Because we aren't considering pressure, this works the same in air and water. 
-            thrustForceVector = internalForceVector * (thrustForce + angleOfAttackThrustForce + propulsionThrustForce); 
+            thrustForceVector = internalForceVector * (thrustForce + angleOfAttackThrustForce + propulsionThrustForce);
             internalForceVector = thrustForceVector;
         }
 
         // Jump
         if (Input.IsActionJustPressed("jump_dodge") & Model.IsOnFloor())
         {
-            // Testing angled jump, might go back to just, up.
-            internalForceVector += (Transform.Basis * new Vector3(inputDirection.X, 1, inputDirection.Y).Normalized()) * jumpForce; // Could angle this to reflect input direction.
+            internalForceVector += Vector3.Up * jumpForce; // Vertical jump
+            // internalForceVector += (Transform.Basis * new Vector3(inputDirection.X, 1, inputDirection.Y).Normalized()) * jumpForce; // Angled Jump
         }
 
         if (Input.IsActionPressed("movementAbility"))
         {
             // Change logic to reflect kit. For now -> mage hover
-            internalForceVector += (Transform.Basis * new Vector3(inputDirection.X, 1, inputDirection.Y).Normalized()) * jetPackForce;
+            Vector3 hoverForce = (Transform.Basis * new Vector3(inputDirection.X, 1, inputDirection.Y).Normalized()) * jetPackForce; // Force is angled according to input.
+            internalForceVector += hoverForce;
             // Do fuel and stuff
         }
 
@@ -303,8 +306,6 @@ public partial class PlayerController : AbstractController
             this.Model.GetAnimationTree().Set("parameters/Blended/Floating/blend_amount", 1f);
         }
 
-        //Model.Velocity = CalculatedVelocity + AppliedGravity + (direction * Speed);
-        //Model.MoveAndSlide();
         //if (Model.IsOnFloor())
         //{
         //    AppliedGravity = Vector3.Zero;
@@ -313,7 +314,6 @@ public partial class PlayerController : AbstractController
         //    {
         //        JetPackFuel += JetpackFuelRefillRate;
         //    }
-
         //}
     }
 
