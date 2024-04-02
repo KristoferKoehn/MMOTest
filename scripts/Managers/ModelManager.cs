@@ -82,7 +82,7 @@ public partial class ModelManager : Node
             a.ClientModelReference.GetMultiplayerSynchronizer().SetVisibilityFor(1, true);
             a.ClientModelReference.GetMultiplayerSynchronizer().SetVisibilityFor(PeerID, true);
             a.ClientModelReference.SetMultiplayerAuthority(PeerID);
-            SceneOrganizerManager.GetInstance().GetCurrentLevel().GetNode<Node>("ClientModels").AddChild(a.ClientModelReference);
+            SceneOrganizerManager.GetInstance().GetCurrentLevel().GetNode<Node>("ClientModels").AddChild(a.ClientModelReference, forceReadableName: true);
 
             a.ClientModelReference.Name = PeerID.ToString();
             a.ClientModelReference.SetActorID(ActorID);
@@ -117,7 +117,7 @@ public partial class ModelManager : Node
         a.PuppetModelReference.SetTrackingPeerId(PeerID);
         a.PuppetModelReference.SetActorID(ActorID);
 
-        SceneOrganizerManager.GetInstance().GetCurrentLevel().GetNode<Node>("PuppetModels").AddChild(a.PuppetModelReference);
+        SceneOrganizerManager.GetInstance().GetCurrentLevel().GetNode<Node>("PuppetModels").AddChild(a.PuppetModelReference, forceReadableName: true);
 
     }
 
