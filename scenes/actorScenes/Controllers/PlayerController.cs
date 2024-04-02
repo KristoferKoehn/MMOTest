@@ -126,7 +126,6 @@ public partial class PlayerController : AbstractController
                 Input.MouseMode = Input.MouseModeEnum.Captured;
             }
         }
-        
 	}
 
     public void AttachModel(AbstractModel model)
@@ -325,21 +324,8 @@ public partial class PlayerController : AbstractController
     public override void _Input(InputEvent @event)
     {
 
-        if (Input.MouseMode != Input.MouseModeEnum.Captured)
-        {
-            InputEventMouseButton button = @event as InputEventMouseButton;
-            if (button != null)
-            {
-                Input.MouseMode = Input.MouseModeEnum.Captured;
-            } 
-            else
-            {
-                return;
-            }
-        }
-
         InputEventMouseMotion motion = @event as InputEventMouseMotion;
-		if (motion != null)
+		if (motion != null && Input.MouseMode == Input.MouseModeEnum.Captured)
 		{
             this.RotateY(Mathf.DegToRad(-motion.Relative.X * HorizontalMouseSensitivity));
             CameraVerticalRotationPoint.RotateX(Mathf.DegToRad(-motion.Relative.Y * VerticalMouseSensitity));

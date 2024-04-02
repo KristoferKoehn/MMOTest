@@ -49,7 +49,6 @@ transform = Transform3D(0.847143, -0.195679, -0.494024, 0.52613, 0.178679, 0.831
 light_energy = 0.9
 
 [node name="Moon" parent="Main" index="2"]
-transform = Transform3D(0.660938, 0.208132, -0.721, 0.750421, -0.190051, 0.633047, -0.00526923, -0.959458, -0.281799, 0, 0, 0)
 light_energy = 0.2
 
 [node name="PuppetModels" type="Node" parent="."]
