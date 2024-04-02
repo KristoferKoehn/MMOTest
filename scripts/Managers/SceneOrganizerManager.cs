@@ -1,51 +1,53 @@
 using Godot;
-using MMOTest.scripts.Managers;
-using System;
 using System.Collections.Generic;
 
-public partial class SceneOrganizerManager : Node
-{
 
-    private static SceneOrganizerManager instance = null;
-    public Node3D CurrentLevel = null;
-    List<string> sceneNames = new List<string>()
+namespace MMOTest.scripts.Managers
+{
+    public partial class SceneOrganizerManager : Node
     {
+
+        private static SceneOrganizerManager instance = null;
+        public Node3D CurrentLevel = null;
+        List<string> sceneNames = new List<string>()
+        {
         "res://scenes/actorScenes/Models/MageModel.tscn",
         "res://scenes/actorScenes/Models/NecromancerModel.tscn",
         "res://scenes/abilities/Fireball.tscn",
         "res://scenes/abilities/FireballExplosion.tscn"
-    };
+        };
 
-    private SceneOrganizerManager() { }
-    public static SceneOrganizerManager GetInstance()
-    {
-        if (instance == null)
+        private SceneOrganizerManager() { }
+        public static SceneOrganizerManager GetInstance()
         {
-            instance = new SceneOrganizerManager();
-            GameLoop.Root.GetNode<GameLoop>("GameLoop").AddChild(instance);
-            instance.Name = "SceneOrganizerManager";
+            if (instance == null)
+            {
+                instance = new SceneOrganizerManager();
+                GameLoop.Root.GetNode<GameLoop>("GameLoop").AddChild(instance);
+                instance.Name = "SceneOrganizerManager";
+            }
+
+            return instance;
         }
 
-        return instance;
-    }
-
-    public override void _Ready()
-    {
-        foreach (string sceneName in sceneNames)
+        public override void _Ready()
         {
-            ResourceLoader.Load<PackedScene>(sceneName, cacheMode: ResourceLoader.CacheMode.Reuse);
+            foreach (string sceneName in sceneNames)
+            {
+                ResourceLoader.Load<PackedScene>(sceneName, cacheMode: ResourceLoader.CacheMode.Reuse);
+            }
         }
+
+
+        public void SetCurrentLevel(Node3D MainLevel)
+        {
+            CurrentLevel = MainLevel;
+        }
+
+        public Node3D GetCurrentLevel()
+        {
+            return CurrentLevel;
+        }
+
     }
-
-
-    public void SetCurrentLevel(Node3D MainLevel)
-    {
-        CurrentLevel = MainLevel;
-    }
-
-    public Node3D GetCurrentLevel()
-    {
-        return CurrentLevel;
-    }
-
 }

@@ -62,6 +62,7 @@ namespace MMOTest.scripts.Managers
             t.Timeout += Connector.HostRefresh;
             this.AddChild(t);
             t.Start(5);
+
         }
 
         public void Join()
@@ -73,7 +74,6 @@ namespace MMOTest.scripts.Managers
         public void EstablishActor(long PeerId)
         {
             GD.Print("Establishing Actor for connecting client: " + PeerId);
-
             RandomNumberGenerator rng = new RandomNumberGenerator();
             int ActorID = (int)rng.Randi();
             while (ActorManager.GetInstance().GetActor(ActorID) != null)
@@ -81,19 +81,35 @@ namespace MMOTest.scripts.Managers
                 ActorID = (int)rng.Randi();
             }
 
+            //stop here, wait for spawn signal
+
+            //establish actor across both simulations
+            ActorManager.GetInstance().CreateActor(PeerId, ActorID);
+            ActorManager.GetInstance().RpcId(PeerId, "CreateActor", PeerId, ActorID);
+
+
+            //I think that's it?
+
+
+
+            //the following must be moved to SpawnManager or something. 
+            /*
             AbstractModel client = SpawnClientModel(PeerId, ActorID);
             AbstractModel puppet = PuppetPlayer.Instantiate<MageModel>();
+            RpcId(PeerId, "SpawnClientModel", PeerId, ActorID);
             puppet.SetTrackingPeerId(PeerId);
             puppet.SetActorID(ActorID);
             client.SetTrackingPeerId(PeerId);
             client.SetActorID(ActorID);
             puppet.SetMultiplayerAuthority(1);
-            RpcId(PeerId, "SpawnClientModel", PeerId, ActorID);
 
             Node level = SceneOrganizerManager.GetInstance().GetCurrentLevel();
             level.GetNode<Node>(PuppetNodePath).AddChild(puppet, forceReadableName: true);
             ActorManager.GetInstance().CreateActor(client, puppet, PeerId, ActorID);
             SpawnManager.GetInstance().SpawnActor(ActorID);
+            */
+            //end move
+
         }
 
         public void RemoveActor(long PeerId)
@@ -103,14 +119,19 @@ namespace MMOTest.scripts.Managers
             foreach (Actor actor in actors)
             {
                 ActorManager.GetInstance().RemoveActor(actor.ActorID);
-                actor.ClientModelReference.QueueFree();
-                actor.PuppetModelReference.QueueFree();
+                if (actor.ClientModelReference != null)
+                {
+                    actor.ClientModelReference.QueueFree();
+                }
+                if (actor.PuppetModelReference != null)
+                {
+                    actor.PuppetModelReference.QueueFree();
+                }
                 UIManager.GetInstance().UnregisterActor(actor.ActorID);
                 GD.Print("Actor Left: " + actor.ActorID);
             }
 
         }
-
 
         [Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
         public AbstractModel SpawnClientModel(long PeerId, int ActorID)
@@ -132,26 +153,9 @@ namespace MMOTest.scripts.Managers
                 ActorManager.GetInstance().CreateActor(PlayerModel, null, PeerId, ActorID);
                 StatManager.GetInstance().RpcId(1, "RequestStatBlock", ActorID);
                 level.GetNode<PlayerController>("PlayerController").AttachModel(PlayerModel);
+                GD.Print("attaching playercontroller");
             }
             return PlayerModel;
         }
-
-        //join
-
-        //host
-
-
-        //spawn player
-        //establishActor
-
-        //remove actor
-
-        //server stuff
-        //subscribe to peerconnected
-
-        //receive connection -> get actor data -> hand off to actormanager
-
-        //getting actor data needs to be sourced from a manager that could have access to database
-
     }
 }

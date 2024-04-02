@@ -3,20 +3,21 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://gb7gg4w3nsg6"
-path="res://.godot/imported/SM_Tree_04-402fd161983d8548addd4bd61f2f9622_PolygonNature_01.png-c76217b442e8bf920c2a07c02c19c061.ctex"
+path.s3tc="res://.godot/imported/SM_Tree_04-402fd161983d8548addd4bd61f2f9622_PolygonNature_01.png-c76217b442e8bf920c2a07c02c19c061.s3tc.ctex"
 metadata={
-"vram_texture": false
+"imported_formats": ["s3tc_bptc"],
+"vram_texture": true
 }
 generator_parameters={}
 
 [deps]
 
 source_file="res://assets/models/Environment/SM_Tree_04-402fd161983d8548addd4bd61f2f9622_PolygonNature_01.png"
-dest_files=["res://.godot/imported/SM_Tree_04-402fd161983d8548addd4bd61f2f9622_PolygonNature_01.png-c76217b442e8bf920c2a07c02c19c061.ctex"]
+dest_files=["res://.godot/imported/SM_Tree_04-402fd161983d8548addd4bd61f2f9622_PolygonNature_01.png-c76217b442e8bf920c2a07c02c19c061.s3tc.ctex"]
 
 [params]
 
-compress/mode=0
+compress/mode=2
 compress/high_quality=false
 compress/lossy_quality=0.7
 compress/hdr_compression=1
@@ -32,4 +33,4 @@ process/normal_map_invert_y=false
 process/hdr_as_srgb=false
 process/hdr_clamp_exposure=false
 process/size_limit=0
-detect_3d/compress_to=1
+detect_3d/compress_to=0

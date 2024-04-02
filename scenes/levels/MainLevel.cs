@@ -3,6 +3,7 @@ using MMOTest.Backend;
 using MMOTest.scripts.Managers;
 using Newtonsoft.Json.Linq;
 using System.Collections.Generic;
+using System.Net.NetworkInformation;
 
 public partial class MainLevel : Node3D
 {
@@ -24,15 +25,7 @@ public partial class MainLevel : Node3D
         SpawnManager.GetInstance();
         StatManager.GetInstance();
         UIManager.GetInstance();
-    }
-
-    public void PrintStatus()
-    {
-        GD.Print("Peers Connected: " + Multiplayer.GetPeers().Length);
-        foreach (int p in Multiplayer.GetPeers())
-        {
-            GD.Print("Peer ID " + p);
-        }
+        ModelManager.GetInstance();
     }
 
     public override void _Ready()

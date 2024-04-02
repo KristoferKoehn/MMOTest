@@ -147,11 +147,6 @@ public partial class StatManager : Node
     [Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
     public void AssignStatBlock(string jstr, int ActorID)
     {
-        if (ActorManager.GetInstance().GetActor(ActorID) == null)
-        {
-            ActorManager.GetInstance().CreateActor(null, null, Multiplayer.GetUniqueId(), ActorID);
-        }
-
         Dictionary<StatType, float> sb = JsonConvert.DeserializeObject< Dictionary<StatType, float>>(jstr);
         ActorManager.GetInstance().GetActor(ActorID).stats.SetStatBlock(sb);
     }
