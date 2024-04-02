@@ -1,5 +1,0 @@
-[gd_scene load_steps=2 format=3 uid="uid://ipmqepy8h6kw"]
-
-[ext_resource type="PackedScene" uid="uid://ecd4kk8un4o3" path="res://assets/models/CharacterModelsglb/Mage.glb" id="1_1ix0j"]
-
-[node name="Mage" instance=ExtResource("1_1ix0j")]
