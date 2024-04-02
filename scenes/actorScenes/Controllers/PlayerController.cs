@@ -111,6 +111,12 @@ public partial class PlayerController : AbstractController
         
         fluidDensity = airDensity; // Air by default. Should probably make a check here
         thrustForce = airThrustForce;
+
+        if (Multiplayer.GetUniqueId() == 1)
+        {
+            this.QueueFree();
+        }
+
     }
 
     // Called every frame. 'delta' is the elapsed time since the previous frame.
