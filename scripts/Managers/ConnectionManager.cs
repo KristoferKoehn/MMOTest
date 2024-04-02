@@ -118,8 +118,14 @@ namespace MMOTest.scripts.Managers
             foreach (Actor actor in actors)
             {
                 ActorManager.GetInstance().RemoveActor(actor.ActorID);
-                actor.ClientModelReference.QueueFree();
-                actor.PuppetModelReference.QueueFree();
+                if (actor.ClientModelReference != null)
+                {
+                    actor.ClientModelReference.QueueFree();
+                }
+                if (actor.PuppetModelReference != null)
+                {
+                    actor.PuppetModelReference.QueueFree();
+                }
                 UIManager.GetInstance().UnregisterActor(actor.ActorID);
                 GD.Print("Actor Left: " + actor.ActorID);
             }

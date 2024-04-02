@@ -58,7 +58,7 @@ offset_right = 69.0
 offset_bottom = 43.0
 text = "Select class: "
 
-[node name="Class Selection" type="Label" parent="SpawnPanel/Panel"]
+[node name="ClassSelection" type="Label" parent="SpawnPanel/Panel"]
 layout_mode = 0
 offset_left = 48.0
 offset_top = 246.0

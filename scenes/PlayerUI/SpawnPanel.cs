@@ -11,8 +11,8 @@ public partial class SpawnPanel : Control
 
     public override void _Ready()
     {
-        displayLabel = this.GetNode<Label>("Class Selection");
-        playerUI = this.GetParent().GetParent().GetParent<PlayerUI>();
+        displayLabel = this.GetNode<Label>("Panel/ClassSelection");
+        playerUI = this.GetParent<PlayerUI>();
     }
 
     public void _on_spawn_button_pressed()
