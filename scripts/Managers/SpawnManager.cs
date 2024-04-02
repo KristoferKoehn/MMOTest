@@ -1,5 +1,4 @@
 ﻿using Godot;
-using Godot.Collections;
 using MMOTest.Backend;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -82,7 +81,7 @@ namespace MMOTest.scripts.Managers
         public void SpawnPlayer(string classname, int ActorID)
         {
             int PeerID = Multiplayer.GetRemoteSenderId();
-            Godot.Collections.Dictionary<StatType, float> statsDict;
+            Dictionary<StatType, float> statsDict;
             switch (classname)
             {
                 case "Mage":
@@ -244,7 +243,10 @@ namespace MMOTest.scripts.Managers
                     break;
             }
 
-            StatManager.GetInstance().RpcId(PeerID, "AssignStatBlock", statsDict);
+            StatBlock sb = new StatBlock();
+            sb.SetStatBlock(statsDict);
+
+            StatManager.GetInstance().RpcId(PeerID, "AssignStatBlock", sb.SerializeStatBlock(), ActorID);
             ModelManager.GetInstance().ChangeActorModel(ActorID, classname);
 
             //no teams by default, change this later somehow
