@@ -77,7 +77,7 @@ public partial class ModelManager : Node
                 t.Start(20);
             }
 
-            a.ClientModelReference = ResourceLoader.Load<AbstractModel>("res://scenes/actorScenes/Models/" + classname + "Model.tscn", cacheMode: ResourceLoader.CacheMode.Reuse);
+            a.ClientModelReference = ResourceLoader.Load<PackedScene>("res://scenes/actorScenes/Models/" + classname + "Model.tscn", cacheMode: ResourceLoader.CacheMode.Reuse).Instantiate<AbstractModel>();
             a.ClientModelReference.GetMultiplayerSynchronizer().SetVisibilityFor(0, false);
             a.ClientModelReference.GetMultiplayerSynchronizer().SetVisibilityFor(1, true);
             a.ClientModelReference.GetMultiplayerSynchronizer().SetVisibilityFor(PeerID, true);
