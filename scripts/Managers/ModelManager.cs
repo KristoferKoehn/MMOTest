@@ -72,8 +72,15 @@ public partial class ModelManager : Node
             }
 
             a.ClientModelReference = ResourceLoader.Load<AbstractModel>("res://scenes/actorScenes/Models/" + classname + "Model");
+            a.ClientModelReference.GetMultiplayerSynchronizer().SetVisibilityFor(0, false);
+            a.ClientModelReference.GetMultiplayerSynchronizer().SetVisibilityFor(1, true);
+            a.ClientModelReference.GetMultiplayerSynchronizer().SetVisibilityFor(PeerID, true);
             a.ClientModelReference.SetMultiplayerAuthority(PeerID);
             SceneOrganizerManager.GetInstance().GetCurrentLevel().GetNode<Node>("ClientModels").AddChild(a.ClientModelReference);
+
+            a.ClientModelReference.Name = PeerID.ToString();
+            a.ClientModelReference.SetActorID(ActorID);
+
             SceneOrganizerManager.GetInstance().GetCurrentLevel().GetNode<PlayerController>("PlayerController").AttachModel(a.ClientModelReference);
         }
     }
@@ -101,6 +108,10 @@ public partial class ModelManager : Node
 
         a.PuppetModelReference = ResourceLoader.Load<AbstractModel>("res://scenes/actorScenes/Models/" + classname + "Model");
         a.PuppetModelReference.SetMultiplayerAuthority(1);
+        a.PuppetModelReference.SetTrackingPeerId(PeerID);
+        a.PuppetModelReference.SetActorID(ActorID);
+
+
         SceneOrganizerManager.GetInstance().GetCurrentLevel().GetNode<Node>("PuppetModels").AddChild(a.PuppetModelReference);
 
     }

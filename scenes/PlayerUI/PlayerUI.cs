@@ -22,12 +22,9 @@ public partial class PlayerUI : CanvasLayer
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
 	{
-		
 		progressBar = this.GetNode<ProgressBar>("ProgressBar");
 		UIManager.GetInstance().RegisterUI(ActorID, this);
 		UIManager.GetInstance().RpcId(1, "RegisterActor", ActorID);
-
-
     }
 
 	// Called every frame. 'delta' is the elapsed time since the previous frame.

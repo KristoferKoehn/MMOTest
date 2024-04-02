@@ -85,6 +85,8 @@ namespace MMOTest.scripts.Managers
             //establish actor across both simulations
             ActorManager.GetInstance().CreateActor(PeerId, ActorID);
             ActorManager.GetInstance().RpcId(PeerId, "CreateActor", PeerId, ActorID);
+
+
             //I think that's it?
 
 

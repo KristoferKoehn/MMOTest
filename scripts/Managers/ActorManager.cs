@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Newtonsoft.Json.Linq;
 using MMOTest.Backend;
 using System;
+using MMOTest.scripts.Managers;
 
 public partial class ActorManager : Node
 {
@@ -50,6 +51,12 @@ public partial class ActorManager : Node
         actor.ActorMultiplayerAuthority = PeerID;
         actor.stats = new StatBlock();
         actors[ActorID] = actor;
+
+		if (Multiplayer.GetUniqueId() > 1)
+		{
+			SceneOrganizerManager.GetInstance().GetCurrentLevel().GetNode<PlayerController>("PlayerController").InitializeUI(ActorID);
+		}
+
     }
 
     public void CreateActor(AbstractModel player, AbstractModel puppet, long PeerID, int ActorID)

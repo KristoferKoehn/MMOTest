@@ -135,8 +135,13 @@ public partial class PlayerController : AbstractController
         this.Model = model;
         this.ModelAnimation = model.GetNode<AnimationPlayer>("AnimationPlayer");
         Model.AttachController(this);
+
+    }
+
+    public void InitializeUI(int ActorID)
+    {
         PlayerUI p = GD.Load<PackedScene>("res://scenes/PlayerUI/PlayerUI.tscn").Instantiate<PlayerUI>();
-        p.initialize(model.GetActorID());
+        p.initialize(ActorID);
         this.AddChild(p);
     }
 
