@@ -112,11 +112,10 @@ public partial class ModelManager : Node
             t.Start(20);
         }
 
-        a.PuppetModelReference = ResourceLoader.Load<AbstractModel>("res://scenes/actorScenes/Models/" + classname + "Model.tscn");
+        a.PuppetModelReference = ResourceLoader.Load<PackedScene>("res://scenes/actorScenes/Models/" + classname + "Model.tscn", cacheMode: ResourceLoader.CacheMode.Reuse).Instantiate<AbstractModel>();
         a.PuppetModelReference.SetMultiplayerAuthority(1);
         a.PuppetModelReference.SetTrackingPeerId(PeerID);
         a.PuppetModelReference.SetActorID(ActorID);
-
 
         SceneOrganizerManager.GetInstance().GetCurrentLevel().GetNode<Node>("PuppetModels").AddChild(a.PuppetModelReference);
 
