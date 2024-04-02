@@ -69,7 +69,7 @@ public partial class ModelManager : Node
 
         if (a != null)
         {
-            if (Multiplayer.GetUniqueId() > 1) {
+            if (Multiplayer.GetUniqueId() > 1 && a.ClientModelReference != null) {
                 Timer t = new Timer();
                 t.Timeout += a.ClientModelReference.QueueFree;
                 t.Timeout += t.QueueFree;
@@ -77,7 +77,7 @@ public partial class ModelManager : Node
                 t.Start(20);
             }
 
-            a.ClientModelReference = ResourceLoader.Load<AbstractModel>("res://scenes/actorScenes/Models/" + classname + "Model", cacheMode: ResourceLoader.CacheMode.Reuse);
+            a.ClientModelReference = ResourceLoader.Load<AbstractModel>("res://scenes/actorScenes/Models/" + classname + "Model.tscn", cacheMode: ResourceLoader.CacheMode.Reuse);
             a.ClientModelReference.GetMultiplayerSynchronizer().SetVisibilityFor(0, false);
             a.ClientModelReference.GetMultiplayerSynchronizer().SetVisibilityFor(1, true);
             a.ClientModelReference.GetMultiplayerSynchronizer().SetVisibilityFor(PeerID, true);
