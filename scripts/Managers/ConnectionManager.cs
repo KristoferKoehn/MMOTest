@@ -1,4 +1,4 @@
-﻿using Godot;
+using Godot;
 using MMOTest.Backend;
 using System.Collections.Generic;
 
@@ -137,7 +137,7 @@ namespace MMOTest.scripts.Managers
         public AbstractModel SpawnClientModel(long PeerId, int ActorID)
         {
 
-            MageModel PlayerModel = ResourceLoader.Load<PackedScene>("res://scenes/actorScenes/Models/MageModel.tscn", cacheMode: ResourceLoader.CacheMode.Reuse).Instantiate<MageModel>();
+            BaseModel PlayerModel = ResourceLoader.Load<PackedScene>("res://scenes/actorScenes/Models/MageModel.tscn", cacheMode: ResourceLoader.CacheMode.Reuse).Instantiate<BaseModel>();
             PlayerModel.GetMultiplayerSynchronizer().SetVisibilityFor(0, false);
             PlayerModel.GetMultiplayerSynchronizer().SetVisibilityFor(1, true);
             PlayerModel.GetMultiplayerSynchronizer().SetVisibilityFor((int)PeerId, true);

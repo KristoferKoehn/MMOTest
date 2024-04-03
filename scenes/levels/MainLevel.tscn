@@ -180,3 +180,4 @@ transform = Transform3D(98.196, 0, -174.234, 0, 200, 0, 174.234, 0, 98.196, -14.
 [connection signal="despawned" from="AbilitySpawner" to="." method="_on_ability_spawner_despawned"]
 
 [editable path="Main"]
+[editable path="PlayerController"]
