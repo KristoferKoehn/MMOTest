@@ -8,19 +8,24 @@ using static Godot.TextServer;
 public partial class PlayerController : AbstractController
 {
     //model node paths
-    AbstractModel Model;
-    AnimationPlayer ModelAnimation;
+    private AbstractModel Model;
+    private AnimationPlayer ModelAnimation;
 
-    Node3D CameraVerticalRotationPoint;
-    RayCast3D RayCast;
-    Camera3D Camera;
-    Node3D CastingPoint;
+    private Node3D CameraVerticalRotationPoint;
+    private RayCast3D RayCast;
+    private Camera3D Camera;
+    private Node3D CastingPoint;
 
-    [Export] float HorizontalMouseSensitivity = 0.2f;
-    [Export] float VerticalMouseSensitity = 0.2f;
-    [Export] float ScrollSensitivity = 0.25f;
+    [Export] private float HorizontalMouseSensitivity = 0.2f;
+    [Export] private float VerticalMouseSensitivity = 0.2f;
+    [Export] private float ZoomedMouseSensitivityModifier = 0.5f;
+    [Export] private float CameraScrollSensitivity = 0.25f;
+    [Export] private float CameraScrollMaxIn = 4f;
+    [Export] private float CameraScrollMaxOut = 10f;
+    [Export] private float CameraZValue = 4f;
     [Export] private float CameraDefaultFOV = 75;
     [Export] private float CameraZoomedFOV = 40;
+    private bool isZoomed = false;
 
     // Used if position needs to be halted for animations
     bool IsPositionLocked = false;
@@ -117,22 +122,6 @@ public partial class PlayerController : AbstractController
         thrustForce = airThrustForce;
     }
 
-    // Called every frame. 'delta' is the elapsed time since the previous frame.
-    public override void _Process(double delta)
-	{
-        if (Input.IsActionJustPressed("pause"))
-        {
-            if (Input.MouseMode == Input.MouseModeEnum.Captured)
-            {
-                Input.MouseMode = Input.MouseModeEnum.Visible;
-            }
-            else
-            {
-                Input.MouseMode = Input.MouseModeEnum.Captured;
-            }
-        }
-	}
-
     public void AttachModel(AbstractModel model)
     {
         this.Model = model;
@@ -148,11 +137,55 @@ public partial class PlayerController : AbstractController
         this.AddChild(p);
     }
 
+    public override void _Input(InputEvent @event)
+    {
+        InputEventMouseMotion motion = @event as InputEventMouseMotion;
+        if (motion != null && Input.MouseMode == Input.MouseModeEnum.Captured)
+        {
+            if (isZoomed)
+            {
+                this.RotateY(Mathf.DegToRad(-motion.Relative.X * HorizontalMouseSensitivity * ZoomedMouseSensitivityModifier));
+                CameraVerticalRotationPoint.RotateX(Mathf.DegToRad(-motion.Relative.Y * VerticalMouseSensitivity * ZoomedMouseSensitivityModifier));
+            }
+            else
+            {
+                this.RotateY(Mathf.DegToRad(-motion.Relative.X * HorizontalMouseSensitivity));
+                CameraVerticalRotationPoint.RotateX(Mathf.DegToRad(-motion.Relative.Y * VerticalMouseSensitivity));
+            }
+
+            if (CameraVerticalRotationPoint.Rotation.X > Mathf.DegToRad(90))
+            {
+                CameraVerticalRotationPoint.RotateX(Mathf.DegToRad(90) - CameraVerticalRotationPoint.Rotation.X);
+            }
+            if (CameraVerticalRotationPoint.Rotation.X < Mathf.DegToRad(-90))
+            {
+                CameraVerticalRotationPoint.RotateX(Mathf.DegToRad(-90) - CameraVerticalRotationPoint.Rotation.X);
+            }
+        }
+    }
+
+    // Called every frame. 'delta' is the elapsed time since the previous frame.
+    public override void _Process(double delta)
+    {
+        if (Input.IsActionJustPressed("pause"))
+        {
+            if (Input.MouseMode == Input.MouseModeEnum.Captured)
+            {
+                Input.MouseMode = Input.MouseModeEnum.Visible;
+            }
+            else
+            {
+                Input.MouseMode = Input.MouseModeEnum.Captured;
+            }
+        }
+    }
+
     public override void _PhysicsProcess(double delta)
     {
         if (Model == null) { return; }
 
-        if (Model.IsDead) {
+        if (Model.IsDead) 
+        {
             totalForceVector = Vector3.Zero;
             externalForceVector = Vector3.Zero;
             internalForceVector = Vector3.Zero;
@@ -163,6 +196,7 @@ public partial class PlayerController : AbstractController
 
         if (Input.IsActionJustPressed("aim"))
         {
+            isZoomed = true;
             Tween tween = GetTree().CreateTween();
             tween.TweenProperty(this.Camera, "fov", this.CameraZoomedFOV, 0.3f).SetTrans(Tween.TransitionType.Sine);
             tween.Play();
@@ -170,9 +204,34 @@ public partial class PlayerController : AbstractController
 
         if (Input.IsActionJustReleased("aim"))
         {
+            isZoomed = false;
             Tween tween = GetTree().CreateTween();
             tween.TweenProperty(this.Camera, "fov", this.CameraDefaultFOV, 0.3f).SetTrans(Tween.TransitionType.Sine);
             tween.Play();
+        }
+
+        if (Input.IsActionJustPressed("zoomIn"))
+        {
+            if ((CameraZValue - CameraScrollSensitivity) > CameraScrollMaxIn)
+            {
+                CameraZValue -= CameraScrollSensitivity;
+                Tween tween = GetTree().CreateTween();
+                Vector3 targetValue = new Vector3(Camera.Position.X, Camera.Position.Y, this.CameraZValue);
+                tween.TweenProperty(this.Camera, "position", targetValue, 0.1f).SetTrans(Tween.TransitionType.Sine);
+                tween.Play();
+            }
+        }
+
+        if (Input.IsActionJustPressed("zoomOut"))
+        {
+            if ((CameraZValue + CameraScrollSensitivity) < CameraScrollMaxOut)
+            {
+                CameraZValue += CameraScrollSensitivity;
+                Tween tween = GetTree().CreateTween();
+                Vector3 targetValue = new Vector3(Camera.Position.X, Camera.Position.Y, this.CameraZValue);
+                tween.TweenProperty(this.Camera, "position", targetValue, 0.1f).SetTrans(Tween.TransitionType.Sine);
+                tween.Play();
+            }
         }
 
         if (Input.IsActionJustPressed("shoot_throw"))
@@ -304,6 +363,7 @@ public partial class PlayerController : AbstractController
             Vector3 hoverForce = Vector3.Up * jetPackForce;
             // Vector3 hoverForce = (Transform.Basis * new Vector3(inputDirection.X, 1, inputDirection.Y).Normalized()) * jetPackForce; // Force is angled according to input.
             internalForceVector += hoverForce;
+            
             // Do fuel and stuff
         }
 
@@ -347,26 +407,6 @@ public partial class PlayerController : AbstractController
         //        JetPackFuel += JetpackFuelRefillRate;
         //    }
         //}
-    }
-
-
-    public override void _Input(InputEvent @event)
-    {
-
-        InputEventMouseMotion motion = @event as InputEventMouseMotion;
-		if (motion != null && Input.MouseMode == Input.MouseModeEnum.Captured)
-		{
-            this.RotateY(Mathf.DegToRad(-motion.Relative.X * HorizontalMouseSensitivity));
-            CameraVerticalRotationPoint.RotateX(Mathf.DegToRad(-motion.Relative.Y * VerticalMouseSensitity));
-            if (CameraVerticalRotationPoint.Rotation.X > Mathf.DegToRad(90))
-            {
-                CameraVerticalRotationPoint.RotateX(Mathf.DegToRad(90) - CameraVerticalRotationPoint.Rotation.X);
-            }
-            if (CameraVerticalRotationPoint.Rotation.X < Mathf.DegToRad(-90))
-            {
-                CameraVerticalRotationPoint.RotateX(Mathf.DegToRad(-90) - CameraVerticalRotationPoint.Rotation.X);
-            }
-        }
     }
 
     public override void ApplyImpulse(Vector3 vec)

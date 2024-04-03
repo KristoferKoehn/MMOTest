@@ -27,8 +27,6 @@ public partial class MageModel : AbstractModel
         {
             AnimationTree = at;
         }
-
-
     }
 
 	// Called every frame. 'delta' is the elapsed time since the previous frame.
