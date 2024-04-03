@@ -12,12 +12,15 @@ public partial class PlayerController : AbstractController
     AnimationPlayer ModelAnimation;
 
     Node3D CameraVerticalRotationPoint;
-    Node3D DirectionMarker;
+    RayCast3D RayCast;
     Camera3D Camera;
+    Node3D CastingPoint;
 
     [Export] float HorizontalMouseSensitivity = 0.2f;
     [Export] float VerticalMouseSensitity = 0.2f;
     [Export] float ScrollSensitivity = 0.25f;
+    [Export] private float CameraDefaultFOV = 75;
+    [Export] private float CameraZoomedFOV = 40;
 
     // Used if position needs to be halted for animations
     bool IsPositionLocked = false;
@@ -31,8 +34,8 @@ public partial class PlayerController : AbstractController
 
     private float dragCoefficient = 1.15f; // Ranges between 1.0 and 1.3 for a person. https://en.wikipedia.org/wiki/Drag_coefficient
     // Should be like 1, 0.9. High for game feel for now.
-    private float staticFrictionCoefficient = 0.7f; // best guess. Leather on wood, with the grain is 0.61. So a leather shoe on stone or dirt? idk. a bit higher. // Needs a setter and surface detection of some kind? so we can switch to an ice coefficient? Also, kinetic friction at some point? https://www.engineeringtoolbox.com/friction-coefficients-d_778.html 
-    private float kineticFrictionCoefficient = 0.6f; // Also a guess 
+    private float staticFrictionCoefficient = 1f; // best guess. Leather on wood, with the grain is 0.61. So a leather shoe on stone or dirt? idk. a bit higher. // Needs a setter and surface detection of some kind? so we can switch to an ice coefficient? Also, kinetic friction at some point? https://www.engineeringtoolbox.com/friction-coefficients-d_778.html 
+    private float kineticFrictionCoefficient = 0.9f; // Also a guess 
 
     // Physics exports
     // These are about the character itself
@@ -42,7 +45,7 @@ public partial class PlayerController : AbstractController
     [Export] private float modelVolume = 0.075f; // cubic meters, surprisingly.
 
     // These are about the desired behavior of the character
-    [Export] private float jumpHeight = 10f; // 3 meters is way higher than people can jump but 0.3 feels bad because you cant pick up your legs to clear a fence.
+    [Export] private float jumpHeight = 3f; // 3 meters is way higher than people can jump but 0.3 feels bad because you cant pick up your legs to clear a fence.
     [Export] private float maxSprintSpeed = 7f; // 10 meters a second. Ballpark of olympic athletes in 200m races.
     [Export] private float maxSwimSpeed = 2.2f; // 2.2 Meters per second. https://www.wired.com/2012/08/olympics-physics-swimming/
     [Export] private float maxFlySpeed = 7f; //Terminal velocity?  // People cant fly. Should be zero, but having it at 10 helps a bit.The air thrust force needs to be calculated differently. Drag doesnt make sense.
@@ -52,7 +55,7 @@ public partial class PlayerController : AbstractController
     private float jumpVelocity;
     private float jumpForce;
     private float angleOfAttackThrustForce; // Derived from angle of attack and drag
-    private float airThrustForce;// = 500; // Force generated to fly, like a bird.
+    private float airThrustForce = 500; // Force generated to fly, like a bird.
     private float swimThrustForce; // Force generated to swim.
     private float thrustForce; // total Thrust force
 
@@ -60,7 +63,6 @@ public partial class PlayerController : AbstractController
     // Internal Force
     private Vector2 inputDirection = new Vector2(); // Captures movement key presses
     private Vector3 currentRunningSpeedVector = new Vector3(); // How the character is running in a given direction
-    private Vector3 runningSpeedAccelerationVector = new Vector3();
     private Vector3 internalForceVector = new Vector3(); // Represents the force the character is exerting inorder to move in a certain direction.
     private Vector3 thrustForceVector = new Vector3(); // Force used to move in a given direction in a fluid (air, water) and not on the ground. Internal force = thrust force when off the ground.
     private Vector3 runningForceVector = new Vector3(); // thrustForce On ground counterpart. Used to move in a given direction on the ground.
@@ -70,7 +72,7 @@ public partial class PlayerController : AbstractController
 
     // Resistance Forces
     private Vector3 dragForceVector = new Vector3(); // Friction while moving through a fluid (off the ground)
-    private Vector3 frictionForceVector = new Vector3(); // Dampens movement of objects sliding on the ground.
+    private Vector3 frictionForceVector = new Vector3(); // Dampens movement of objects
     private float normalForce; // Used to calculate friction
     private Vector3 movementResistanceForceVector = new Vector3(); // Represents forces from the environment that slow the character down. Friction and drag.
     private Vector3 buoyantForceVector = new Vector3(); // Used to float in fluids (or sink)
@@ -89,21 +91,23 @@ public partial class PlayerController : AbstractController
     private float JetPackFuel = 10f;
     [Export] private float JetpackFuelConsumptionRate = 0.1f;
     [Export] private float JetpackFuelRefillRate = 0.5f;
-    [Export] private float jetPackForce = 1500f; // Arbitrary. Might turn into a calculation later. Give it a better handle
-    [Export] private float propulsionThrustForce = 000f; // 500?
+    [Export] private float jetPackForce = 1200f; // Arbitrary. Might turn into a calculation later. Give it a better handle
+    [Export] private float propulsionThrustForce = 300f;
 
     public bool WaterFlag { get; private set; }
 
     public override void _EnterTree()
     {
-        CameraVerticalRotationPoint = GetNode<Node3D>("CameraVerticalRotationPoint");
-        DirectionMarker = GetNode<Node3D>("CameraVerticalRotationPoint/Marker3D");
-        Camera = GetNode<Camera3D>("CameraVerticalRotationPoint/Camera3D");
+        
     }
 
     // Called when the node enters the scene tree for the first time.
     public override void _Ready()
     {
+        CameraVerticalRotationPoint = GetNode<Node3D>("CameraVerticalRotationPoint");
+        Camera = GetNode<Camera3D>("CameraVerticalRotationPoint/Camera3D");
+        RayCast = GetNode<RayCast3D>("CameraVerticalRotationPoint/Camera3D/RayCast3D");
+
         // So this whole bit feels a little backwards. The forces are ultimately what moves the model, we are inferring what those forces should be from exported variables that are more intuitive to set.
         jumpVelocity = (float)Math.Sqrt(jumpHeight * 2 * -gravity.Y); // This one is a little bit of a doozy. Has to do with velocity averages and calculating time to max height
         jumpForce = jumpVelocity * mass * 60; // 60 for 60fps. This will be multiplied by delta later, so the 60 is here to cancel it out.
@@ -111,7 +115,6 @@ public partial class PlayerController : AbstractController
         
         fluidDensity = airDensity; // Air by default. Should probably make a check here
         thrustForce = airThrustForce;
-
     }
 
     // Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -134,8 +137,8 @@ public partial class PlayerController : AbstractController
     {
         this.Model = model;
         this.ModelAnimation = model.GetNode<AnimationPlayer>("AnimationPlayer");
+        this.CastingPoint = this.Model.GetNode<Node3D>("Rig/Skeleton3D/2H_Staff/2H_Staff/Marker3D");
         Model.AttachController(this);
-
     }
 
     public void InitializeUI(int ActorID)
@@ -158,18 +161,43 @@ public partial class PlayerController : AbstractController
 
         this.GlobalPosition = this.Model.GlobalPosition;
 
-        if (Input.IsActionJustPressed("shoot_throw")) {
-            Vector3 point = (DirectionMarker.GlobalPosition - Camera.GlobalPosition).Normalized();
+        if (Input.IsActionJustPressed("aim"))
+        {
+            Tween tween = GetTree().CreateTween();
+            tween.TweenProperty(this.Camera, "fov", this.CameraZoomedFOV, 0.3f).SetTrans(Tween.TransitionType.Sine);
+            tween.Play();
+        }
+
+        if (Input.IsActionJustReleased("aim"))
+        {
+            Tween tween = GetTree().CreateTween();
+            tween.TweenProperty(this.Camera, "fov", this.CameraDefaultFOV, 0.3f).SetTrans(Tween.TransitionType.Sine);
+            tween.Play();
+        }
+
+        if (Input.IsActionJustPressed("shoot_throw"))
+        {
+            Vector3 target;
+            if (RayCast.IsColliding())
+            {
+                target = RayCast.GetCollisionPoint();
+            }
+            else
+            {
+                target = (RayCast.GlobalPosition - Camera.GlobalPosition).Normalized() * 1000f; // Arbitrary "Max distance"
+            }
+            Vector3 fireballTrajectory = (target - CastingPoint.GlobalPosition).Normalized();
+
             JObject job = new JObject
             {
                 { "spell", "Fireball"},
                 { "type", "cast"},
-                { "posx", Model.Position.X },
-                { "posy", Model.Position.Y + 1.5},
-                { "posz", Model.Position.Z },
-                { "velx", point.X},
-                { "vely", point.Y},
-                { "velz", point.Z},
+                { "posx", CastingPoint.GlobalPosition.X},
+                { "posy", CastingPoint.GlobalPosition.Y},
+                { "posz", CastingPoint.GlobalPosition.Z},
+                { "velx", fireballTrajectory.X},
+                { "vely", fireballTrajectory.Y},
+                { "velz", fireballTrajectory.Z},
                 { "SourceID", Model.GetActorID()}
             };
             MessageQueue.GetInstance().RpcId(1, "AddMessage", JsonConvert.SerializeObject(job));
@@ -255,7 +283,7 @@ public partial class PlayerController : AbstractController
             // Adjust thrust to enforce fly speed cap
             if (!WaterFlag)
             {
-                // If thrust would accelerate us past our max fly speed, scale down thrust to match
+                // TODO: If thrust would accelerate us past our max fly speed, scale down thrust to match
             }
 
             // Because we aren't considering pressure, this works the same in air and water. 
@@ -273,7 +301,8 @@ public partial class PlayerController : AbstractController
         if (Input.IsActionPressed("movementAbility"))
         {
             // Change logic to reflect kit. For now -> mage hover
-            Vector3 hoverForce = (Transform.Basis * new Vector3(inputDirection.X, 1, inputDirection.Y).Normalized()) * jetPackForce; // Force is angled according to input.
+            Vector3 hoverForce = Vector3.Up * jetPackForce;
+            // Vector3 hoverForce = (Transform.Basis * new Vector3(inputDirection.X, 1, inputDirection.Y).Normalized()) * jetPackForce; // Force is angled according to input.
             internalForceVector += hoverForce;
             // Do fuel and stuff
         }
