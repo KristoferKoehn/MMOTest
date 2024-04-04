@@ -118,8 +118,8 @@ public partial class PlayerController : AbstractController
         jumpForce = jumpVelocity * mass * 60; // 60 for 60fps. This will be multiplied by delta later, so the 60 is here to cancel it out.
         swimThrustForce = 0.5f * waterDensity * maxSwimSpeed * maxSwimSpeed * dragCoefficient * modelProjectedArea; // Needs to be equal to drag at max speed.
         
-        fluidDensity = airDensity; // Air by default. Should probably make a check here
-        thrustForce = airThrustForce;
+        // TODO: Check before setting 
+        SetWaterFlag(false);
     }
 
     public void AttachModel(AbstractModel model)
@@ -339,14 +339,25 @@ public partial class PlayerController : AbstractController
             
             movementResistanceForceVector = dragForceVector;
 
+            Vector3 flySpeedCapDampeningVector = new Vector3();
             // Adjust thrust to enforce fly speed cap
             if (!WaterFlag)
             {
                 // TODO: If thrust would accelerate us past our max fly speed, scale down thrust to match
+                Vector2 horizontalModelVelocity = new Vector2(this.Model.Velocity.X, this.Model.Velocity.Z);
+                if (horizontalModelVelocity.Length() > maxFlySpeed)
+                {
+                    Vector2 horizontalInternalForceVector = new Vector2(internalForceVector.X, internalForceVector.Z);
+                    float dampenScalar = horizontalInternalForceVector.Normalized().Dot(horizontalModelVelocity.Normalized());
+                    if (dampenScalar > 0)
+                    {
+                        flySpeedCapDampeningVector = (-internalForceVector * dampenScalar * (thrustForce + angleOfAttackThrustForce + propulsionThrustForce));
+                    }
+                }
             }
 
             // Because we aren't considering pressure, this works the same in air and water. 
-            thrustForceVector = internalForceVector * (thrustForce + angleOfAttackThrustForce + propulsionThrustForce);
+            thrustForceVector = (internalForceVector * (thrustForce + angleOfAttackThrustForce + propulsionThrustForce)) + flySpeedCapDampeningVector;
             internalForceVector = thrustForceVector;
         }
 
@@ -369,7 +380,6 @@ public partial class PlayerController : AbstractController
 
         buoyantForceVector = Vector3.Up * (-1 * fluidDensity * gravity.Y * modelVolume);
         externalForceVector += buoyantForceVector;
-
 
         // NOT PHYSICAL, ADDED FOR GAME FEEL
         // Internal force is scaled to be up to twice as strong if it is in a direction opposite current velocity.
@@ -414,6 +424,7 @@ public partial class PlayerController : AbstractController
         externalForceVector += vec;
     }
 
+    // Set water flag on enter
     public void SetWaterFlag(bool flag)
     {
         this.WaterFlag = flag;
