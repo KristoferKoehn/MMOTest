@@ -54,6 +54,7 @@ namespace MMOTest.scripts.Managers
 
         public void HeadlessHost()
         {
+            SocketServerManager.GetInstance();
             EnetPeer.CreateServer(PORT);
             Multiplayer.MultiplayerPeer = EnetPeer;
             Multiplayer.PeerConnected += EstablishActor;
