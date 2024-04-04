@@ -20,8 +20,6 @@ public partial class SocketServerManager : Node
             GameLoop.Root.GetNode<MainLevel>("GameLoop/MainLevel").AddChild(instance);
         }
 
-        
-
         return instance;
     }
 
