@@ -62,7 +62,6 @@ namespace MMOTest.scripts.Managers
             t.Timeout += Connector.HostRefresh;
             this.AddChild(t);
             t.Start(5);
-
         }
 
         public void Join()
