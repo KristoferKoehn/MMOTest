@@ -7,7 +7,6 @@ public partial class SocketServerManager : Node
     int outport = 9003;
 
 
-
     private SocketServerManager() { }
     private static SocketServerManager instance = null;
     TcpServer TCPin = null;
@@ -18,7 +17,11 @@ public partial class SocketServerManager : Node
         {
             instance = new SocketServerManager();
             instance.Name = "SocketServerManager";
+            GameLoop.Root.GetNode<MainLevel>("GameLoop/MainLevel").AddChild(instance);
         }
+
+        
+
         return instance;
     }
 
