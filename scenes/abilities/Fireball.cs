@@ -15,7 +15,7 @@ public partial class Fireball : AbstractAbility
         Vector3 velocity = new Vector3((float)obj.Property("velx"), (float)obj.Property("vely"), (float)obj.Property("velz"));
         SourceActorID = (int)obj.Property("SourceID");
         this.Position = position + velocity * 2;
-        this.LinearVelocity = velocity * 30;
+        this.LinearVelocity = velocity * 60;
     }
 
     public override void ApplyHost(bool Host)
@@ -72,10 +72,6 @@ public partial class Fireball : AbstractAbility
             b["stats"] = JsonConvert.SerializeObject(values);
             MessageQueue.GetInstance().AddMessage(b);
         }
-
-        // get actor ID from model
-        // 
-
     }
 
 }
