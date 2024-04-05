@@ -6,23 +6,6 @@ using System.Runtime.CompilerServices;
 namespace Managers.SocketServerManager
 {
 
-    class PendingPeer
-    {
-        public ulong ConnectTime;
-        public StreamPeerTcp tcp;
-        public StreamPeer connection;
-        public WebSocketPeer ws;
-
-        PendingPeer(StreamPeerTcp p_tcp)
-        {
-            tcp = p_tcp;
-            connection = p_tcp;
-            ConnectTime = Time.GetTicksMsec();
-        }
-    }
-
-
-
     public partial class SocketServerManager : Node
     {
         int inport = 9002;
@@ -32,8 +15,12 @@ namespace Managers.SocketServerManager
         private SocketServerManager() { }
         private static SocketServerManager instance = null;
         TcpServer TCPin = null;
+        StreamPeerTls StreamPeerServertTls = null;
         WebSocketPeer wsp = null;
-        WebSocketPeer.State prevstate = WebSocketPeer.State.Closed;
+        StreamPeerTls.Status prevstate = StreamPeerTls.Status.Disconnected;
+
+        X509Certificate cert = null;
+        CryptoKey cryptoKey = null;
 
         public static SocketServerManager GetInstance()
         {
@@ -49,9 +36,20 @@ namespace Managers.SocketServerManager
 
         public override void _Ready()
         {
-            wsp = new WebSocketPeer();
+            
+            cert = ResourceLoader.Load<X509Certificate>("res://assets/ServerResources/serverCAS.crt");
+            cryptoKey = ResourceLoader.Load<CryptoKey>("res://assets/ServerResources/serverKey.key");;
+
+
+
+            StreamPeerServertTls = new StreamPeerTls();
+
             TCPin = new TcpServer();
             TCPin.Listen(9002);
+           
+
+
+            StreamPeerTls tls = new StreamPeerTls();
 
             if(!TCPin.IsListening())
             {
@@ -70,24 +68,23 @@ namespace Managers.SocketServerManager
                 StreamPeerTcp stream = TCPin.TakeConnection();
                 GD.Print("web client connected from" + stream.GetConnectedHost());
                 stream.Poll();
-                wsp.AcceptStream(stream);
+                StreamPeerServertTls.AcceptStream(stream, TlsOptions.Server(cryptoKey, cert));
                 
                 GD.Print(stream.GetStatus());
             }
 
-            wsp.Poll();
+            StreamPeerServertTls.Poll();
             
 
 
-            WebSocketPeer.State state = wsp.GetReadyState();
+            StreamPeerTls.Status state = StreamPeerServertTls.GetStatus();
 
-            if (state == WebSocketPeer.State.Open)
+            if (state == StreamPeerTls.Status.Connected)
             {
                 if(state != prevstate)
                 {
                     GD.Print("Open!");
                 }
-
 
                 while (wsp.GetAvailablePacketCount() > 0)
                 {
@@ -96,19 +93,15 @@ namespace Managers.SocketServerManager
                 }
             }
 
-            if (state == WebSocketPeer.State.Closed && state != prevstate)
+            if (state == StreamPeerTls.Status.Disconnected && state != prevstate)
             {
                 wsp.Close();
-                GD.Print("Closed");
+                GD.Print("Disconnected");
             }
 
-            if (state == WebSocketPeer.State.Closing && state != prevstate)
+            if (state == StreamPeerTls.Status.Handshaking && state != prevstate)
             {
-                GD.Print("Closing...");
-            }
-            if (state == WebSocketPeer.State.Connecting && state != prevstate)
-            {
-                GD.Print("Connecting...");
+                GD.Print("Handshaking...");
             }
 
             prevstate = state;
