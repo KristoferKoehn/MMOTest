@@ -32,11 +32,21 @@ public partial class SocketServerManager : Node
 
     public override void _Process(double delta)
     {
+
         if (TCPin.IsConnectionAvailable())
         {
             StreamPeerTcp stream = TCPin.TakeConnection();
+            wsp.AcceptStream(stream);
             GD.Print("web client connected from" + stream.GetConnectedHost());
         }
-    }
 
+        if(wsp.GetReadyState() == WebSocketPeer.State.Open)
+        {
+            while(wsp.GetAvailablePacketCount() > 0)
+            {
+                byte[] msg = wsp.GetPacket();
+                GD.Print(msg.ToString());
+            }
+        }
+    }
 }
