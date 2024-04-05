@@ -8,9 +8,6 @@ namespace Managers.SocketServerManager
 
     public partial class SocketServerManager : Node
     {
-        int inport = 9002;
-        int outport = 9003;
-
 
         private SocketServerManager() { }
         private static SocketServerManager instance = null;
@@ -56,14 +53,17 @@ namespace Managers.SocketServerManager
 
         public override void _Process(double delta)
         {
+
+
+
             while (TCPin.IsConnectionAvailable())
             {
                 StreamPeerTcp stream = TCPin.TakeConnection();
                 GD.Print("web client connected from" + stream.GetConnectedHost());
-                stream.Poll();
 
                 StreamPeerTls sptls = new StreamPeerTls();
                 sptls.AcceptStream(stream, TlsOptions.Server(cryptoKey, cert));
+                stream.Poll();
 
                 wsp.AcceptStream(sptls);
                 GD.Print(stream.GetStatus());
