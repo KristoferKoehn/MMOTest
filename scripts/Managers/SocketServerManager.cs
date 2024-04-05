@@ -1,5 +1,6 @@
 using Godot;
 using System;
+using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 
 namespace Managers.SocketServerManager
@@ -32,7 +33,7 @@ namespace Managers.SocketServerManager
         private static SocketServerManager instance = null;
         TcpServer TCPin = null;
         WebSocketPeer wsp = null;
-
+        List<StreamPeerTcp> streamPeerTcps = new List<StreamPeerTcp>();
 
 
         public static SocketServerManager GetInstance()
@@ -63,6 +64,7 @@ namespace Managers.SocketServerManager
                 StreamPeerTcp stream = TCPin.TakeConnection();
                 GD.Print("web client connected from" + stream.GetConnectedHost());
                 wsp.AcceptStream(stream);
+                GD.Print(stream.GetStatus());
             }
 
             WebSocketPeer.State state = wsp.GetReadyState();
