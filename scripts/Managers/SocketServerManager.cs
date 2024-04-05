@@ -40,7 +40,9 @@ public partial class SocketServerManager : Node
             wsp.AcceptStream(stream);
         }
 
-        if(wsp.GetReadyState() == WebSocketPeer.State.Open)
+        WebSocketPeer.State state = wsp.GetReadyState();
+
+        if (state == WebSocketPeer.State.Open)
         {
             while(wsp.GetAvailablePacketCount() > 0)
             {
@@ -48,5 +50,20 @@ public partial class SocketServerManager : Node
                 GD.Print(msg.ToString());
             }
         }
+
+        if(state == WebSocketPeer.State.Closed)
+        {
+            wsp.Close();
+        }
+
+        if(state == WebSocketPeer.State.Closing)
+        {
+            //do nothing?
+        }
+        if(state == WebSocketPeer.State.Connecting)
+        {
+            GD.Print("connecting...");
+        }
+
     }
 }
