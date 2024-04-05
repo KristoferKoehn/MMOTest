@@ -69,7 +69,9 @@ namespace Managers.SocketServerManager
             {
                 StreamPeerTcp stream = TCPin.TakeConnection();
                 GD.Print("web client connected from" + stream.GetConnectedHost());
+                
                 wsp.AcceptStream(stream);
+                stream.Poll();
             }
 
             wsp.Poll();

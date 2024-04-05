@@ -1,4 +1,4 @@
-﻿using Godot;
+using Godot;
 using Managers.SocketServerManager;
 using MMOTest.Backend;
 using System.Collections.Generic;
