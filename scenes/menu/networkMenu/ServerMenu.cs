@@ -77,24 +77,6 @@ public partial class ServerMenu : Node2D
     }
 
 
-    public string UpnpSetup()
-    {
-        Upnp upnp = new Upnp();
-
-        int result = upnp.Discover();
-
-		Debug.Assert((Upnp.UpnpResult)result == Upnp.UpnpResult.Success, $"UPNP DISCOVER FAILED! ERROR {result}");
-
-		Debug.Assert(upnp.GetGateway() != null && upnp.GetGateway().IsValidGateway(), "ESTABLISH GATEWAY FAILED");
-
-        int MapResult = upnp.AddPortMapping(PORT);
-		Debug.Assert(MapResult == 0, "INVALID PORT MAPPING");
-
-		GD.Print($"SUCCESSFUL UPNP SETUP? map result: {MapResult} - valid gateway: {upnp.GetGateway().IsValidGateway()}");
-        return upnp.QueryExternalAddress();
-
-    }
-
     public void _on_refresh_pressed()
 	{
 		updateTree();

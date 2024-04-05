@@ -15,9 +15,8 @@ namespace Managers.SocketServerManager
         private SocketServerManager() { }
         private static SocketServerManager instance = null;
         TcpServer TCPin = null;
-        StreamPeerTls StreamPeerServertTls = null;
         WebSocketPeer wsp = null;
-        StreamPeerTls.Status prevstate = StreamPeerTls.Status.Disconnected;
+        WebSocketPeer.State prevstate = WebSocketPeer.State.Closed;
 
         X509Certificate cert = null;
         CryptoKey cryptoKey = null;
@@ -41,15 +40,9 @@ namespace Managers.SocketServerManager
             cryptoKey = ResourceLoader.Load<CryptoKey>("res://assets/ServerResources/serverKey.key");;
 
 
-
-            StreamPeerServertTls = new StreamPeerTls();
-
             TCPin = new TcpServer();
             TCPin.Listen(9002);
            
-
-
-            StreamPeerTls tls = new StreamPeerTls();
 
             if(!TCPin.IsListening())
             {
@@ -68,23 +61,27 @@ namespace Managers.SocketServerManager
                 StreamPeerTcp stream = TCPin.TakeConnection();
                 GD.Print("web client connected from" + stream.GetConnectedHost());
                 stream.Poll();
-                StreamPeerServertTls.AcceptStream(stream, TlsOptions.Server(cryptoKey, cert));
-                
+
+                StreamPeerTls sptls = new StreamPeerTls();
+                sptls.AcceptStream(stream, TlsOptions.Server(cryptoKey, cert));
+
+                wsp.AcceptStream(sptls);
                 GD.Print(stream.GetStatus());
             }
 
-            StreamPeerServertTls.Poll();
+            wsp.Poll();
             
 
 
-            StreamPeerTls.Status state = StreamPeerServertTls.GetStatus();
+            WebSocketPeer.State state = wsp.GetReadyState();
 
-            if (state == StreamPeerTls.Status.Connected)
+            if (state == WebSocketPeer.State.Open)
             {
                 if(state != prevstate)
                 {
                     GD.Print("Open!");
                 }
+
 
                 while (wsp.GetAvailablePacketCount() > 0)
                 {
@@ -93,15 +90,19 @@ namespace Managers.SocketServerManager
                 }
             }
 
-            if (state == StreamPeerTls.Status.Disconnected && state != prevstate)
+            if (state == WebSocketPeer.State.Closed && state != prevstate)
             {
                 wsp.Close();
-                GD.Print("Disconnected");
+                GD.Print("Closed");
             }
 
-            if (state == StreamPeerTls.Status.Handshaking && state != prevstate)
+            if (state == WebSocketPeer.State.Closing && state != prevstate)
             {
-                GD.Print("Handshaking...");
+                GD.Print("Closing...");
+            }
+            if (state == WebSocketPeer.State.Connecting && state != prevstate)
+            {
+                GD.Print("Connecting...");
             }
 
             prevstate = state;
