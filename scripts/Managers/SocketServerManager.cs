@@ -38,7 +38,7 @@ namespace Managers.SocketServerManager
             
             cert = ResourceLoader.Load<X509Certificate>("res://assets/ServerResources/serverCAS.crt");
             cryptoKey = ResourceLoader.Load<CryptoKey>("res://assets/ServerResources/serverKey.key");;
-
+            wsp = new WebSocketPeer();
 
             TCPin = new TcpServer();
             TCPin.Listen(9002);
