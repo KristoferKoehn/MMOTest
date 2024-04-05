@@ -32,6 +32,7 @@ public partial class SocketServerManager : Node
 
     public override void _Process(double delta)
     {
+        wsp.Poll();
 
         if (TCPin.IsConnectionAvailable())
         {
