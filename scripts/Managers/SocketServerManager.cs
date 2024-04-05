@@ -33,8 +33,7 @@ namespace Managers.SocketServerManager
         private static SocketServerManager instance = null;
         TcpServer TCPin = null;
         WebSocketPeer wsp = null;
-        List<StreamPeerTcp> streamPeerTcps = new List<StreamPeerTcp>();
-
+        WebSocketPeer.State prevstate = WebSocketPeer.State.Closed;
 
         public static SocketServerManager GetInstance()
         {
@@ -53,23 +52,40 @@ namespace Managers.SocketServerManager
             wsp = new WebSocketPeer();
             TCPin = new TcpServer();
             TCPin.Listen(9002);
+
+            if(!TCPin.IsListening())
+            {
+                GD.Print("TCP server error");
+            } else
+            {
+                GD.Print("TCP server listening...");
+            }
+
         }
 
         public override void _Process(double delta)
         {
-            wsp.Poll();
-
-            if (TCPin.IsConnectionAvailable())
+            while (TCPin.IsConnectionAvailable())
             {
                 StreamPeerTcp stream = TCPin.TakeConnection();
                 GD.Print("web client connected from" + stream.GetConnectedHost());
                 wsp.AcceptStream(stream);
             }
 
+            wsp.Poll();
+            
+
+
             WebSocketPeer.State state = wsp.GetReadyState();
 
             if (state == WebSocketPeer.State.Open)
             {
+                if(state != prevstate)
+                {
+                    GD.Print("Open!");
+                }
+
+
                 while (wsp.GetAvailablePacketCount() > 0)
                 {
                     byte[] msg = wsp.GetPacket();
@@ -77,19 +93,22 @@ namespace Managers.SocketServerManager
                 }
             }
 
-            if (state == WebSocketPeer.State.Closed)
+            if (state == WebSocketPeer.State.Closed && state != prevstate)
             {
                 wsp.Close();
+                GD.Print("Closed");
             }
 
-            if (state == WebSocketPeer.State.Closing)
+            if (state == WebSocketPeer.State.Closing && state != prevstate)
             {
-                //do nothing?
+                GD.Print("Closing...");
             }
-            if (state == WebSocketPeer.State.Connecting)
+            if (state == WebSocketPeer.State.Connecting && state != prevstate)
             {
-                wsp.Poll();
+                GD.Print("Connecting...");
             }
+
+            prevstate = state;
         }
 
     }
