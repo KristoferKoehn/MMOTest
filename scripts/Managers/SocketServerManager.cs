@@ -36,8 +36,8 @@ public partial class SocketServerManager : Node
         if (TCPin.IsConnectionAvailable())
         {
             StreamPeerTcp stream = TCPin.TakeConnection();
-            wsp.AcceptStream(stream);
             GD.Print("web client connected from" + stream.GetConnectedHost());
+            wsp.AcceptStream(stream);
         }
 
         if(wsp.GetReadyState() == WebSocketPeer.State.Open)
