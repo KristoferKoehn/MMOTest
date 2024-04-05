@@ -35,7 +35,7 @@ namespace Managers.SocketServerManager
 
         public override void _Ready()
         {
-            
+            GD.Print("loading socket server...");
             cert = ResourceLoader.Load<X509Certificate>("res://assets/ServerResources/serverCAS.crt");
             cryptoKey = ResourceLoader.Load<CryptoKey>("res://assets/ServerResources/serverKey.key");;
             wsp = new WebSocketPeer();
