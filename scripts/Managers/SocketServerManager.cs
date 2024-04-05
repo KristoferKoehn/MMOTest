@@ -63,11 +63,7 @@ public partial class SocketServerManager : Node
         }
         if(state == WebSocketPeer.State.Connecting)
         {
-            while(state == WebSocketPeer.State.Connecting)
-            {
-                wsp.Poll();
-            }
-            GD.Print("connecting...");
+            wsp.Poll();
         }
 
     }
