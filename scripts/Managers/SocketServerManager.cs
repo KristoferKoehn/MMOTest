@@ -72,6 +72,7 @@ namespace Managers.SocketServerManager
                 
                 wsp.AcceptStream(stream);
                 stream.Poll();
+                GD.Print(stream.GetStatus());
             }
 
             wsp.Poll();
