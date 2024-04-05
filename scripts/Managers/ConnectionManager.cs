@@ -1,6 +1,7 @@
 ﻿using Godot;
 using MMOTest.Backend;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace MMOTest.scripts.Managers
 {
@@ -36,7 +37,7 @@ namespace MMOTest.scripts.Managers
         public void InitializeConnection()
         {
             EnetPeer = new ENetMultiplayerPeer();
-            if (OS.HasFeature("dedicated_server"))
+            if (OS.HasFeature("dedicated_server") || OS.GetCmdlineUserArgs().Contains("--host"))
             {
                 headless = true;
             }

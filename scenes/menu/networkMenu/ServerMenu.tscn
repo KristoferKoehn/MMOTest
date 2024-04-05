@@ -39,24 +39,6 @@ enable_recursive_folding = false
 select_mode = 1
 metadata/_edit_use_anchors_ = true
 
-[node name="Host" type="Button" parent="Control/Panel"]
-layout_mode = 0
-offset_left = 62.0
-offset_top = 548.0
-offset_right = 152.0
-offset_bottom = 584.0
-text = "Host"
-metadata/_edit_use_anchors_ = true
-
-[node name="ServerName" type="LineEdit" parent="Control/Panel"]
-layout_mode = 0
-offset_left = 177.0
-offset_top = 552.0
-offset_right = 438.0
-offset_bottom = 583.0
-placeholder_text = "Server Name"
-metadata/_edit_use_anchors_ = true
-
 [node name="Join" type="Button" parent="Control/Panel"]
 layout_mode = 0
 offset_left = 954.0
@@ -98,7 +80,6 @@ offset_bottom = 38.0
 text = "Refresh List
 "
 
-[connection signal="pressed" from="Control/Panel/Host" to="." method="_on_host_pressed"]
 [connection signal="pressed" from="Control/Panel/Join" to="." method="_on_join_pressed"]
 [connection signal="pressed" from="Control/Back" to="." method="_on_back_pressed"]
 [connection signal="pressed" from="Control/Refresh" to="." method="_on_refresh_pressed"]

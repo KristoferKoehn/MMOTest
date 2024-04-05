@@ -3,6 +3,7 @@ using MMOTest.scripts.Managers;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 
 public partial class GameLoop : Node
 {
@@ -19,7 +20,7 @@ public partial class GameLoop : Node
 
     public override void _Ready()
     {
-        if (OS.HasFeature("dedicated_server"))
+        if (OS.HasFeature("dedicated_server") || OS.GetCmdlineUserArgs().Contains("--host"))
         {
             string ip = UpnpSetup();
             UniversalConnector connector = new UniversalConnector("50.47.173.115", PORT);

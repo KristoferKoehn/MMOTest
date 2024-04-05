@@ -33,21 +33,6 @@ public partial class ServerMenu : Node2D
 		
 	}
 
-	public void _on_host_pressed()
-	{
-		if (serverName.Text.Length > 0)
-		{
-			string ip = UpnpSetup();
-			connector.Host(serverName.Text, ip);
-            //start host
-
-            MainLevel tL = GD.Load<PackedScene>("res://scenes/levels/MainLevel.tscn").Instantiate<MainLevel>();
-            ConnectionManager.GetInstance().Connector = connector;
-            ConnectionManager.GetInstance().host = true;
-            this.GetParent<GameLoop>().PushScene(tL);
-        }
-	}
-
 	public void updateTree()
 	{
 
