@@ -8,7 +8,6 @@ public partial class ServerMenu : Node2D
 {
 	UniversalConnector connector;
 	Tree tree;
-	LineEdit serverName;
 	Timer timer;
 	int PORT = 9001;
 	[Export]
@@ -19,7 +18,6 @@ public partial class ServerMenu : Node2D
 	{
 		connector = new UniversalConnector(IPAddress, 9999);
 		tree = this.GetNode<Tree>("Control/Panel/Tree");
-        serverName = this.GetNode<LineEdit>("Control/Panel/ServerName");
         tree.CreateItem();
 		tree.HideRoot = true;
 		updateTree();
